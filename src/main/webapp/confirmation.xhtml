@@ -1,0 +1,27 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form id="confirmDialog">
+        <p:confirmDialog global="true">  
+            <p:commandButton value="#{posRepBundle['Yes']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" escape="false"/>  
+            <p:commandButton value="#{posRepBundle['No']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" escape="false"/>       
+        </p:confirmDialog>   
+    </h:form>
+    <p:ajaxStatus>  
+        <f:facet name="start">
+            <div class="ups-loading-position-br">
+                <p:graphicImage library="ups-template" name="images/loading/ups-loading-32.gif" />
+            </div>
+        </f:facet>
+        <f:facet name="complete">  
+            <h:outputText value="" />  
+        </f:facet>  
+    </p:ajaxStatus>
+
+    <p:dialog widgetVar="statusDialog" draggable="false" closable="false" showHeader="false" resizable="false">
+        <p:graphicImage library="ups-template" name="images/loading/ups-loading-32.gif" />
+        Por favor, espere...
+    </p:dialog>
+</ui:composition>

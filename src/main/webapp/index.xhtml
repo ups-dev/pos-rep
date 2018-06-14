@@ -1,0 +1,19 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      template="/WEB-INF/templates/template-menu.xhtml"
+      xmlns:uorg="http://ups.edu.ec/ui/composites/sec">
+    <ui:define name="title">
+        <h:outputText value="#{posRepBundle['AppName']}"/>
+    </ui:define>
+    <ui:define name="ups-content-center">
+        <p:panel header="#{posRepBundle['Welcome']}">
+            <p><h:outputText value="#{posRepBundle['WelcomeMessage']}"/></p>
+        </p:panel>
+    </ui:define>
+    <ui:define name="ups-content-estructura">
+        <uorg:estructura id="exap" style="width: 20em;" changeSession="true" />                  
+    </ui:define>    
+</ui:composition>
