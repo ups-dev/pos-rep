@@ -1,0 +1,412 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:us="http://ups.edu.ec/ui/security"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:o="http://omnifaces.org/ui">
+    
+    <f:metadata>
+        <o:importConstants type="ec.edu.ups.pos.rep.data.utils.EvaRepConstants" />
+    </f:metadata>
+    <h:form id="EvaReportesForm">
+        <p:panel header="#{posRepBundle['PosResultadosTitle']}" id="RepCabecera">
+            
+            <p:growl id="notificacion" showDetail="true" sticky="false" life="7000"/>                          
+            <h:panelGroup id="messagePanel">
+                <p:messages id="listMessages" closable="true">
+                    <p:effect type="pulsate" event="load" delay="200" speed="500">
+                        <f:param name="times" value="1" />
+                    </p:effect>
+                </p:messages>
+            </h:panelGroup>   
+            
+            <p:dataTable id="EvaReportesSistemaDataTable"
+                         widgetVar="EvaReportesSistemaDataTableVar"
+                         value="#{repReportesSistemaController.items}"
+                         var="item"
+                         rowKey="#{item.resCodigo}"
+                         sortBy="#{item.resReporte}"
+                         sortOrder="ascending"
+                         paginator="true"
+                         rows="10"
+                         rowsPerPageTemplate="10,20,30,40,50"
+                         selectionMode="single"
+                         paginatorPosition="bottom"
+                         emptyMessage="#{pedBundle['TableEmpty']}"
+                         selection="#{repReportesSistemaController.selected}"
+                         filteredValue="#{repReportesSistemaController.itemsFilter}">
+                <p:ajax event="rowSelect" update=":EvaReportesForm:SbeRepExportToolbar, 
+                                                  :EvaReportesForm:sede, 
+                                                  :EvaReportesForm:campus, 
+                                                  :EvaReportesForm:programa,
+                                                  :EvaReportesForm:cohorte,
+                                                  :EvaReportesForm:modalidad,
+                                                  :EvaReportesForm:nivel,
+                                                  :EvaReportesForm:docente, 
+                                                  :EvaReportesForm:asignatura, 
+                                                  :EvaReportesForm:grupo" listener="#{evaRepResultadoController.actualizaFiltros()}"/>
+                <p:ajax event="filter" update=":EvaReportesForm:SbeRepExportToolbar, 
+                                                  :EvaReportesForm:sede, 
+                                                  :EvaReportesForm:campus, 
+                                                  :EvaReportesForm:programa, 
+                                                  :EvaReportesForm:cohorte, 
+                                                  :EvaReportesForm:modalidad, 
+                                                  :EvaReportesForm:nivel,
+                                                  :EvaReportesForm:docente, 
+                                                  :EvaReportesForm:asignatura, 
+                                                  :EvaReportesForm:grupo" listener="#{repReportesSistemaController.setSelected(null)}"/>   
+                
+                
+                <p:column sortBy="#{item.resReporte}" filterBy="#{item.resReporte}" filterMatchMode="contains">
+                    <f:facet name="header">
+                        <h:outputText value="#{posRepBundle['RepReportesSistemaLabel_resReporte']}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.resReporte}"/>
+                </p:column>                                 
+                
+                <p:column sortBy="#{item.resFormato}" styleClass="columnFormato">
+                    <f:facet name="header">
+                        <h:outputText value="#{posRepBundle['RepReportesSistemaLabel_resFormato']}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.resFormato}"/>
+                </p:column>
+                    
+            </p:dataTable>
+                        
+            <p:panel id="SbeRepFiltroPanel" header="Parámetros Generales">
+                
+                <h:panelGroup id="sede">
+                    <ui:fragment rendered="#{repReportesSistemaController.selected ne null 
+                                             and evaRepResultadoController.compruebaParametro(repReportesSistemaController.selected, EvaRepConstants.REP_PARAMETRO_SEDE)}">
+                        <!--Filtro Sede-->
+                        <ui:decorate template="/WEB-INF/templates/decorators/search/ups-search-param.xhtml">
+                            <ui:define name="ups-search-param-title">
+                                <p:outputLabel value="#{posRepBundle['Sede']}:" />                        
+                            </ui:define>
+                            <ui:define name="ups-search-param-content">                       
+                                <p:selectOneMenu id="evaRepFiltrarEstructuraSede" 
+                                                 value="#{evaRepResultadoController.orgEstructuraSede}"                                         
+                                                 filter="true" filterMatchMode="contains" var="filtro">                                                        
+                                    <f:selectItem itemLabel="#{posRepBundle['Todos']}" itemValue="" itemDisabled="#{evaRepResultadoController.validaSeleccionEstructuraSeguridadSede}"/>
+                                    <f:selectItems value="#{evaRepResultadoController.orgEstructuraSedeList}"
+                                                   var="orgEstructuraSedeItem"
+                                                   itemValue="#{orgEstructuraSedeItem}"
+                                                   itemLabel="#{orgEstructuraSedeItem.orgDescripcionEstructura.deeDescripcion.toString()}"
+                                                   />
+                                    <p:column>
+                                        <h:outputText value="#{filtro.orgDescripcionEstructura.deeDescripcion}" />  
+                                    </p:column>
+                                    <p:ajax listener="#{evaRepResultadoController.updateCampusList()}" 
+                                            update="evaRepFiltrarEstructuraCampus, evaRepFiltrarEstructuraCarrera, evaRepFiltrarPeriodoInicial, evaRepFiltrarAsignatura, evaRepFiltrarGrupo, evaRepFiltrarDocente"/>
+                                </p:selectOneMenu>
+                            </ui:define>
+                        </ui:decorate>
+                    </ui:fragment>
+                </h:panelGroup>
+                
+                <h:panelGroup id="campus">
+                    <ui:fragment rendered="#{repReportesSistemaController.selected ne null 
+                                             and evaRepResultadoController.compruebaParametro(repReportesSistemaController.selected, EvaRepConstants.REP_PARAMETRO_CAMPUS)}">
+                        <!--Filtro Campus-->
+                        <ui:decorate template="/WEB-INF/templates/decorators/search/ups-search-param.xhtml">
+                            <ui:define name="ups-search-param-title">
+                                <p:outputLabel value="#{posRepBundle['Campus']}:" />                        
+                            </ui:define>
+                            <ui:define name="ups-search-param-content">
+                                <p:selectOneMenu id="evaRepFiltrarEstructuraCampus" 
+                                                 value="#{evaRepResultadoController.orgEstructuraCampus}" 
+                                                 filter="true" filterMatchMode="contains" var="filtro" >                                                        
+                                    <f:selectItem itemLabel="#{posRepBundle['Todos']}" itemValue="" itemDisabled="#{evaRepResultadoController.validaSeleccionEstructuraSeguridadCampus}"/>
+                                    <f:selectItems value="#{evaRepResultadoController.orgEstructuraCampusList}"
+                                                   var="orgEstructuraCampusItem"
+                                                   itemValue="#{orgEstructuraCampusItem}"
+                                                   itemLabel="#{orgEstructuraCampusItem.orgDescripcionEstructura.deeDescripcion.toString()}"
+                                                   />
+                                    <p:column>
+                                        <h:outputText value="#{filtro.orgDescripcionEstructura.deeDescripcion}" />  
+                                    </p:column>   
+                                    <p:ajax update="evaRepFiltrarEstructuraCarrera, evaRepFiltrarPeriodoInicial, evaRepFiltrarAsignatura, evaRepFiltrarGrupo, evaRepFiltrarDocente"                                    
+                                            listener="#{evaRepResultadoController.updateCarreraList()}" 
+                                            
+                                            
+                                            />
+                                </p:selectOneMenu>
+                            </ui:define>
+                        </ui:decorate>
+                    </ui:fragment>
+                </h:panelGroup>
+                
+                <h:panelGroup id="programa">
+                    <ui:fragment rendered="#{repReportesSistemaController.selected ne null 
+                                             and evaRepResultadoController.compruebaParametro(repReportesSistemaController.selected, EvaRepConstants.REP_PARAMETRO_CARRERA)}">
+                        <!--Filtro Carrera-->
+                        <ui:decorate template="/WEB-INF/templates/decorators/search/ups-search-param.xhtml">
+                            <ui:define name="ups-search-param-title">
+                                <p:outputLabel value="#{posRepBundle['Programa']}:" />                        
+                            </ui:define>
+
+                            <ui:define name="ups-search-param-content">
+                                <p:selectOneMenu id="evaRepFiltrarEstructuraCarrera" 
+                                                 value="#{evaRepResultadoController.orgEstructuraCarrera}" 
+                                                 filter="true" filterMatchMode="contains" var="filtro" >                                                        
+                                    <f:selectItem itemLabel="#{posRepBundle['Todos']}" itemValue="" itemDisabled="#{evaRepResultadoController.validaSeleccionEstructuraSeguridadCarrProg}"/>
+                                    <f:selectItems value="#{evaRepResultadoController.orgEstructuraCarreraList}"
+                                                   var="orgEstructuraCarreraItem"
+                                                   itemValue="#{orgEstructuraCarreraItem}"
+                                                   itemLabel="#{orgEstructuraCarreraItem.orgDescripcionEstructura.deeDescripcion.toString()}"
+                                                   />
+                                    <p:column>
+                                        <h:outputText value="#{filtro.orgDescripcionEstructura.deeDescripcion}" />  
+                                    </p:column>    
+                                    <p:ajax update="evaRepFiltrarAsignatura,evaRepFiltrarPeriodoInicial, evaRepFiltrarGrupo, evaRepFiltrarDocente,posRepFiltrarNivel"                                    
+                                            listener="#{evaRepResultadoController.updateCarreraList()}" 
+                                            />
+                                </p:selectOneMenu>
+                            </ui:define>
+                        </ui:decorate>
+                    </ui:fragment>
+                </h:panelGroup>
+                
+                
+                <h:panelGroup id="cohorte">
+                    <ui:fragment rendered="#{repReportesSistemaController.selected ne null 
+                                             and evaRepResultadoController.compruebaParametro(repReportesSistemaController.selected, EvaRepConstants.REP_PARAMETRO_PERIODO_INICIAL)}">
+                        <!--Filtro Período Inicial-->
+                        <ui:decorate template="/WEB-INF/templates/decorators/search/ups-search-param.xhtml">
+                            <ui:define name="ups-search-param-title">  
+                                <p:outputLabel value="#{posRepBundle['PosRepCohorte']}:" />                        
+                            </ui:define>
+
+                            <ui:define name="ups-search-param-content">
+                                <p:selectOneMenu id="evaRepFiltrarPeriodoInicial" value="#{evaRepResultadoController.orgPeriodoInicial}"                                         
+                                                 filter="true" filterMatchMode="contains" var="filtro" required="true" requiredMessage="Seleccione un Periodo Lectivo" >                            
+                                    <f:selectItem itemLabel="#{posRepBundle['SelectOneMessage']}" itemValue=""/>
+                                    <f:selectItems value="#{evaRepResultadoController.orgPeriodoLectivoList}"
+                                                   var="periodoLectivoItem"
+                                                   itemValue="#{periodoLectivoItem}"
+                                                   itemLabel="#{periodoLectivoItem.pelDescripcion.toString()} (#{periodoLectivoItem.pelCodigo.toString()})"
+                                                   />
+                                    <p:column>
+                                        <h:outputText value="#{filtro.pelDescripcion} (#{filtro.pelCodigo})" />  
+                                    </p:column>    
+                                    <p:ajax update="posRepFiltrarNivel,evaRepFiltrarGrupo,evaRepFiltrarDocente,"                                    
+                                            listener="#{evaRepResultadoController.updateNivelMallaList()}" 
+                                             
+                                            />
+                                </p:selectOneMenu>                        
+                            </ui:define>
+                        </ui:decorate>
+                    </ui:fragment>
+                </h:panelGroup>
+                    
+                 
+                 <h:panelGroup id="modalidad">
+                    <ui:fragment rendered="#{repReportesSistemaController.selected ne null 
+                                             and evaRepResultadoController.compruebaParametro(repReportesSistemaController.selected, EvaRepConstants.REP_PARAMETRO_MODALIDAD)}">
+                      <!--Filtro Modalidad--> 
+                        <ui:decorate template="/WEB-INF/templates/decorators/search/ups-search-param.xhtml">
+                            <ui:define name="ups-search-param-title">  
+                                <p:outputLabel value="#{posRepBundle['EvaRepModalidad']}:" />                        
+                            </ui:define>
+
+                            <ui:define name="ups-search-param-content">
+                                <p:selectOneMenu id="evaRepFiltrarModalidad" value="#{evaRepResultadoController.pedModalidad}"                                         
+                                                 filter="true" filterMatchMode="contains" var="filtro" 
+                                                 >                            
+                                   <f:selectItem itemLabel="#{posRepBundle['Todos']}" itemValue="" />
+                                    <f:selectItems value="#{pedModalidadController.itemsNotDisabled}"
+                                                   var="modalidadItem"
+                                                   itemValue="#{modalidadItem}"
+                                                   itemLabel="#{modalidadItem.modDescripcion.toString()}"
+                                                   />
+                                    <p:column>
+                                        <h:outputText value="#{filtro.modDescripcion}" />  
+                                    </p:column>    
+                                   <p:ajax update="evaRepFiltrarCuestionario, evaRepFiltrarInformante"                                    
+                                            listener="#{evaRepResultadoController.updateEvaluacionCuestionarioList()}" 
+                                            /> 
+                                </p:selectOneMenu>                        
+                            </ui:define>
+                        </ui:decorate>
+                    </ui:fragment>
+                </h:panelGroup>                  
+                                
+                 <h:panelGroup id="nivel">
+                    <ui:fragment rendered="#{repReportesSistemaController.selected ne null 
+                                             and evaRepResultadoController.compruebaParametro(repReportesSistemaController.selected, EvaRepConstants.REP_PARAMETRO_NIVEL)}">
+                        <!--Filtro NIVEL-->
+                        <ui:decorate template="/WEB-INF/templates/decorators/search/ups-search-param.xhtml">
+                            <ui:define name="ups-search-param-title">  
+                                <p:outputLabel value="#{posRepBundle['PosRepNivel']}:" />                        
+                            </ui:define>
+
+                            <ui:define name="ups-search-param-content">
+                                <p:selectOneMenu id="posRepFiltrarNivel" value="#{evaRepResultadoController.pedNivelMalla}"                                         
+                                                      filter="true" filterMatchMode="contains" var="filtro" 
+                                                      >                            
+                                         <f:selectItem itemLabel="#{posRepBundle['Todos']}" itemValue=""/>
+                                         <f:selectItems value="#{evaRepResultadoController.pedMallaNivelList}"
+                                                        var="mallaNivelItem"
+                                                        itemValue="#{mallaNivelItem}"
+                                                        itemLabel="#{mallaNivelItem.toString()}"
+                                                        />                            
+                                         <p:column>
+                                             <h:outputText value="#{filtro}" />  
+                                         </p:column>
+                           
+                                         <p:ajax update="evaRepFiltrarGrupo"                                    
+                                                 listener="#{evaRepResultadoController.updateGrupoList()}" 
+                                                 />
+                                     </p:selectOneMenu>                        
+                                 </ui:define>
+                        </ui:decorate>
+                    </ui:fragment>
+                </h:panelGroup>
+                       
+                                             
+                                             
+                <h:panelGroup id="docente">
+                    <ui:fragment rendered="#{repReportesSistemaController.selected ne null 
+                                             and evaRepResultadoController.compruebaParametro(repReportesSistemaController.selected, EvaRepConstants.REP_PARAMETRO_DOCENTE)}">
+                        <!--Filtro Docente-->
+                        <ui:decorate template="/WEB-INF/templates/decorators/search/ups-search-param.xhtml">
+                            <ui:define name="ups-search-param-title">  
+                                <p:outputLabel value="#{posRepBundle['EvaRepDocente']}:" />                        
+                            </ui:define>
+
+                            <ui:define name="ups-search-param-content">
+                                <h:panelGroup id="evaRepFiltrarDocente">
+                                    <p:autoComplete id="evaRepFiltrarDocente2" value="#{evaRepResultadoController.gthPersona}"                                
+                                                    cache="true" forceSelection="true" maxResults="10" minQueryLength="2" cacheTimeout="30000"
+                                                    var="p" itemLabel="#{p.perNroIdentificacion.concat(' - ').concat(p.perApellidos).concat(' ').concat(p.perNombres)}" itemValue="#{p}" 
+                                                    autocomplete="on"
+                                                    completeMethod="#{evaRepResultadoController.completePersona}"
+                                                    queryDelay="0"                                                                       
+                                                    > 
+                                        <o:converter converterId="omnifaces.ListConverter" list="#{evaRepResultadoController.gthPersonaList}" />
+<!--                                        <p:column>
+                                            <h:outputText value="#{p.perCodigo}" />
+                                        </p:column>-->
+
+                                        <p:column>
+                                            <h:outputText value="#{p.perNroIdentificacion}" />
+                                        </p:column>
+
+                                        <p:column>
+                                            <h:outputText value="#{p.perApellidos} #{p.perNombres}" />
+                                        </p:column>                                                        
+                                        <!--p:ajax event="itemSelect" update="evaRepFiltrarAsignatura, evaRepFiltrarGrupo, evaRepFiltrarDocente" listener="#{evaRepResultadoController.updateAsignaturaList()}"></p:ajax-->
+                                         <p:ajax event=  "itemSelect" update="evaRepFiltrarAsignatura, evaRepFiltrarGrupo, evaRepFiltrarDocente" 
+                                                 listener="#{evaRepResultadoController.updateAsignaturaList()}"/>
+                                         <p:ajax event="change" update="evaRepFiltrarAsignatura, evaRepFiltrarGrupo" 
+                                                 listener="#{evaRepResultadoController.updateAsignaturaList()}"/>
+                                        
+                                    </p:autoComplete>                                                         
+                                    <p:watermark value="Escriba nombre o apellido de la persona, caso contrario será Todos." for="evaRepFiltrarDocente2" />
+                             
+                                </h:panelGroup>
+                            </ui:define>
+                        </ui:decorate>
+                    </ui:fragment>
+                </h:panelGroup>
+                
+                <h:panelGroup id="asignatura">
+                    <ui:fragment rendered="#{repReportesSistemaController.selected ne null 
+                                             and evaRepResultadoController.compruebaParametro(repReportesSistemaController.selected, EvaRepConstants.REP_PARAMETRO_ASIGNATURA)}">
+                        <!--Filtro Asignatura-->
+                        <ui:decorate template="/WEB-INF/templates/decorators/search/ups-search-param.xhtml">
+                            <ui:define name="ups-search-param-title">   
+                                <p:outputLabel value="#{posRepBundle['EvaRepAsignatura']}:" />                        
+                            </ui:define>
+
+                            <ui:define name="ups-search-param-content">
+                                <p:selectOneMenu id="evaRepFiltrarAsignatura" value="#{evaRepResultadoController.pedMalla}"                                         
+                                                 filter="true" filterMatchMode="contains" var="filtro" 
+                                                 >                            
+                                    <f:selectItem itemLabel="#{posRepBundle['Todos']}" itemValue=""/>
+                                    <f:selectItems value="#{evaRepResultadoController.pedMallaList}"
+                                                   var="mallaItem"
+                                                   itemValue="#{mallaItem}"
+                                                   itemLabel="#{mallaItem.pedMateria.matDescripcion.toString()}"
+                                                   />                            
+                                    <p:column>
+                                        <h:outputText value="#{filtro.malCodigoAsignatura}" />  
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{filtro.pedMateria.matDescripcion}" />  
+                                    </p:column>   
+                                    <p:ajax update="evaRepFiltrarGrupo"                                    
+                                            listener="#{evaRepResultadoController.updateGrupoList()}" 
+                                     />
+                                </p:selectOneMenu>                        
+                            </ui:define>
+                        </ui:decorate>
+                    </ui:fragment>
+                </h:panelGroup>
+                
+                <h:panelGroup id="grupo">
+                    <ui:fragment rendered="#{repReportesSistemaController.selected ne null 
+                                             and evaRepResultadoController.compruebaParametro(repReportesSistemaController.selected, EvaRepConstants.REP_PARAMETRO_GRUPO)}">
+                        <!--Filtro Grupo-->
+                        <ui:decorate template="/WEB-INF/templates/decorators/search/ups-search-param.xhtml">
+                            <ui:define name="ups-search-param-title">    
+                                <p:outputLabel value="#{posRepBundle['EvaRepGrupo']}:" />                        
+                            </ui:define>
+
+                            <ui:define name="ups-search-param-content">
+                                <p:selectOneMenu id="evaRepFiltrarGrupo" value="#{evaRepResultadoController.ofeGrupo}"                                         
+                                                 filter="true" filterMatchMode="contains" var="filtro" 
+                                                 >                            
+                                    <f:selectItem itemLabel="#{posRepBundle['Todos']}" itemValue=""/>
+                                    <f:selectItems value="#{evaRepResultadoController.ofeGrupoList}"
+                                                   var="grupoItem"
+                                                   itemValue="#{grupoItem}"
+                                                   itemLabel="#{grupoItem.gruDescripcion.toString()}"
+                                                   />  
+                                    <p:column>
+                                        <h:outputText value="#{filtro.gruCodigo}" />  
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{filtro.gruDescripcion}" />  
+                                    </p:column>                           
+                                </p:selectOneMenu>                        
+                            </ui:define>
+                        </ui:decorate>
+                    </ui:fragment>
+                </h:panelGroup>
+                
+            </p:panel>                        
+                                       
+        </p:panel>
+        <p:toolbar id="SbeRepExportToolbar">  
+            <us:auth permissions="{'operations':['GENERAR']}">
+
+                <p:toolbarGroup align="center">                
+                    <p:commandLink id="nonAjaxExcel"                                    
+                                   ajax="false"
+                                   update="messagePanel"                                   
+                                   actionListener="#{evaRepGeneralController.generar_reporte_generico('xlsx')}"
+                                   disabled="#{repReportesSistemaController.selected.resFormato eq null or (repReportesSistemaController.selected.resFormato ne 'EXCEL' and repReportesSistemaController.selected.resFormato ne 'PDF - EXCEL')}">  
+                        <p:graphicImage library="ups-template" 
+                                        name="images/icons/apps/xls.png" 
+                                        alt="#{posRepBundle['ExportXls']}" 
+                                        title="#{posRepBundle['ExportXls']}"/>  
+                    </p:commandLink>
+                    <p:commandLink id="nonAjaxPdf"                                    
+                                   ajax="false"
+                                   update="messagePanel"
+                                   actionListener="#{evaRepGeneralController.generar_reporte_generico('pdf')}"
+                                   disabled="#{repReportesSistemaController.selected.resFormato eq null or (repReportesSistemaController.selected.resFormato ne 'PDF' and repReportesSistemaController.selected.resFormato ne 'PDF - EXCEL')}">
+                        <p:graphicImage library="ups-template" 
+                                        name="images/icons/apps/pdf.png" 
+                                        alt="#{posRepBundle['ExportPdf']}" 
+                                        title="#{posRepBundle['ExportPdf']}"/>  
+                    </p:commandLink>                
+                </p:toolbarGroup>
+
+            </us:auth>
+        </p:toolbar>
+    </h:form>
+</ui:composition>

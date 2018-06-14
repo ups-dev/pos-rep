@@ -1,0 +1,686 @@
+package ec.edu.ups.pos.rep.view.controllers;
+
+import ec.edu.ups.pos.rep.data.entities.eva.EvaEvaCueInf;
+import ec.edu.ups.pos.rep.data.entities.eva.EvaEvaluacionCuestionario;
+import ec.edu.ups.pos.rep.data.entities.eva.EvaTipoInformante;
+import ec.edu.ups.pos.rep.data.entities.gth.GthPersona;
+import ec.edu.ups.pos.rep.data.entities.ofe.OfeGrupo;
+import ec.edu.ups.pos.rep.data.entities.rep.RepParametroReporte;
+import ec.edu.ups.pos.rep.data.entities.rep.RepReportesSistema;
+import ec.edu.ups.pos.rep.data.utils.EvaRepConstants;
+import ec.edu.ups.pos.rep.logic.sessions.eva.EvaEvaCueInfFacade;
+import ec.edu.ups.pos.rep.logic.sessions.eva.EvaEvaluacionCuestionarioFacade;
+import ec.edu.ups.pos.rep.logic.sessions.eva.EvaTipoInformanteFacade;
+import ec.edu.ups.pos.rep.logic.sessions.gth.GthPersonaFacade;
+import ec.edu.ups.pos.rep.logic.sessions.ofe.OfeGrupoFacade;
+import ec.edu.ups.pos.rep.logic.sessions.org.OrgEstructuraFacade;
+import ec.edu.ups.pos.rep.logic.sessions.org.OrgPeriodoEstructuraFacade;
+import ec.edu.ups.pos.rep.logic.sessions.ped.PedMallaFacade;
+import ec.edu.ups.pos.rep.logic.sessions.ped.PedModalidadFacade;
+import ec.edu.ups.pos.rep.logic.sessions.rep.RepParametroReporteFacade;
+import ec.edu.ups.pos.rep.view.controller.rep.RepReportesSistemaController;
+import ec.edu.ups.jsf.security.ups.util.TipoEstructura;
+import ec.edu.ups.jsf.security.ups.web.session.SecOrgEstructuraController;
+import ec.edu.ups.org.common.data.entities.OrgEstructura;
+import ec.edu.ups.org.common.data.entities.OrgPeriodoLectivo;
+import ec.edu.ups.ped.common.data.entities.PedMalla;
+import ec.edu.ups.ped.common.data.entities.PedModalidad;
+import ec.edu.ups.util.jpa.search.DefaultParamOrderSearch;
+import ec.edu.ups.util.jpa.search.SearchOrder;
+import ec.edu.ups.util.jpa.search.builder.SearchBuilder;
+import ec.edu.ups.util.jpa.search.param.CacheStoreModeParam;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import javax.inject.Named;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.persistence.CacheStoreMode;
+import org.primefaces.context.RequestContext;
+
+@Named(value = "evaRepResultadoController")
+@ViewScoped
+public class EvaRepResultadoController implements Serializable{
+
+    private OrgEstructura orgEstructuraSede;
+    private OrgEstructura orgEstructuraCampus;
+    private OrgEstructura orgEstructuraCarrera;
+    private OrgPeriodoLectivo orgPeriodoInicial;
+    private OrgPeriodoLectivo orgPeriodoFinal;
+    private PedModalidad pedModalidad;
+    private EvaEvaluacionCuestionario evaEvaluacionCuestionario;
+    private EvaEvaCueInf evaEvaCueInf;
+    private EvaTipoInformante evaTipoInformante;
+    private List<EvaTipoInformante> evaTipoInformanteList;
+    private GthPersona gthPersona;
+    private PedMalla pedMalla;
+    private OfeGrupo ofeGrupo;
+    private List<OrgEstructura> orgEstructuraSedeList;
+    private List<OrgEstructura> orgEstructuraCampusList;
+    private List<OrgEstructura> orgEstructuraCarreraList;
+    private List<OrgPeriodoLectivo> orgPeriodoLectivoList;
+    private List<EvaEvaluacionCuestionario> evaEvaluacionCuestionarioList;
+    private List<EvaEvaCueInf> evaEvaCueInfList;
+    private List<RepReportesSistema> repReportesSistemaList;
+    private List<GthPersona> gthPersonaList;
+    private List<PedMalla> pedMallaList;
+    private List<OfeGrupo> ofeGrupoList;
+    private List<Integer> pedMallaNivelList;
+    private Integer pedNivelMalla;
+      
+    @Inject
+    private EvaEvaluacionCuestionarioFacade evaEvaluacionCuestionarioFacade;
+    @Inject
+    private SecOrgEstructuraController secOrgEstructuraController;
+    @Inject
+    private OrgEstructuraFacade orgEstructuraFacade;
+    @Inject
+    private EvaEvaCueInfFacade evaCueInfFacade;
+    @Inject
+    private EvaTipoInformanteFacade evaTipoInformanteFacade;
+    @Inject
+    private RepReportesSistemaController repReportesSistemaController;  
+    @Inject
+    private OrgPeriodoEstructuraFacade orgPeriodoEstructuraFacade;
+    @Inject
+    private GthPersonaFacade gthPersonaFacade;
+    @Inject
+    private PedMallaFacade pedMallaFacade;
+    @Inject
+    private OfeGrupoFacade ofeGrupoFacade;
+    @Inject
+    private RepParametroReporteFacade repParametroReporteFacade;
+    @Inject
+    private PedModalidadFacade pedModalidadFacade;
+    private String filtro = "";
+    private int maxResult = 10;
+    private boolean validaSeleccionEstructuraSeguridadSede=false;
+    private boolean validaSeleccionEstructuraSeguridadCampus=false;
+    private boolean validaSeleccionEstructuraSeguridadCarrProg=false;
+    
+    /**
+     * Devuelve el objeto usado por PrimeFaces con opciones para poder modificar
+     * la respuesta de una solicitud.
+     *
+     * @return la instancia de RequestContext usada por PrimeFaces.
+     */
+    public RequestContext getRequestContext() {
+        return RequestContext.getCurrentInstance();
+    }
+    
+    
+    public void callEventAjaxOrgEstructura() {
+        actualizaFiltros();   
+        getRequestContext().update("EvaReportesForm:EvaReportesSistemaDataTable");
+        getRequestContext().update("EvaReportesForm:SbeRepExportToolbar");
+        getRequestContext().update("EvaReportesForm:SbeRepFiltroPanel");
+//        updateSedeList();        
+    }
+    
+    public List<RepReportesSistema> getRepReportesSistemaList() {
+        if(repReportesSistemaList==null){
+            return repReportesSistemaController.getEjbFacade().findRecords(
+                    SearchBuilder.create(new DefaultParamOrderSearch("resCodigo", SearchOrder.ASC))
+                    .addParam(new CacheStoreModeParam(CacheStoreMode.REFRESH))
+                            
+            );                        
+        }
+        return repReportesSistemaList;
+    }
+
+    public void setRepReportesSistemaList(List<RepReportesSistema> repReportesSistemaList) {
+        this.repReportesSistemaList = repReportesSistemaList;
+    }
+    
+    public void updateSedeList() {        
+        if (secOrgEstructuraController.getOrgEstructuraSede().getEstCodigo().equals(EvaRepConstants.TODAS_SEDES)) {
+            setValidaSeleccionEstructuraSeguridadSede(false);
+            orgEstructuraSedeList = orgEstructuraFacade.listaEstructuraSedeActivo();
+        } else {
+            setValidaSeleccionEstructuraSeguridadSede(true);
+            setOrgEstructuraSedeList(Arrays.asList(secOrgEstructuraController.getOrgEstructuraSede()));
+            if(!orgEstructuraSedeList.isEmpty()){
+                setOrgEstructuraSede(getOrgEstructuraSedeList().get(0));
+            }            
+        }
+        updateCampusList();
+    }
+
+    public void updateCampusList() {
+        setOrgEstructuraCampus(null);
+        setOrgEstructuraCampusList(null);        
+        if (getOrgEstructuraSede() != null) {
+            if (!Objects.equals(secOrgEstructuraController.getOrgEstructuraCampus().getEstCodigo(), EvaRepConstants.TODOS_CAMPUS)
+                    && !Objects.equals(secOrgEstructuraController.getOrgEstructuraSede().getEstCodigo(), EvaRepConstants.TODAS_SEDES)) {
+                validaSeleccionEstructuraSeguridadCampus=true;
+                setOrgEstructuraCampusList(Arrays.asList(secOrgEstructuraController.getOrgEstructuraCampus()));
+                if(!(orgEstructuraCampusList.isEmpty())){
+                    setOrgEstructuraCampus(orgEstructuraCampusList.get(0));
+                }
+            } else {
+                validaSeleccionEstructuraSeguridadCampus=false;
+                orgEstructuraCampusList = orgEstructuraFacade.listaEstructuraCampusActivo(getOrgEstructuraSede());
+                orgEstructuraCampusList.retainAll(secOrgEstructuraController.updateCampusList(getOrgEstructuraSede()));                 
+            }            
+        }  
+        updateCarreraList();
+    }
+
+    public void updateCarreraList() {
+        //setOrgEstructuraCarrera(null);
+        setOrgEstructuraCarreraList(null);
+        updatePeriodoPorCampusList();
+        updateEvaluacionCuestionarioList(); 
+        updateAsignaturaList();
+        setGthPersona(null);
+        //setGthPersonaList(null);
+        if (getOrgEstructuraCampus() != null) {
+            if (secOrgEstructuraController.getTipoEstructura()==TipoEstructura.PROGRAMA) {
+                if (Objects.equals(secOrgEstructuraController.getOrgEstructuraCarrera().getEstCodigo(), EvaRepConstants.TODAS_CARRERAS)) {
+                    orgEstructuraCarreraList = orgEstructuraFacade.listaEstructuraPostGradoSelecActivo(getOrgEstructuraCampus());
+                    orgEstructuraCarreraList.retainAll(secOrgEstructuraController.updateCarreraList(getOrgEstructuraCampus()));
+                } else {
+                    orgEstructuraCarreraList = orgEstructuraFacade.listaEstructuraPostGradoSelecActivo(getOrgEstructuraCampus());
+                    if (orgEstructuraCarreraList.contains(secOrgEstructuraController.getOrgEstructuraCarrera())) {
+                        orgEstructuraCarreraList = new ArrayList<>();
+                        orgEstructuraCarreraList.add(secOrgEstructuraController.getOrgEstructuraCarrera());
+                    } else {
+                        orgEstructuraCarreraList = new ArrayList<>();
+                    }
+                }
+            }
+           /* if (secOrgEstructuraController.getTipoEstructura()==TipoEstructura.CARRERA) {
+                if (Objects.equals(secOrgEstructuraController.getOrgEstructuraCarrera().getEstCodigo(), EvaRepConstants.TODAS_CARRERAS)) {
+                    validaSeleccionEstructuraSeguridadCarrProg=false;
+                    orgEstructuraCarreraList = orgEstructuraFacade.listaEstructuraCarreraSelecActivo(getOrgEstructuraCampus());
+                    orgEstructuraCarreraList.retainAll(secOrgEstructuraController.updateCarreraList(getOrgEstructuraCampus()));
+                } else {
+                    validaSeleccionEstructuraSeguridadCarrProg=true;
+                    orgEstructuraCarreraList = orgEstructuraFacade.listaEstructuraCarreraSelecActivo(getOrgEstructuraCampus());
+                    if (orgEstructuraCarreraList.contains(secOrgEstructuraController.getOrgEstructuraCarrera())) {
+                        orgEstructuraCarreraList = new ArrayList<>();
+                        orgEstructuraCarreraList.add(secOrgEstructuraController.getOrgEstructuraCarrera());
+                    } else {
+                        orgEstructuraCarreraList = new ArrayList<>();
+                    }
+                    if(!(orgEstructuraCarreraList.isEmpty())){
+                        setOrgEstructuraCarrera(orgEstructuraCarreraList.get(0));
+                    }
+                }
+            }*/
+        }                                        
+    }
+    
+    /**
+     * Actualizar lista de EvaluacionCuestionario
+     */
+    public void updateEvaluacionCuestionarioList() { 
+        setEvaEvaluacionCuestionario(null);
+        setEvaEvaluacionCuestionarioList(null);
+        setEvaEvaCueInf(null);
+        setEvaEvaCueInfList(null);
+        updateGrupoList();  
+//        if(getOrgPeriodoInicial()!=null){
+        setEvaEvaluacionCuestionarioList(evaEvaluacionCuestionarioFacade.obtieneEvaluacionCuestionario(getPedModalidad(), getOrgPeriodoInicial(), getOrgPeriodoFinal(), getOrgEstructuraCampus()));        
+//        }
+    }
+    
+    /**
+     * Actualizar lista de EvaluacionCuestionario
+     */
+    public void updateInformanteList() {
+        updateTipoInformanteList();
+        if(getEvaEvaluacionCuestionario()!=null){            
+            setEvaEvaCueInfList(evaCueInfFacade.obtieneInformantePorEvaluacionCuestionario(getEvaEvaluacionCuestionario()));
+        }
+    }
+    
+    public void updateTipoInformanteList(){
+        setEvaTipoInformanteList(evaTipoInformanteFacade.obtieneTipoInformante());
+    }
+
+    public EvaTipoInformante getEvaTipoInformante() {
+        return evaTipoInformante;
+    }
+
+    public void setEvaTipoInformante(EvaTipoInformante evaTipoInformante) {
+        this.evaTipoInformante = evaTipoInformante;
+    }
+
+    public List<EvaTipoInformante> getEvaTipoInformanteList() {
+        updateTipoInformanteList();
+        return evaTipoInformanteList;
+    }
+
+    public void setEvaTipoInformanteList(List<EvaTipoInformante> evaTipoInformanteList) {
+        this.evaTipoInformanteList = evaTipoInformanteList;
+    }
+
+    /**
+     * Actualizar lista de Periodo por Campus
+     */
+   /* public void updatePeriodoPorCampusList() {
+        setOrgPeriodoInicial(null);
+        setOrgPeriodoFinal(null);
+        setOrgPeriodoLectivoList(null);
+        updateGrupoList();
+        if(getOrgEstructuraCampus()!=null){            
+            setOrgPeriodoLectivoList(orgPeriodoEstructuraFacade.obtienePeriodoPorCampus(getOrgEstructuraCampus()));
+        }else{
+            setOrgPeriodoLectivoList(orgPeriodoEstructuraFacade.obtienePeriodoLectivo());
+        }          
+    }*/
+    
+        public void updatePeriodoPorCampusList() {
+        setOrgPeriodoInicial(null);
+        setOrgPeriodoFinal(null);
+        setOrgPeriodoLectivoList(null);
+        updateGrupoList();
+        if(getOrgEstructuraCampus()!=null){            
+            setOrgPeriodoLectivoList(orgPeriodoEstructuraFacade.obtieneCohortePorPrograma(getOrgEstructuraCarrera()));
+        }else{
+            setOrgPeriodoLectivoList(orgPeriodoEstructuraFacade.obtienePeriodoLectivo());
+        }          
+    }
+    
+  
+    
+    /**
+     * Actualizar lista de Asignaturas por Carrera
+     */
+    public void updateAsignaturaList() {  
+        setPedMalla(null);
+        setPedMallaList(null);
+        updateGrupoList();
+        Long pelCodigo = 0L;
+        if (getOrgPeriodoInicial() != null)
+        {
+            if (getOrgPeriodoInicial().getPelCodigo() != null)
+            {
+                pelCodigo = getOrgPeriodoInicial().getPelCodigo();
+            }
+        }
+        
+        Long estCodigo = 0L;
+        if(getOrgEstructuraCarrera()!=null){
+            estCodigo = getOrgEstructuraCarrera().getEstCodigo();
+        }else if(getOrgEstructuraCampus()!=null){
+            estCodigo = getOrgEstructuraCampus().getEstCodigo();
+        }else if(getOrgEstructuraSede()!=null){
+            estCodigo = getOrgEstructuraSede().getEstCodigo();
+        }            
+        
+        if(getGthPersona()!=null && pelCodigo != 0L){  
+            setPedMallaList(pedMallaFacade.obtieneMallaDocente(estCodigo, getGthPersona(), pelCodigo));
+        }
+        if(getGthPersona()==null && pelCodigo != 0L){  
+            setPedMallaList(null);
+//            setPedMallaList(pedMallaFacade.obtieneMalla(estCodigo, pelCodigo));
+        }
+    }
+    
+    /**
+     * Actualizar lista de Grupos por malla
+     */
+    public void updateGrupoList() {  
+        setOfeGrupo(null);
+        setOfeGrupoList(null);
+        Long pelCodigoI = 0L;
+        if (getOrgPeriodoInicial() != null)
+        {
+            if (getOrgPeriodoInicial().getPelCodigo() != null)
+            {
+                pelCodigoI = getOrgPeriodoInicial().getPelCodigo();
+            }
+        }
+
+        Long pelCodigoF = 0L;
+        if (getOrgPeriodoFinal()!= null)
+        {
+            if (getOrgPeriodoFinal().getPelCodigo() != null)
+                pelCodigoF = getOrgPeriodoFinal().getPelCodigo();
+            else
+                pelCodigoF = pelCodigoI;
+        }
+        else
+            pelCodigoF = pelCodigoI;
+        if(getPedMalla()!=null && getOrgPeriodoInicial()!=null && getGthPersona()!=null){            
+            setOfeGrupoList(ofeGrupoFacade.obtieneGrupo(getPedMalla(), pelCodigoI, pelCodigoF, getGthPersona()));
+        }          
+    }
+   
+    public OrgEstructura getOrgEstructuraSede() {
+        return orgEstructuraSede;
+    }
+
+    public void setOrgEstructuraSede(OrgEstructura orgEstructuraSede) {
+        this.orgEstructuraSede = orgEstructuraSede;
+    }
+
+    public OrgEstructura getOrgEstructuraCampus() {
+        return orgEstructuraCampus;
+    }
+
+    public void setOrgEstructuraCampus(OrgEstructura orgEstructuraCampus) {
+        this.orgEstructuraCampus = orgEstructuraCampus;
+    }
+
+    public OrgEstructura getOrgEstructuraCarrera() {
+        return orgEstructuraCarrera;
+    }
+
+    public void setOrgEstructuraCarrera(OrgEstructura orgEstructuraCarrera) {
+        this.orgEstructuraCarrera = orgEstructuraCarrera;
+    }    
+
+    public OrgPeriodoLectivo getOrgPeriodoInicial() {
+        return orgPeriodoInicial;
+    }
+
+    public void setOrgPeriodoInicial(OrgPeriodoLectivo orgPeriodoInicial) {
+        this.orgPeriodoInicial = orgPeriodoInicial;
+    }
+
+    public OrgPeriodoLectivo getOrgPeriodoFinal() {
+        return orgPeriodoFinal;
+    }
+
+    public void setOrgPeriodoFinal(OrgPeriodoLectivo orgPeriodoFinal) {
+        this.orgPeriodoFinal = orgPeriodoFinal;
+    }       
+
+    public PedModalidad getPedModalidad() {
+        return pedModalidad;
+    }
+
+    public void setPedModalidad(PedModalidad pedModalidad) {
+        this.pedModalidad = pedModalidad;
+    }    
+
+    public EvaEvaluacionCuestionario getEvaEvaluacionCuestionario() {
+        return evaEvaluacionCuestionario;
+    }
+
+    public void setEvaEvaluacionCuestionario(EvaEvaluacionCuestionario evaEvaluacionCuestionario) {
+        this.evaEvaluacionCuestionario = evaEvaluacionCuestionario;
+    }  
+
+    public EvaEvaCueInf getEvaEvaCueInf() {
+        return evaEvaCueInf;
+    }
+
+    public void setEvaEvaCueInf(EvaEvaCueInf evaEvaCueInf) {
+        this.evaEvaCueInf = evaEvaCueInf;
+    } 
+
+    public GthPersona getGthPersona() {
+        return gthPersona;
+    }
+
+    public void setGthPersona(GthPersona gthPersona) {
+        this.gthPersona = gthPersona;
+    }    
+
+    public PedMalla getPedMalla() {
+        return pedMalla;
+    }
+
+    public void setPedMalla(PedMalla pedMalla) {
+        this.pedMalla = pedMalla;
+    }    
+
+    public OfeGrupo getOfeGrupo() {
+        return ofeGrupo;
+    }
+
+    public void setOfeGrupo(OfeGrupo ofeGrupo) {
+        this.ofeGrupo = ofeGrupo;
+    }    
+
+    public List<OrgEstructura> getOrgEstructuraSedeList() {
+        if(orgEstructuraSedeList==null){
+            updateSedeList();
+        }
+        return orgEstructuraSedeList;
+    }
+
+    public void setOrgEstructuraSedeList(List<OrgEstructura> orgEstructuraSedeList) {
+        this.orgEstructuraSedeList = orgEstructuraSedeList;
+    }
+
+    public List<OrgEstructura> getOrgEstructuraCampusList() {
+        return orgEstructuraCampusList;
+    }
+
+    public void setOrgEstructuraCampusList(List<OrgEstructura> orgEstructuraCampusList) {
+        this.orgEstructuraCampusList = orgEstructuraCampusList;
+    }
+
+    public List<OrgEstructura> getOrgEstructuraCarreraList() {
+        return orgEstructuraCarreraList;
+    }
+
+    public void setOrgEstructuraCarreraList(List<OrgEstructura> orgEstructuraCarreraList) {
+        this.orgEstructuraCarreraList = orgEstructuraCarreraList;
+    } 
+
+    public List<OrgPeriodoLectivo> getOrgPeriodoLectivoList() {
+        if(orgPeriodoLectivoList==null){
+            updatePeriodoPorCampusList();
+        }
+        return orgPeriodoLectivoList;
+    }
+
+    public void setOrgPeriodoLectivoList(List<OrgPeriodoLectivo> orgPeriodoLectivoList) {
+        this.orgPeriodoLectivoList = orgPeriodoLectivoList;
+    }        
+
+    public List<EvaEvaluacionCuestionario> getEvaEvaluacionCuestionarioList() {
+//        if(evaEvaluacionCuestionarioList==null){
+//            updateEvaluacionCuestionarioList();
+//        }
+        return evaEvaluacionCuestionarioList;
+    }
+
+    public void setEvaEvaluacionCuestionarioList(List<EvaEvaluacionCuestionario> evaEvaluacionCuestionarioList) {
+        this.evaEvaluacionCuestionarioList = evaEvaluacionCuestionarioList;
+    }   
+
+    public List<EvaEvaCueInf> getEvaEvaCueInfList() {
+        return evaEvaCueInfList;
+    }
+
+    public void setEvaEvaCueInfList(List<EvaEvaCueInf> evaEvaCueInfList) {
+        this.evaEvaCueInfList = evaEvaCueInfList;
+    }    
+
+    public List<GthPersona> getGthPersonaList() {
+               
+        Long pelCodigo = 0L;
+        if (getOrgPeriodoInicial() != null)
+            if (getOrgPeriodoInicial().getPelCodigo() != null)
+                pelCodigo = getOrgPeriodoInicial().getPelCodigo();
+
+        if (gthPersonaList == null) {  
+            if(getOrgEstructuraCarrera()!=null){
+                gthPersonaList = gthPersonaFacade.listaGthPersonaFiltro(getFiltro(),getOrgEstructuraCarrera().getEstCodigo(), pelCodigo);
+                //gthPersonaList = gthPersonaFacade.listaGthPersonaFiltro(getFiltro(),584L,2001L);
+                
+            }else if(getOrgEstructuraCampus()!=null){
+                gthPersonaList = gthPersonaFacade.listaGthPersonaFiltro(getFiltro(),getOrgEstructuraCampus().getEstCodigo(), pelCodigo);
+                //gthPersonaList = gthPersonaFacade.listaGthPersonaFiltro(getFiltro(),584L,2001L);
+            }else if(getOrgEstructuraSede()!=null){
+                gthPersonaList = gthPersonaFacade.listaGthPersonaFiltro(getFiltro(),getOrgEstructuraSede().getEstCodigo(), pelCodigo);
+              //gthPersonaList = gthPersonaFacade.listaGthPersonaFiltro(getFiltro(),584L,2001L);
+            }else{
+                gthPersonaList = gthPersonaFacade.listaGthPersonaFiltro(getFiltro(),0L, pelCodigo);
+               // gthPersonaList = gthPersonaFacade.listaGthPersonaFiltro(getFiltro(),584L,2001L);
+            }   
+            System.out.println("lista" + gthPersonaList.size() );
+        }
+        return gthPersonaList;
+    }
+
+    public void setGthPersonaList(List<GthPersona> gthPersonaList) {
+        this.gthPersonaList = gthPersonaList;
+            
+    }
+
+    public List<PedMalla> getPedMallaList() {
+        return pedMallaList;
+    }
+
+    public void setPedMallaList(List<PedMalla> pedMallaList) {
+        this.pedMallaList = pedMallaList;
+    }    
+
+    public List<OfeGrupo> getOfeGrupoList() {
+        return ofeGrupoList;
+    }
+
+    public void setOfeGrupoList(List<OfeGrupo> ofeGrupoList) {
+        this.ofeGrupoList = ofeGrupoList;
+    }    
+
+    public String getFiltro() {
+        return filtro;
+    }
+
+    public void setFiltro(String filtro) {
+        this.filtro = filtro;
+    }    
+
+    public List<GthPersona> completePersona(String query) {
+            
+        List<GthPersona> suggestions = new ArrayList<>();
+        filtrarDocente(query.toUpperCase(Locale.getDefault()));
+        for (GthPersona i : getGthPersonaList()) {
+            if (suggestions.size() < maxResult && (i.getPerApellidos().contains(query.toUpperCase(Locale.getDefault()))
+                                                   || i.getPerNombres().contains(query.toUpperCase(Locale.getDefault()))
+                                                   || i.getPerNroIdentificacion().contains(query.toUpperCase(Locale.getDefault())))) {
+                suggestions.add(i);
+            }
+        }
+        return suggestions;
+    }  
+    
+    public void filtrarDocente(String value) {
+         System.out.println("value" +value);
+        setFiltro(value);
+        setGthPersonaList(null);
+              
+    }
+    
+    public void cambioSede(){
+        setOrgEstructuraCampus(null);
+        setOrgEstructuraCampusList(null);
+        updateCampusList();
+    }
+    
+    public boolean compruebaParametro(RepReportesSistema repReportesSistema, Long codigoParametro){
+        List<RepParametroReporte> parametroReporteList=repParametroReporteFacade.obtieneParametroPorReporte(codigoParametro, repReportesSistema);
+        return !(parametroReporteList==null || parametroReporteList.isEmpty());
+    }
+    
+    public void actualizaFiltros(){
+        setOrgEstructuraSede(null);
+        setOrgEstructuraCampusList(null);
+        setOrgEstructuraCampus(null);
+        setOrgEstructuraCampusList(null);
+        setOrgEstructuraCarrera(null);
+        setOrgEstructuraCarreraList(null);
+        setOrgPeriodoInicial(null);
+        setOrgPeriodoFinal(null);
+        setOrgPeriodoLectivoList(null);
+        setPedModalidad(null);
+        setPedMallaNivelList(null);
+        setPedNivelMalla(null);
+        setEvaEvaluacionCuestionario(null);
+        setEvaEvaluacionCuestionarioList(null);
+        setEvaEvaCueInf(null);
+        setEvaEvaCueInfList(null);
+        setGthPersona(null);
+        setGthPersonaList(null);
+        setPedMalla(null);
+        setPedMallaList(null);
+        setOfeGrupo(null);
+        setOfeGrupoList(null);
+        updateSedeList();
+        
+    }
+
+    public boolean isValidaSeleccionEstructuraSeguridadSede() {
+        return validaSeleccionEstructuraSeguridadSede;
+    }
+
+    public void setValidaSeleccionEstructuraSeguridadSede(boolean validaSeleccionEstructuraSeguridadSede) {
+        this.validaSeleccionEstructuraSeguridadSede = validaSeleccionEstructuraSeguridadSede;
+    }
+
+    public boolean isValidaSeleccionEstructuraSeguridadCampus() {
+        return validaSeleccionEstructuraSeguridadCampus;
+    }
+
+    public void setValidaSeleccionEstructuraSeguridadCampus(boolean validaSeleccionEstructuraSeguridadCampus) {
+        this.validaSeleccionEstructuraSeguridadCampus = validaSeleccionEstructuraSeguridadCampus;
+    }
+
+    public boolean isValidaSeleccionEstructuraSeguridadCarrProg() {
+        return validaSeleccionEstructuraSeguridadCarrProg;
+    }
+
+    public void setValidaSeleccionEstructuraSeguridadCarrProg(boolean validaSeleccionEstructuraSeguridadCarrProg) {
+        this.validaSeleccionEstructuraSeguridadCarrProg = validaSeleccionEstructuraSeguridadCarrProg;
+    }
+    
+    public String obtieneModalidad(Long modCodigo){
+        if(modCodigo==null){
+            return "";
+        }
+        PedModalidad pedModalidadDes=pedModalidadFacade.find(modCodigo);
+        if(pedModalidadDes!=null){
+            return pedModalidadDes.getModDescripcion();
+        }else{
+            return "";
+        }        
+    }
+    
+    public String obtieneCampus(Long estCodigo){
+        if(estCodigo==null){
+            return "";
+        }  
+        OrgEstructura orgEstructuraDes=orgEstructuraFacade.find(estCodigo);
+        if(orgEstructuraDes!=null){
+            return orgEstructuraDes.getOrgDescripcionEstructura().getDeeDescripcion();
+        }else{
+            return "";
+        }
+    }
+    
+      public List<Integer> getPedMallaNivelList() {
+        return pedMallaNivelList;
+    }
+
+    public void setPedMallaNivelList(List<Integer> pedMallaNivelList) {
+        this.pedMallaNivelList = pedMallaNivelList;
+    }    
+
+    public Integer getPedNivelMalla() {
+        return pedNivelMalla;
+    }
+
+    public void setPedNivelMalla(Integer pedNivelMalla) {
+        this.pedNivelMalla = pedNivelMalla;
+    }
+      /**
+     * Actualizar lista de Nivel de asignatura  revisaaaaaar
+     */
+    public void updateNivelMallaList() {  
+       pedMallaNivelList = pedMallaFacade.obtieneNivelMalla(getOrgEstructuraCarrera().getEstCodigo(), getOrgPeriodoInicial().getPelCodigo());
+        
+    }
+}
+          

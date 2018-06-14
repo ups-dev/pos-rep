@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>ec.edu.ups</groupId>
+        <artifactId>ups-parent</artifactId>
+        <version>1.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    
+    <groupId>ec.edu.ups.eva</groupId>
+    <artifactId>pos-rep</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>war</packaging>
+
+    <name>pos-rep</name>
+
+    <description>Sistema de Reportes módulo EVA.</description>
+
+    <developers>
+        <developer>
+            <id>wsaca</id>
+            <name>Wilber Saca</name>
+            <email>wsaca@ups.edu.ec</email>
+            <organization>UPS</organization>
+            <organizationUrl>http://www.ups.edu.ec</organizationUrl>
+        </developer>
+        <developer>
+            <id>mjarama</id>
+            <name>Miguel Jarama</name>
+            <email>mjarama@ups.edu.ec</email>
+            <organization>UPS</organization>
+            <organizationUrl>http://www.ups.edu.ec</organizationUrl>
+        </developer>
+        <developer>
+            <id>emora</id>
+            <name>Edisson Mora</name>
+            <email>emora@ups.edu.ec</email>
+            <organization>UPS</organization>
+            <organizationUrl>http://www.ups.edu.ec</organizationUrl>
+        </developer>      
+        <developer>
+            <id>mpineda</id>
+            <name>Yenner Pineda</name>
+            <email>mpinedav@ups.edu.ec</email>
+            <organization>UPS</organization>
+            <organizationUrl>http://www.ups.edu.ec</organizationUrl>
+        </developer>
+        <developer>
+            <id>scastroa1</id>
+            <name>Santiago Castro</name>
+            <email>scastroa1@ups.edu.ec</email>
+            <organization>UPS</organization>
+            <organizationUrl>http://www.ups.edu.ec</organizationUrl>
+        </developer>
+        <developer>
+            <id>jsuarez</id>
+            <name>Jairo Suarez</name>
+            <email>jsuarez@ups.edu.ec</email>
+            <organization>UPS</organization>
+            <organizationUrl>http://www.ups.edu.ec</organizationUrl>
+        </developer>                   
+    </developers>
+    
+    <scm>
+        <connection>scm:svn:http://dev-sources.ups.edu.ec/svn/eva-rep/trunk</connection>
+        <developerConnection>scm:svn:http://dev-sources.ups.edu.ec/svn/eva-rep/trunk</developerConnection>
+        <url>http://dev-sources.ups.edu.ec/svn/eva-rep/trunk</url>
+    </scm>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>org.eclipse.persistence.jpa.modelgen.processor</artifactId>
+            <version>2.5.1</version>
+            <scope>provided</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.faces</artifactId>
+            <version>2.2.0</version>
+            <scope>provided</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.primefaces</groupId>
+            <artifactId>primefaces</artifactId>
+            <version>5.2.3</version>
+        </dependency>
+        
+        <!-- File Upload -->
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.3</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.primefaces.extensions</groupId>
+            <artifactId>primefaces-extensions</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.primefaces.extensions</groupId>
+            <artifactId>resources-ckeditor</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+       
+        <dependency>
+            <groupId>org.atmosphere</groupId>
+            <artifactId>atmosphere-runtime</artifactId>
+            <version>2.1.3</version>
+        </dependency>
+       
+        <dependency>
+            <groupId>org.omnifaces</groupId>
+            <artifactId>omnifaces</artifactId>
+            <version>1.8.1</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.jasig.cas.client</groupId>
+            <artifactId>cas-client-core</artifactId>
+            <version>3.3.0</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>ec.edu.ups.jsf.security</groupId>
+            <artifactId>jsf-security-ups</artifactId>
+            <version>1.0</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>ec.edu.ups.jsf</groupId>
+            <artifactId>jsf-template-responsive</artifactId>
+            <version>1.1</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>ec.edu.ups.jsf</groupId>
+            <artifactId>jsf-components</artifactId>
+            <version>1.0</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>ec.edu.ups.jsf</groupId>
+            <artifactId>jsf-util</artifactId>
+            <version>1.1</version>
+        </dependency>
+        
+                
+        <dependency>
+            <groupId>ec.edu.ups.org</groupId>
+            <artifactId>org-common</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>ec.edu.ups.aseg</groupId>
+            <artifactId>aseg-common-data</artifactId>
+            <version>1.0</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>ec.edu.ups.ped</groupId>
+            <artifactId>ped-common</artifactId>
+            <version>2.1.1</version>
+        </dependency>   
+        
+<!--        <dependency>
+            <groupId>ec.edu.ups.ofe</groupId>
+            <artifactId>ofe-common</artifactId>
+            <version>2.0.7</version>
+        </dependency>                         -->
+        
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.11</version>
+        </dependency>        
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.11</version>
+        </dependency>
+        
+        <!-- DEPENDENCIA PARA LAS ENTIDADES DEL INS -->
+        <dependency>
+            <groupId>ec.edu.ups.ins</groupId>
+            <artifactId>ins-common-data</artifactId>
+            <version>1.0</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>ec.edu.ups.jr</groupId>
+            <artifactId>jr-scriptlets</artifactId>
+            <version>1.1</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>ec.edu.ups.primefaces.theme</groupId>
+            <artifactId>primefaces-ups</artifactId>
+            <version>1.0</version>
+        </dependency>        
+        
+        <dependency>
+            <groupId>ec.edu.ups.notification</groupId>
+            <artifactId>ups-notification-jsf</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-web-api</artifactId>
+            <version>7.0</version>
+            <scope>provided</scope>
+        </dependency>
+        
+        <!-- DEPENDENCIA PARA USAR EL JASPER REPORT -->
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports</artifactId>
+            <version>5.6.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        
+        
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-fonts</artifactId>
+            <version>5.6.1</version>            
+        </dependency>
+               
+    </dependencies>
+    
+     <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>        
+    </properties>
+
+</project>

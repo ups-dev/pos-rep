@@ -1,0 +1,27 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form>
+        <p:hotkey process="@this" onstart="handleHotKey('#{form}ListForm:createButton')" bind="SHIFT+C" />      
+        <p:hotkey process="@this" onstart="handleHotKey('#{form}ListForm:editButton')" bind="SHIFT+E" />
+        <p:hotkey process="@this" onstart="handleHotKey('#{form}ListForm:viewButton')" bind="SHIFT+V" />
+        <p:hotkey process="@this" onstart="handleHotKey('#{form}ListForm:searchButton')" bind="SHIFT+B" />
+        <p:hotkey process="@this" onstart="handleHotKey('#{form}ListForm:clearButton')" bind="SHIFT+L" />
+        <p:hotkey process="@this" onstart="handleHotKey('#{form}ListForm:updateButton')" bind="SHIFT+F5" />
+        <p:hotkey process="@this" onstart="handleHotKey('#{form}ListForm:searchAdvancedButton')" bind="SHIFT+F" />
+        <p:hotkey process="@this" onstart="handleHotKey('confirmDialog:yesButton')" bind="SHIFT+S" />
+        <p:hotkey process="@this" onstart="handleHotKey('confirmDialog:notButton')" bind="SHIFT+N" />
+        <p:hotkey process="@this" onstart="handleHotKey('#{form}CreateForm:saveButton')" bind="SHIFT+G" />
+        <p:hotkey process="@this" onstart="handleHotKey('#{form}EditForm:saveButton')" bind="SHIFT+G" />
+        <p:hotkey process="@this" onstart="handleHotKey('#{form}CreateForm:cancelButton')" bind="SHIFT+X" />
+        <p:hotkey process="@this" onstart="handleHotKey('#{form}EditForm:cancelButton')" bind="SHIFT+X" />
+        <p:hotkey process="@this" onstart="handleHotKey('#{form}ViewForm:closeButton')" bind="SHIFT+X" />
+
+        <!-- PAGINATOR -->
+        <p:hotkey process="@this" onstart="handleHotKeyPag('#{form}ListForm:#{form}DataTable_paginator_bottom','ui-paginator-prev')" bind="LEFT" />
+        <p:hotkey process="@this" onstart="handleHotKeyPag('#{form}ListForm:#{form}DataTable_paginator_bottom','ui-paginator-next')" bind="RIGHT" />
+        <p:hotkey process="@this" onstart="handleHotKeyPag('#{form}ListForm:#{form}DataTable_paginator_bottom','ui-paginator-first')" bind="SHIFT+LEFT" />
+        <p:hotkey process="@this" onstart="handleHotKeyPag('#{form}ListForm:#{form}DataTable_paginator_bottom','ui-paginator-last')" bind="SHIFT+RIGHT" />
+    </h:form>
+</ui:composition>

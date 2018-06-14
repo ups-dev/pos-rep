@@ -1,0 +1,64 @@
+.ui-widget-header {
+    text-align: center;
+    text-transform: uppercase;
+}
+.ui-widget-header .ui-button {
+    text-transform: none;
+}
+.firstColColored{      
+      font-style: oblique;
+}
+.column {
+    font-weight: bold;
+    background-color: #F5F5F5;
+}
+.container {
+    width: 100%;
+}
+
+.ui-autocomplete .ui-inputfield {
+    width: 650px;
+}
+
+.columnFecha{
+    width: 9%;
+    text-align:center;
+}
+
+.columnCheck{
+    width: 10%; 
+    text-align:center;
+}
+
+.columnCodigo{
+    width: 10%; 
+    text-align:center;
+}
+
+.columnDescripcion{
+    width: 50%; 
+    text-align:left;
+}
+
+.columnPanelGridThree{
+    width: 95%;     
+}
+
+.tableAlignParallel {
+    margin: 0 auto;
+    vertical-align: top;
+}
+
+.columnEliminado{
+    width: 7%;
+    text-align: center;
+}
+
+.selectOneMenuFull
+{
+    width: 75%;
+}
+
+.columnFormato{
+    width: 10%
+}
