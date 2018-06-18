@@ -186,10 +186,10 @@
                                     <f:selectItems value="#{evaRepResultadoController.orgPeriodoLectivoList}"
                                                    var="periodoLectivoItem"
                                                    itemValue="#{periodoLectivoItem}"
-                                                   itemLabel="#{periodoLectivoItem.pelDescripcion.toString()} (#{periodoLectivoItem.pelCodigo.toString()})"
+                                                   itemLabel="#{periodoLectivoItem.pelDescripcion.toString()} (#{evaRepResultadoController.obtenerAnioPosgrado(periodoLectivoItem.pelFechaInicio,periodoLectivoItem.pelFechaFin)})"
                                                    />
                                     <p:column>
-                                        <h:outputText value="#{filtro.pelDescripcion} (#{filtro.pelCodigo})" />  
+                                        <h:outputText value="#{filtro.pelDescripcion} (#{evaRepResultadoController.obtenerAnioPosgrado(filtro.pelFechaInicio,filtro.pelFechaFin)})" />  
                                     </p:column>    
                                     <p:ajax update="posRepFiltrarNivel,evaRepFiltrarGrupo,evaRepFiltrarDocente,"                                    
                                             listener="#{evaRepResultadoController.updateNivelMallaList()}" 
