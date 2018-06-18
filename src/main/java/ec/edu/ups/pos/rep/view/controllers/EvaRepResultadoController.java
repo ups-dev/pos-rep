@@ -32,6 +32,8 @@ import ec.edu.ups.util.jpa.search.param.CacheStoreModeParam;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -477,7 +479,9 @@ public class EvaRepResultadoController implements Serializable{
     public void setOrgPeriodoLectivoList(List<OrgPeriodoLectivo> orgPeriodoLectivoList) {
         this.orgPeriodoLectivoList = orgPeriodoLectivoList;
     }        
-
+    
+    
+    
     public List<EvaEvaluacionCuestionario> getEvaEvaluacionCuestionarioList() {
 //        if(evaEvaluacionCuestionarioList==null){
 //            updateEvaluacionCuestionarioList();
@@ -681,6 +685,18 @@ public class EvaRepResultadoController implements Serializable{
     public void updateNivelMallaList() {  
        pedMallaNivelList = pedMallaFacade.obtieneNivelMalla(getOrgEstructuraCarrera().getEstCodigo(), getOrgPeriodoInicial().getPelCodigo());
         
+    }
+    public String obtenerAnioPosgrado(Date fechaInicio, Date fechaFin ){
+       
+        Calendar fecha1 = Calendar.getInstance();
+        fecha1.setTime(fechaInicio); 
+        Calendar fecha2 = Calendar.getInstance();
+        fecha2.setTime(fechaFin);
+        int anioIni = fecha1.get(Calendar.YEAR);
+        int anioFin = fecha2.get(Calendar.YEAR);
+        String anio_posgrado = Integer.toString(anioIni)+" - " +Integer.toString(anioFin);
+       
+    return anio_posgrado;
     }
 }
           
