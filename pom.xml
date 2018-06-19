@@ -7,14 +7,14 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     
-    <groupId>ec.edu.ups.eva</groupId>
+    <groupId>ec.edu.ups.rep</groupId>
     <artifactId>pos-rep</artifactId>
     <version>1.0.0</version>
     <packaging>war</packaging>
 
     <name>pos-rep</name>
 
-    <description>Sistema de Reportes módulo EVA.</description>
+    <description>Sistema de Reportes módulo POS.</description>
 
     <developers>
         <developer>
