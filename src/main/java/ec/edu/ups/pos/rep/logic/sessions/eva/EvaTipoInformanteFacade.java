@@ -35,7 +35,6 @@ public class EvaTipoInformanteFacade extends AbstractFacade<EvaTipoInformante>{
     
     /**
      * Lista EvaluacionCuestionario.     
-     * @param evaEvaluacionCuestionario Cuestionario por Evaluación
      * @return Cuestionarios por Evaluaciones.
      */
     public List<EvaTipoInformante> obtieneTipoInformante(){
