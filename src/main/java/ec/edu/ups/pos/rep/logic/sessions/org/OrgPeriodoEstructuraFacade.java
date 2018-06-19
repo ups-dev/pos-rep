@@ -33,7 +33,6 @@ public class OrgPeriodoEstructuraFacade extends AbstractFacade<OrgPeriodoEstruct
     
     /**
      * Lista Periodos Vigentes Por Campus.     
-     * @param orgEstructuraCampus Campus
      * @return Periodos.
      */
    /* public List<OrgPeriodoLectivo> obtienePeriodoPorCampus(OrgEstructura orgEstructuraCampus){

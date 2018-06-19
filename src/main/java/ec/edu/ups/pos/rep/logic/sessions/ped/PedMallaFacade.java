@@ -34,6 +34,7 @@ public class PedMallaFacade extends AbstractFacade<PedMalla> {
     /**
      * Lista mallas por carrera.     
      * @param orgEstructuraCarrera Carrera
+     * @param pelCodigo Periodo Lectivo
      * @return Mallas por carrera.
      */
     public List<PedMalla> obtieneMalla(Long orgEstructuraCarrera, Long pelCodigo){
@@ -57,6 +58,7 @@ public class PedMallaFacade extends AbstractFacade<PedMalla> {
      * Lista mallas por carrera y docente.     
      * @param orgEstructuraCarrera Carrera
      * @param gthPersona docente
+     * @param pelCodigo Periodo
      * @return Mallas por carrera.
      */
     public List<PedMalla> obtieneMallaDocente(Long orgEstructuraCarrera, GthPersona gthPersona, Long pelCodigo){
