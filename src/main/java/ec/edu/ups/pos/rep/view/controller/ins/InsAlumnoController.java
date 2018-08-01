@@ -5,7 +5,7 @@ import ec.edu.ups.pos.rep.data.entities.sigac.ClienteLocal;
 import ec.edu.ups.pos.rep.logic.sessions.ins.InsAlumnoFacade;
 import ec.edu.ups.pos.rep.logic.sessions.sigac.ClienteLocalFacade;
 import ec.edu.ups.pos.rep.view.controllers.AbstractController;
-import ec.edu.ups.pos.rep.data.utils.EvaRepConstants;
+import ec.edu.ups.pos.rep.data.utils.PosRepConstants;
 import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -22,7 +22,7 @@ public class InsAlumnoController extends AbstractController<InsAlumno> {
     
     private String cedula; //es el campo que posee la identificacion ingresada por el usuario
     private String aluApellido; //sirve para almacenar el nombre con el cual se busca a los estudiantes        
-    private String tipoDocumento = EvaRepConstants.TIPO_DOCUMENTO_DF; //Tipo de documento por defecto cedula
+    private String tipoDocumento = PosRepConstants.TIPO_DOCUMENTO_DF; //Tipo de documento por defecto cedula
     private ClienteLocal clienteLocalToEdit = new ClienteLocal(); //variable para crear o editar el clienteLocal
     
     public InsAlumnoController() {

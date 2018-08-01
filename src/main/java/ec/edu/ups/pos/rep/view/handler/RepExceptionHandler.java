@@ -5,7 +5,7 @@ import ec.edu.ups.notification.core.Notification;
 import ec.edu.ups.notification.core.message.EmailNotificationMessage;
 import ec.edu.ups.notification.core.message.builder.MessageBuilder;
 import ec.edu.ups.notification.jsf.context.NotificationRequestContext;
-import ec.edu.ups.pos.rep.data.utils.EvaRepConstants;
+import ec.edu.ups.pos.rep.data.utils.PosRepConstants;
 import ec.edu.ups.util.UPSUtils;
 import ec.edu.ups.util.jsf.handlers.UPSExceptionHandler;
 import java.io.UnsupportedEncodingException;
@@ -38,10 +38,10 @@ public class RepExceptionHandler extends UPSExceptionHandler {
                 Notification n = new DefaultNotification();
 
                 EmailNotificationMessage enm = MessageBuilder.createEmail()
-                        .setSender(new InternetAddress("notificaciones@ups.edu.ec", EvaRepConstants.APPLICATION_NAME))
-                        .addRecipient(Message.RecipientType.TO, EvaRepConstants.EMAIL_TO_ERROR.toArray(new String[EvaRepConstants.EMAIL_TO_ERROR.size()]))
-                        .addRecipient(Message.RecipientType.CC, EvaRepConstants.EMAIL_CC_ERROR.toArray(new String[EvaRepConstants.EMAIL_CC_ERROR.size()]))
-                        .setSubject("Error - " + EvaRepConstants.APPLICATION_NAME)
+                        .setSender(new InternetAddress("notificaciones@ups.edu.ec", PosRepConstants.APPLICATION_NAME))
+                        .addRecipient(Message.RecipientType.TO, PosRepConstants.EMAIL_TO_ERROR.toArray(new String[PosRepConstants.EMAIL_TO_ERROR.size()]))
+                        .addRecipient(Message.RecipientType.CC, PosRepConstants.EMAIL_CC_ERROR.toArray(new String[PosRepConstants.EMAIL_CC_ERROR.size()]))
+                        .setSubject("Error - " + PosRepConstants.APPLICATION_NAME)
                         .setMessage(UPSUtils.decorateEmailErrorMessage(null, UPSUtils.getStackTrace(t)));
 
                 n.addMessage(enm);

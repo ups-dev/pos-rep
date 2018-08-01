@@ -7,7 +7,7 @@ import ec.edu.ups.pos.rep.data.entities.gth.GthPersona;
 import ec.edu.ups.pos.rep.data.entities.ofe.OfeGrupo;
 import ec.edu.ups.pos.rep.data.entities.rep.RepParametroReporte;
 import ec.edu.ups.pos.rep.data.entities.rep.RepReportesSistema;
-import ec.edu.ups.pos.rep.data.utils.EvaRepConstants;
+import ec.edu.ups.pos.rep.data.utils.PosRepConstants;
 import ec.edu.ups.pos.rep.logic.sessions.eva.EvaEvaCueInfFacade;
 import ec.edu.ups.pos.rep.logic.sessions.eva.EvaEvaluacionCuestionarioFacade;
 import ec.edu.ups.pos.rep.logic.sessions.eva.EvaTipoInformanteFacade;
@@ -25,6 +25,9 @@ import ec.edu.ups.org.common.data.entities.OrgEstructura;
 import ec.edu.ups.org.common.data.entities.OrgPeriodoLectivo;
 import ec.edu.ups.ped.common.data.entities.PedMalla;
 import ec.edu.ups.ped.common.data.entities.PedModalidad;
+import ec.edu.ups.pos.rep.data.entities.sigac.ClienteLocal;
+import ec.edu.ups.pos.rep.data.entities.wrapper.InsAlumnoWrapper;
+import ec.edu.ups.pos.rep.logic.sessions.ins.InsAlumnoFacade;
 import ec.edu.ups.util.jpa.search.DefaultParamOrderSearch;
 import ec.edu.ups.util.jpa.search.SearchOrder;
 import ec.edu.ups.util.jpa.search.builder.SearchBuilder;
@@ -41,11 +44,12 @@ import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.persistence.CacheStoreMode;
+import org.omnifaces.util.Utils;
 import org.primefaces.context.RequestContext;
 
-@Named(value = "evaRepResultadoController")
+@Named(value = "posRepResultadoController")
 @ViewScoped
-public class EvaRepResultadoController implements Serializable{
+public class PosRepResultadoController implements Serializable{
 
     private OrgEstructura orgEstructuraSede;
     private OrgEstructura orgEstructuraCampus;
@@ -72,6 +76,11 @@ public class EvaRepResultadoController implements Serializable{
     private List<OfeGrupo> ofeGrupoList;
     private List<Integer> pedMallaNivelList;
     private Integer pedNivelMalla;
+    private List<InsAlumnoWrapper> listadoAlumnos;
+    
+    
+    private InsAlumnoWrapper insAlumnoWrapper;
+    
       
     @Inject
     private EvaEvaluacionCuestionarioFacade evaEvaluacionCuestionarioFacade;
@@ -97,6 +106,10 @@ public class EvaRepResultadoController implements Serializable{
     private RepParametroReporteFacade repParametroReporteFacade;
     @Inject
     private PedModalidadFacade pedModalidadFacade;
+    
+    @Inject
+    private InsAlumnoFacade insAlumnoFacade; 
+    
     private String filtro = "";
     private int maxResult = 10;
     private boolean validaSeleccionEstructuraSeguridadSede=false;
@@ -116,9 +129,10 @@ public class EvaRepResultadoController implements Serializable{
     
     public void callEventAjaxOrgEstructura() {
         actualizaFiltros();   
-        getRequestContext().update("EvaReportesForm:EvaReportesSistemaDataTable");
-        getRequestContext().update("EvaReportesForm:SbeRepExportToolbar");
-        getRequestContext().update("EvaReportesForm:SbeRepFiltroPanel");
+        getRequestContext().update("PosReportesForm:EvaReportesSistemaDataTable");
+        getRequestContext().update("PosReportesForm:PosRepExportToolbar");
+        getRequestContext().update("PosReportesForm:PosRepFiltroPanel");
+      //  getRequestContext().update("PosReportesForm:SbeRepFiltroPanel");
 //        updateSedeList();        
     }
     
@@ -138,7 +152,7 @@ public class EvaRepResultadoController implements Serializable{
     }
     
     public void updateSedeList() {        
-        if (secOrgEstructuraController.getOrgEstructuraSede().getEstCodigo().equals(EvaRepConstants.TODAS_SEDES)) {
+        if (secOrgEstructuraController.getOrgEstructuraSede().getEstCodigo().equals(PosRepConstants.TODAS_SEDES)) {
             setValidaSeleccionEstructuraSeguridadSede(false);
             orgEstructuraSedeList = orgEstructuraFacade.listaEstructuraSedeActivo();
         } else {
@@ -155,8 +169,8 @@ public class EvaRepResultadoController implements Serializable{
         setOrgEstructuraCampus(null);
         setOrgEstructuraCampusList(null);        
         if (getOrgEstructuraSede() != null) {
-            if (!Objects.equals(secOrgEstructuraController.getOrgEstructuraCampus().getEstCodigo(), EvaRepConstants.TODOS_CAMPUS)
-                    && !Objects.equals(secOrgEstructuraController.getOrgEstructuraSede().getEstCodigo(), EvaRepConstants.TODAS_SEDES)) {
+            if (!Objects.equals(secOrgEstructuraController.getOrgEstructuraCampus().getEstCodigo(), PosRepConstants.TODOS_CAMPUS)
+                    && !Objects.equals(secOrgEstructuraController.getOrgEstructuraSede().getEstCodigo(), PosRepConstants.TODAS_SEDES)) {
                 validaSeleccionEstructuraSeguridadCampus=true;
                 setOrgEstructuraCampusList(Arrays.asList(secOrgEstructuraController.getOrgEstructuraCampus()));
                 if(!(orgEstructuraCampusList.isEmpty())){
@@ -174,14 +188,14 @@ public class EvaRepResultadoController implements Serializable{
     public void updateCarreraList() {
         //setOrgEstructuraCarrera(null);
         setOrgEstructuraCarreraList(null);
-        updatePeriodoPorCampusList();
+        //updatePeriodoPorCampusList();
         updateEvaluacionCuestionarioList(); 
         updateAsignaturaList();
         setGthPersona(null);
         //setGthPersonaList(null);
         if (getOrgEstructuraCampus() != null) {
             if (secOrgEstructuraController.getTipoEstructura()==TipoEstructura.PROGRAMA) {
-                if (Objects.equals(secOrgEstructuraController.getOrgEstructuraCarrera().getEstCodigo(), EvaRepConstants.TODAS_CARRERAS)) {
+                if (Objects.equals(secOrgEstructuraController.getOrgEstructuraCarrera().getEstCodigo(), PosRepConstants.TODAS_CARRERAS)) {
                     orgEstructuraCarreraList = orgEstructuraFacade.listaEstructuraPostGradoSelecActivo(getOrgEstructuraCampus());
                     orgEstructuraCarreraList.retainAll(secOrgEstructuraController.updateCarreraList(getOrgEstructuraCampus()));
                 } else {
@@ -194,8 +208,10 @@ public class EvaRepResultadoController implements Serializable{
                     }
                 }
             }
+           updatePeriodoPorCampusList();
+           
            /* if (secOrgEstructuraController.getTipoEstructura()==TipoEstructura.CARRERA) {
-                if (Objects.equals(secOrgEstructuraController.getOrgEstructuraCarrera().getEstCodigo(), EvaRepConstants.TODAS_CARRERAS)) {
+                if (Objects.equals(secOrgEstructuraController.getOrgEstructuraCarrera().getEstCodigo(), PosRepConstants.TODAS_CARRERAS)) {
                     validaSeleccionEstructuraSeguridadCarrProg=false;
                     orgEstructuraCarreraList = orgEstructuraFacade.listaEstructuraCarreraSelecActivo(getOrgEstructuraCampus());
                     orgEstructuraCarreraList.retainAll(secOrgEstructuraController.updateCarreraList(getOrgEstructuraCampus()));
@@ -470,9 +486,9 @@ public class EvaRepResultadoController implements Serializable{
     } 
 
     public List<OrgPeriodoLectivo> getOrgPeriodoLectivoList() {
-        if(orgPeriodoLectivoList==null){
-            updatePeriodoPorCampusList();
-        }
+        //if(orgPeriodoLectivoList==null){
+          //  updatePeriodoPorCampusList();
+       // }
         return orgPeriodoLectivoList;
     }
 
@@ -698,5 +714,52 @@ public class EvaRepResultadoController implements Serializable{
        
     return anio_posgrado;
     }
+    
+
+
+
+    public InsAlumnoFacade getInsAlumnoFacade() {
+        return insAlumnoFacade;
+    }
+
+    public void setInsAlumnoFacade(InsAlumnoFacade insAlumnoFacade) {
+        this.insAlumnoFacade = insAlumnoFacade;
+    }
+ 
+    
+    
+    //Metodo controller
+
+public List<InsAlumnoWrapper> getListadoAlumnos() {
+        return listadoAlumnos;
+    }
+
+    public void setListadoAlumnos(List<InsAlumnoWrapper> listadoAlumnos) {
+        this.listadoAlumnos = listadoAlumnos;
+    }
+public List<InsAlumnoWrapper> autoCompleteAlumnos(String query) {
+        List<InsAlumnoWrapper> suggestions = new ArrayList<>();
+
+        if (!Utils.isEmpty(query)) {
+            String replace = query.replace(" ", "%%");
+            suggestions = insAlumnoFacade.findAlumnoWrapper(replace);
+        }
+
+        setListadoAlumnos(suggestions);
+
+        return suggestions;
+    }
+
+    public InsAlumnoWrapper getInsAlumnoWrapper() {
+        return insAlumnoWrapper;
+    }
+
+    public void setInsAlumnoWrapper(InsAlumnoWrapper insAlumnoWrapper) {
+        this.insAlumnoWrapper = insAlumnoWrapper;
+    }
+
+   
+    
+    
 }
           

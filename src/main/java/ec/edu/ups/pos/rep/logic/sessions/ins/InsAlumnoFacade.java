@@ -6,6 +6,7 @@
 package ec.edu.ups.pos.rep.logic.sessions.ins;
 
 import ec.edu.ups.ins.common.data.entities.InsAlumno;
+import ec.edu.ups.pos.rep.data.entities.wrapper.InsAlumnoWrapper;
 import ec.edu.ups.pos.rep.logic.sessions.AbstractFacade;
 import ec.edu.ups.util.jpa.UPSDataConstants;
 import ec.edu.ups.util.jpa.search.DefaultParamOrderSearch;
@@ -17,6 +18,7 @@ import ec.edu.ups.util.jpa.search.function.ConcatFunction;
 import ec.edu.ups.util.jpa.search.function.UpperFunction;
 import ec.edu.ups.util.jpa.search.param.CacheStoreModeParam;
 import ec.edu.ups.util.jpa.search.param.MaxResultsParam;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.CacheStoreMode;
@@ -42,6 +44,50 @@ public class InsAlumnoFacade extends AbstractFacade<InsAlumno> {
     public InsAlumnoFacade() {
         super(InsAlumno.class);
     }
+    
+    
+    //Método facade
+    public List<InsAlumnoWrapper> findAlumnoWrapper(String query) {
+        try {
+            List<String> params = new ArrayList<>();
+            StringBuilder sb = new StringBuilder();
+            sb.append(" SELECT ALU.ALU_CODIGO aluCodigo, CLI.CLLC_RUC cllcRuc, ALU.ALU_APELLIDOS || ' ' || ALU.ALU_NOMBRES aluNombres "
+                    + "FROM INS.INS_ALUMNO ALU, SIGAC.CLIENTE_LOCAL CLI WHERE ALU.CLLC_CDG = CLI.CLLC_CDG AND ");
+            params.add(query.trim());
+            //Separamos el texto a buscar por espacios
+            String[] splits = query.split("[\\s]+");
+            sb.append("(");
+            for (int i = 0; i < splits.length; i++) {
+                if (i > 0) {
+                    sb.append(" AND ");
+                }
+                sb.append("CLI.CLLC_RUC LIKE ?1 or ");
+                params.add(splits[i].toUpperCase());
+                sb.append("ALU.ALU_APELLIDOS || ' ' || ALU.ALU_NOMBRES LIKE ?2 ");
+                params.add(splits[i].toUpperCase());
+
+            }
+            sb.append(" ) AND ROWNUM <= 20 order by aluNombres");
+            Query q = getEntityManager().createNativeQuery(sb.toString(), InsAlumnoWrapper.class);
+            //Agregamos los parámetros
+            for (int i = 0; i < params.size(); i++) {
+                if (i > 0) {
+                    String param = params.get(i);
+                    param = "%" + param + "%";
+                    q.setParameter(i, param);
+                }
+
+            }
+            List<InsAlumnoWrapper> result = q.getResultList();
+            return result;
+        } catch (Exception e) {
+            return null;
+        }
+
+    }
+    
+    
+    
 
     public List<InsAlumno> findByNombre(String nombreBusqueda) {
         return findRecords(SearchBuilder.create(new DefaultParamSearch("audEliminado", UPSDataConstants.CONDICION_LOGICA_NO))

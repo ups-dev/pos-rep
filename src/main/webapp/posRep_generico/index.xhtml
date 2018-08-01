@@ -14,7 +14,7 @@
 
     <ui:define name="ups-content-estructura">
         <uorg:estructura id="exap" value="#{orgEstructuraController.selected}" style="width: 20em;"   >
-            <p:ajax update=":EvaReportesForm" listener="#{evaRepResultadoController.callEventAjaxOrgEstructura()}"
+            <p:ajax update=":PosReportesForm" listener="#{posRepResultadoController.callEventAjaxOrgEstructura()}"
                     event="change" process="@this"/>
         </uorg:estructura>         
     </ui:define>

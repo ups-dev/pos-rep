@@ -4,7 +4,7 @@ import ec.edu.ups.pos.rep.logic.sessions.org.OrgEstructuraFacade;
 import ec.edu.ups.org.common.data.entities.OrgEstructura;
 import ec.edu.ups.pos.rep.view.controllers.AbstractController;
 import ec.edu.ups.jsf.security.ups.web.session.SecOrgEstructuraController;
-import ec.edu.ups.pos.rep.data.utils.EvaRepConstants;
+import ec.edu.ups.pos.rep.data.utils.PosRepConstants;
 
 import ec.edu.ups.util.jpa.search.DefaultParamOrderSearch;
 import ec.edu.ups.util.jpa.search.DefaultParamSearch;
@@ -42,9 +42,9 @@ public class OrgEstructuraController extends AbstractController<OrgEstructura> {
     }
 
     public void updateSedeList() {        
-        if (secOrgEstructuraController.getOrgEstructuraSede().getEstCodigo().equals(EvaRepConstants.TODAS_SEDES)) {
+        if (secOrgEstructuraController.getOrgEstructuraSede().getEstCodigo().equals(PosRepConstants.TODAS_SEDES)) {
             orgEstructuraSedeList = getEjbFacade()
-                    .findRecords(SearchBuilder.create(new DefaultParamSearch("orgEstructuraPadre.estCodigo", EvaRepConstants.CERO, SearchCondition.EQUAL))
+                    .findRecords(SearchBuilder.create(new DefaultParamSearch("orgEstructuraPadre.estCodigo", PosRepConstants.CERO, SearchCondition.EQUAL))
                             .addParam(new DefaultParamOrderSearch("estCodigo", SearchOrder.ASC)));
         } else {
             setOrgEstructuraSedeList(Arrays.asList(secOrgEstructuraController.getOrgEstructuraSede()));
@@ -56,7 +56,7 @@ public class OrgEstructuraController extends AbstractController<OrgEstructura> {
     public void updateCampusList() {
         if (orgEstructuraSede != null && !orgEstructuraSede.getOrgEstructuraCollection().isEmpty()) {
             setOrgEstructuraCampusList(new ArrayList(orgEstructuraSede.getOrgEstructuraCollection()));
-            if (!secOrgEstructuraController.getOrgEstructuraCampus().getEstCodigo().equals(EvaRepConstants.TODOS_CAMPUS)) {
+            if (!secOrgEstructuraController.getOrgEstructuraCampus().getEstCodigo().equals(PosRepConstants.TODOS_CAMPUS)) {
                 getOrgEstructuraCampusList().retainAll(Arrays.asList(secOrgEstructuraController.getOrgEstructuraCampus()));
             }
             //setOrgEstructuraCampus(getOrgEstructuraCampusList().get(0));
@@ -68,7 +68,7 @@ public class OrgEstructuraController extends AbstractController<OrgEstructura> {
         if (orgEstructuraCampus != null && !orgEstructuraCampus.getOrgEstructuraCollection().isEmpty()) {
             setOrgEstructuraCarreraList(new ArrayList(orgEstructuraCampus.getOrgEstructuraCollection()));
             //setOrgEstructuraCarreraList(orgEstructuraFacade.lisEstructuraTipo(orgEstructuraCampus, secOrgEstructuraController.getTipoEstructura().getTieCodigo()));
-            if (!secOrgEstructuraController.getOrgEstructuraCarrera().getEstCodigo().equals(EvaRepConstants.TODAS_CARRERAS)) {
+            if (!secOrgEstructuraController.getOrgEstructuraCarrera().getEstCodigo().equals(PosRepConstants.TODAS_CARRERAS)) {
                 getOrgEstructuraCarreraList().retainAll(Arrays.asList(secOrgEstructuraController.getOrgEstructuraCarrera()));
             }
             //setOrgEstructuraCarrera(getOrgEstructuraCarreraList().get(0));
@@ -87,7 +87,7 @@ public class OrgEstructuraController extends AbstractController<OrgEstructura> {
         } else if (orgEstructuraSede != null) {
             return orgEstructuraSede;
         } else {
-            return getEjbFacade().find(EvaRepConstants.CERO);
+            return getEjbFacade().find(PosRepConstants.CERO);
         }
     }
 
