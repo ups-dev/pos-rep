@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-MAT-0001" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="2"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_pel_codigo" class="java.lang.Integer">
@@ -204,7 +204,9 @@ ORDER   BY campus,posgrado,nivel,modulo,grupo,docente,estudiante]]>
 				</staticText>
 				<textField>
 					<reportElement style="Estilo_contenido" x="87" y="0" width="459" height="16" uuid="f5de055a-3fdc-4dc7-88ad-ca36f74f06bd"/>
-					<textElement verticalAlignment="Middle"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
 					<textFieldExpression><![CDATA[$F{POSGRADO}]]></textFieldExpression>
 				</textField>
 			</band>
@@ -234,7 +236,9 @@ ORDER   BY campus,posgrado,nivel,modulo,grupo,docente,estudiante]]>
 				</staticText>
 				<textField>
 					<reportElement style="Estilo_contenido" x="88" y="0" width="459" height="16" uuid="1d76bedc-a14a-4575-9e7b-1d3ef9fc12a9"/>
-					<textElement verticalAlignment="Middle"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
 					<textFieldExpression><![CDATA[$F{NIVEL}]]></textFieldExpression>
 				</textField>
 			</band>
@@ -264,7 +268,9 @@ ORDER   BY campus,posgrado,nivel,modulo,grupo,docente,estudiante]]>
 				</staticText>
 				<textField>
 					<reportElement style="Estilo_contenido" x="87" y="0" width="459" height="16" printWhenGroupChanges="docente_grup" uuid="702b3351-671f-4e47-8cb8-6d65715c1f90"/>
-					<textElement verticalAlignment="Middle"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
 					<textFieldExpression><![CDATA[$F{MODULO}]]></textFieldExpression>
 				</textField>
 			</band>
@@ -291,7 +297,9 @@ ORDER   BY campus,posgrado,nivel,modulo,grupo,docente,estudiante]]>
 				</rectangle>
 				<textField>
 					<reportElement style="Estilo_contenido" x="87" y="16" width="287" height="16" isPrintWhenDetailOverflows="true" uuid="6dab6d20-162c-405f-8a54-5ee131992df4"/>
-					<textElement verticalAlignment="Middle"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
 					<textFieldExpression><![CDATA[$F{DOCENTE}]]></textFieldExpression>
 				</textField>
 				<staticText>
@@ -334,7 +342,9 @@ ORDER   BY campus,posgrado,nivel,modulo,grupo,docente,estudiante]]>
 				</staticText>
 				<textField>
 					<reportElement style="Estilo_contenido" x="87" y="0" width="459" height="16" printWhenGroupChanges="docente_grup" uuid="123fd5e2-0f2a-414e-98b4-6f0183bfd0cb"/>
-					<textElement verticalAlignment="Middle"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
 					<textFieldExpression><![CDATA[$F{GRUPO}]]></textFieldExpression>
 				</textField>
 			</band>
@@ -357,7 +367,7 @@ ORDER   BY campus,posgrado,nivel,modulo,grupo,docente,estudiante]]>
 				<textElement textAlignment="Right">
 					<font fontName="SansSerif" size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["PAGINA "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["PÁGINA "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
 				<reportElement x="534" y="49" width="22" height="15" uuid="43900013-4c86-49bb-9101-1b71cd16fda9"/>
