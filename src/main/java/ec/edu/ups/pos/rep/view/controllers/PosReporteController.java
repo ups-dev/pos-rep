@@ -6,7 +6,7 @@
 package ec.edu.ups.pos.rep.view.controllers;
 
 import ec.edu.ups.org.common.data.entities.OrgEstructura;
-import ec.edu.ups.pos.rep.data.utils.EvaRepConstants;
+import ec.edu.ups.pos.rep.data.utils.PosRepConstants;
 import ec.edu.ups.util.jasper.JasperUtils;
 import ec.edu.ups.util.jasper.ReportParamBuilder;
 import ec.edu.ups.util.jasper.ReportType;
@@ -34,12 +34,12 @@ import org.omnifaces.util.Messages;
  *
  * @author ups
  */
-@Named(value = "evaReporteController")
+@Named(value = "posReporteController")
 @ViewScoped
-public class EvaReporteController implements Serializable {
+public class PosReporteController implements Serializable {
 
     @Inject
-    EvaRepResultadoController evaRepResultadoController;
+    PosRepResultadoController posRepResultadoController;
 
     private OrgEstructura orgEstructura;
 
@@ -57,7 +57,7 @@ public class EvaReporteController implements Serializable {
         try {
             //Obtiene conexión a datasource de Base de Datos
             InitialContext context = new InitialContext();
-            DataSource dataSource = (DataSource) context.lookup(EvaRepConstants.DATASOURCE_NAME);
+            DataSource dataSource = (DataSource) context.lookup(PosRepConstants.DATASOURCE_NAME);
             Connection connection = dataSource.getConnection();
 
             if (fileExtension.equals(".xlsx")) {
@@ -81,8 +81,8 @@ public class EvaReporteController implements Serializable {
                     connection);
 
             System.out.println("Reporte " + archivoReporte.length);
-            if ((archivoReporte.length < EvaRepConstants.REPORTE_VACIO_PDF && fileExtension.equalsIgnoreCase(".pdf"))
-                    || (archivoReporte.length < EvaRepConstants.REPORTE_VACIO_XLSX && fileExtension.equalsIgnoreCase(".xlsx"))) {
+            if ((archivoReporte.length < PosRepConstants.REPORTE_VACIO_PDF && fileExtension.equalsIgnoreCase(".pdf"))
+                    || (archivoReporte.length < PosRepConstants.REPORTE_VACIO_XLSX && fileExtension.equalsIgnoreCase(".xlsx"))) {
                 Messages.addGlobalWarn("No se han obtenido resultados para " + nombreArchivo + DateFormat.getDateInstance(DateFormat.SHORT).format(new Date()).replace("/", "_") + fileExtension);
                 Faces.validationFailed();
             } else {
@@ -122,18 +122,18 @@ public class EvaReporteController implements Serializable {
     public OrgEstructura identificarEstructura() {
         orgEstructura = new OrgEstructura();
 
-        if (evaRepResultadoController.getOrgEstructuraSede() != null) {
-            if (evaRepResultadoController.getOrgEstructuraCampus() != null) {
-                if (evaRepResultadoController.getOrgEstructuraCarrera() != null) {
-                    orgEstructura = evaRepResultadoController.getOrgEstructuraCarrera();
+        if (posRepResultadoController.getOrgEstructuraSede() != null) {
+            if (posRepResultadoController.getOrgEstructuraCampus() != null) {
+                if (posRepResultadoController.getOrgEstructuraCarrera() != null) {
+                    orgEstructura = posRepResultadoController.getOrgEstructuraCarrera();
                 } else {
-                    orgEstructura = evaRepResultadoController.getOrgEstructuraCampus();
+                    orgEstructura = posRepResultadoController.getOrgEstructuraCampus();
                 }
             } else {
-                orgEstructura = evaRepResultadoController.getOrgEstructuraSede();
+                orgEstructura = posRepResultadoController.getOrgEstructuraSede();
             }
         } else {
-            orgEstructura.setEstCodigo(EvaRepConstants.TODAS_SEDES);
+            orgEstructura.setEstCodigo(PosRepConstants.TODAS_SEDES);
         }        
         return orgEstructura;
     }        

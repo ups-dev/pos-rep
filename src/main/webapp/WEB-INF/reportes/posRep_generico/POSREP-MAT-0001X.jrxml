@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-MAT-0001X" pageWidth="1999" pageHeight="842" columnWidth="1959" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a5610fb4-cc29-46b5-b47b-735f7e78b38b">
 	<property name="ireport.zoom" value="1.2418426461183107"/>
-	<property name="ireport.x" value="708"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String">
@@ -155,7 +155,7 @@ ORDER   BY campus,posgrado,nivel,modulo,grupo,estudiante]]>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[CEDULA]]></text>
+				<text><![CDATA[CÉDULA]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="713" y="0" width="222" height="16" uuid="d449973a-70ab-4b7e-b058-9de0f9ba9e33"/>
@@ -176,14 +176,14 @@ ORDER   BY campus,posgrado,nivel,modulo,grupo,estudiante]]>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[MODULO]]></text>
+				<text><![CDATA[MÓDULO]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="1291" y="0" width="108" height="16" uuid="8834479f-8d37-462a-b220-ebb40ec26d80"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[NRO IDENTIFICACION]]></text>
+				<text><![CDATA[NRO IDENTIFICACIÓN]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="1399" y="0" width="245" height="16" uuid="d42cd295-01ef-4c05-adb3-bec84bd5cba3"/>

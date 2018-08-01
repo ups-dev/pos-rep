@@ -28,12 +28,12 @@ import org.omnifaces.util.Faces;
  *
  * @author ups
  */
-@Named(value = "evaRepGeneralController")
+@Named(value = "posRepGeneralController")
 @ViewScoped
-public class EvaRepGeneralController implements Serializable{
+public class PosRepGeneralController implements Serializable{
             
     @Inject
-    EvaReporteController evaReporteController;
+    PosReporteController evaReporteController;
          
     @Inject
     InsAlumnoController insAlumnoController;
@@ -41,7 +41,7 @@ public class EvaRepGeneralController implements Serializable{
     @Inject
     RepReportesSistemaController repReportesSistemaController;
     @Inject
-    EvaRepResultadoController evaRepResultadoController;
+    PosRepResultadoController posRepResultadoController;
     
     
     /**
@@ -63,40 +63,42 @@ public class EvaRepGeneralController implements Serializable{
         
             //Definición de nombre de: reporte y archivo
             String nombreReporte = "/WEB-INF/reportes/posRep_generico/"+nombre;        
-            String nombreArchivo = repReportesSistema.getResReporte();         
+            String nombreArchivo = repReportesSistema.getResReporte();    
+            
+            System.out.println("nombreArchivo   "+nombreArchivo);
             
             //Identificar la estructura seleccionada para el reporte
             OrgEstructura orgEstructura = evaReporteController.identificarEstructura();
             Integer codigoEstructura=Integer.valueOf(String.valueOf(orgEstructura.getEstCodigo()));
             
             //Parámetro Periodo Inicial
-            OrgPeriodoLectivo orgPeriodoInicial=evaRepResultadoController.getOrgPeriodoInicial();
+            OrgPeriodoLectivo orgPeriodoInicial=posRepResultadoController.getOrgPeriodoInicial();
             Integer codigoPeriodo=0;
             if(orgPeriodoInicial!=null){
                 codigoPeriodo=Integer.valueOf(String.valueOf(orgPeriodoInicial.getPelCodigo()));
             } 
             //Parámetro Periodo Final
-            OrgPeriodoLectivo orgPeriodoFinal=evaRepResultadoController.getOrgPeriodoFinal();
+            OrgPeriodoLectivo orgPeriodoFinal=posRepResultadoController.getOrgPeriodoFinal();
             Integer codigoPeriodoFin=0;
             if(orgPeriodoFinal!=null){
                 codigoPeriodoFin=Integer.valueOf(String.valueOf(orgPeriodoFinal.getPelCodigo()));
             }            
             //Parámetro Modalidad
-            PedModalidad pedModalidad=evaRepResultadoController.getPedModalidad();
+            PedModalidad pedModalidad=posRepResultadoController.getPedModalidad();
             String codigoModalidad="%";
             if(pedModalidad!=null){
                 codigoModalidad=String.valueOf(String.valueOf(pedModalidad.getModCodigo()));
             }
             //Parámetro Cuestionario
-            EvaEvaluacionCuestionario evaEvaluacionCuestionario=evaRepResultadoController.getEvaEvaluacionCuestionario();
+            EvaEvaluacionCuestionario evaEvaluacionCuestionario=posRepResultadoController.getEvaEvaluacionCuestionario();
             Integer codigoCuestionario=0;
             if(evaEvaluacionCuestionario!=null){
                 codigoCuestionario=Integer.valueOf(String.valueOf(evaEvaluacionCuestionario.getEvaCuestionario().getCueCodigo()));
             }
             
             //Parámetro Informante
-            //EvaEvaCueInf evaEvaCueInf=evaRepResultadoController.getEvaEvaCueInf();
-            EvaTipoInformante evaTipoInformante = evaRepResultadoController.getEvaTipoInformante();
+            //EvaEvaCueInf evaEvaCueInf=posRepResultadoController.getEvaEvaCueInf();
+            EvaTipoInformante evaTipoInformante = posRepResultadoController.getEvaTipoInformante();
             String codigoTipoInformante="%";
             if(evaTipoInformante!=null){
                 codigoTipoInformante=String.valueOf(String.valueOf(evaTipoInformante.getTiiCodigo()));
@@ -104,7 +106,7 @@ public class EvaRepGeneralController implements Serializable{
 
             //Parámetro Informante
             
-          /*  EvaEvaCueInf evaEvaCueInf=evaRepResultadoController.getEvaEvaCueInf();
+          /*  EvaEvaCueInf evaEvaCueInf=posRepResultadoController.getEvaEvaCueInf();
             String codigoTipoInformante="%";
             System.out.println("evaEvaCueInf");
             if(evaEvaCueInf!=null){
@@ -113,7 +115,7 @@ public class EvaRepGeneralController implements Serializable{
           
         
            //Parámetro Nivel
-            Integer pedNivelMalla=evaRepResultadoController.getPedNivelMalla();
+            Integer pedNivelMalla=posRepResultadoController.getPedNivelMalla();
             String codigoNivel="%";
             if(pedNivelMalla!=null){
                 codigoNivel=String.valueOf(String.valueOf(pedNivelMalla));
@@ -121,7 +123,7 @@ public class EvaRepGeneralController implements Serializable{
           
           
             //Parámetro GthPersona
-            GthPersona gthPersona=evaRepResultadoController.getGthPersona();
+            GthPersona gthPersona=posRepResultadoController.getGthPersona();
             String codigoPersona="%";
             if(gthPersona!=null){
                 codigoPersona=String.valueOf(gthPersona.getPerCodigo());
@@ -129,13 +131,13 @@ public class EvaRepGeneralController implements Serializable{
         
             
             //Parámetro Asignatura
-            PedMalla pedMalla=evaRepResultadoController.getPedMalla();
+            PedMalla pedMalla=posRepResultadoController.getPedMalla();
             String malCodigo="%";
             if(pedMalla!=null){
                 malCodigo=String.valueOf(pedMalla.getMalCodigo());
             }
             //Parámetro Grupo
-            OfeGrupo ofeGrupo=evaRepResultadoController.getOfeGrupo();
+            OfeGrupo ofeGrupo=posRepResultadoController.getOfeGrupo();
             String gruCodigo="%";
             if(ofeGrupo!=null){
                 gruCodigo=String.valueOf(ofeGrupo.getGruCodigo());
