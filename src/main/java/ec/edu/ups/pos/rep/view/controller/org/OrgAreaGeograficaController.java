@@ -1,6 +1,6 @@
 package ec.edu.ups.pos.rep.view.controller.org;
 
-import static ec.edu.ups.pos.rep.data.utils.EvaRepConstants.TIPO_AREA_PAIS;
+import static ec.edu.ups.pos.rep.data.utils.PosRepConstants.TIPO_AREA_PAIS;
 import ec.edu.ups.org.common.data.entities.OrgAreaGeografica;
 import ec.edu.ups.pos.rep.view.controllers.AbstractController;
 import ec.edu.ups.util.jpa.search.DefaultParamOrderSearch;

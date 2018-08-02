@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author ups
  */
-public class EvaRepConstants {
+public class PosRepConstants {
 
     //Nombre de la aplicación
     public static final String APPLICATION_NAME = "Sistema de Reportes";
@@ -51,9 +51,10 @@ public class EvaRepConstants {
     public static final Long REP_PARAMETRO_DOCENTE = 9L;            //Parámetro de Docente
     public static final Long REP_PARAMETRO_ASIGNATURA = 10L;        //Parámetro de Asignatura
     public static final Long REP_PARAMETRO_GRUPO = 11L;             //Parámetro de Grupo
-    public static final Long REP_PARAMETRO_PROGRAMA = 12L;          //Parámetro de Programa
+    //public static final Long REP_PARAMETRO_PROGRAMA = 12L;          //Parámetro de Programa
+    public static final Long REP_PARAMETRO_ALUMNO = 12L;          //Parámetro de Alumno
     public static final Long REP_PARAMETRO_NIVEL = 14L;          //Parámetro de Nivel
-
+    
     static {
 //        EMAIL_TO_ERROR.add("mpinedav@ups.edu.ec");        
 //        EMAIL_TO_ERROR.add("mjarama@ups.edu.ec");

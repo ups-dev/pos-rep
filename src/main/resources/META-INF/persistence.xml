@@ -256,6 +256,7 @@
     <class>ec.edu.ups.pos.rep.data.entities.rep.RepReportesSistema</class>
     <class>ec.edu.ups.pos.rep.data.entities.sigac.ClienteLocal</class>
     <class>ec.edu.ups.pos.rep.data.entities.sigac.SectorXZonal</class>
+    <class>ec.edu.ups.pos.rep.data.entities.wrapper.InsAlumnoWrapper</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties/>
   </persistence-unit>
