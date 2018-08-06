@@ -94,6 +94,7 @@ AND     pos.est_codigo  IN (SELECT est_codigo e
 AND     mal.mal_nivel   LIKE $P{pv_mal_nivel}
 AND     mal.mal_codigo  LIKE $P{pv_mal_codigo}
 AND     cal.aud_eliminado = 'N'
+AND     cal.cal_retirado  = 'N'
 AND     mat.aud_eliminado = 'N'
 AND     gru.gru_codigo    = dis.gru_codigo
 AND     dis.per_codigo    = per.per_codigo(+)

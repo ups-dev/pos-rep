@@ -361,42 +361,42 @@ ORDER   BY sede,campus,programa,nivel,modulo,grupo,docente]]>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</rectangle>
-			<textField isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Estilo_contenido" x="3" y="0" width="46" height="16" isPrintWhenDetailOverflows="true" uuid="99705392-ebdd-4c36-a146-8f10a17c16ba"/>
 				<textElement>
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{NRO_IDENTIFICACION}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="49" y="0" width="172" height="16" isPrintWhenDetailOverflows="true" uuid="1f542637-1f0d-4ef5-bdea-18d64ed8f031"/>
 				<textElement>
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{DOCENTE}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="222" y="0" width="107" height="16" isPrintWhenDetailOverflows="true" uuid="edf6a7c4-6703-4d7d-ab52-0b26ac046fc0"/>
 				<textElement>
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{SEDE_PERTENECE}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="358" y="0" width="149" height="16" isPrintWhenDetailOverflows="true" uuid="4b0b9527-4252-4187-94c1-66398d0099cd"/>
 				<textElement>
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{MODULO}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="510" y="0" width="45" height="16" isPrintWhenDetailOverflows="true" uuid="3949c687-359a-4c91-983d-c7d0653167ff"/>
 				<textElement>
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{GRUPO}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="329" y="0" width="29" height="16" isPrintWhenDetailOverflows="true" uuid="9cbc7cbf-6619-4d1b-8b5a-4cdb374dea06"/>
 				<textElement>
 					<font size="7"/>
