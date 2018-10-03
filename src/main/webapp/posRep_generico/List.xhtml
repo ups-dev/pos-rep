@@ -22,8 +22,8 @@
                 </p:messages>
             </h:panelGroup>   
             
-            <p:dataTable id="EvaReportesSistemaDataTable"
-                         widgetVar="EvaReportesSistemaDataTableVar"
+            <p:dataTable id="PosReportesSistemaDataTable"
+                         widgetVar="PosReportesSistemaDataTableVar"
                          value="#{repReportesSistemaController.items}"
                          var="item"
                          rowKey="#{item.resCodigo}"
@@ -64,7 +64,7 @@
                 <p:column sortBy="#{item.resReporte}" filterBy="#{item.resReporte}" filterMatchMode="contains">
                     <f:facet name="header">
                         <h:outputText value="#{posRepBundle['RepReportesSistemaLabel_resReporte']}"/>
-                    </f:facet>
+                    </f:facet>        
                     <h:outputText value="#{item.resReporte}"/>
                 </p:column>                                 
                 
@@ -251,15 +251,14 @@
                         </ui:decorate>
                     </ui:fragment>
                 </h:panelGroup>
-                    
-                 
+                   
                  <h:panelGroup id="modalidad">
                     <ui:fragment rendered="#{repReportesSistemaController.selected ne null 
                                              and posRepResultadoController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_MODALIDAD)}">
                       <!--Filtro Modalidad--> 
                         <ui:decorate template="/WEB-INF/templates/decorators/search/ups-search-param.xhtml">
                             <ui:define name="ups-search-param-title">  
-                                <p:outputLabel value="#{posRepBundle['EvaRepModalidad']}:" />                        
+                                <p:outputLabel value="#{posRepBundle['PosRepModalidad']}:" />                        
                             </ui:define>
 
                             <ui:define name="ups-search-param-content">
@@ -369,7 +368,7 @@
                         <!--Filtro Asignatura-->
                         <ui:decorate template="/WEB-INF/templates/decorators/search/ups-search-param.xhtml">
                             <ui:define name="ups-search-param-title">   
-                                <p:outputLabel value="#{posRepBundle['EvaRepAsignatura']}:" />                        
+                                <p:outputLabel value="#{posRepBundle['PosRepAsignatura']}:" />                        
                             </ui:define>
 
                             <ui:define name="ups-search-param-content">
@@ -403,7 +402,7 @@
                         <!--Filtro Grupo-->
                         <ui:decorate template="/WEB-INF/templates/decorators/search/ups-search-param.xhtml">
                             <ui:define name="ups-search-param-title">    
-                                <p:outputLabel value="#{posRepBundle['EvaRepGrupo']}:" />                        
+                                <p:outputLabel value="#{posRepBundle['PosRepGrupo']}:" />                        
                             </ui:define>
 
                             <ui:define name="ups-search-param-content">

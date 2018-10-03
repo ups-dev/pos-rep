@@ -8,9 +8,9 @@
     xmlns:p="http://primefaces.org/ui"
     xmlns:uorg="http://ups.edu.ec/ui/composites/sec">
 
-     <f:metadata>
+      <f:metadata>
         <o:importConstants type="ec.edu.ups.pos.rep.data.utils.PosRepConstants" />
-         <f:event type="preRenderView" listener="#{repReportesSistemaController.preRenderView(PosRepConstants.REP_PARAMETRO_MODULO_REPORTES)}"></f:event>
+         <f:event type="preRenderView" listener="#{repReportesSistemaController.preRenderView(PosRepConstants.REP_PARAMETRO_MODULO_CERTIFICADOS)}"></f:event>
     </f:metadata>
     
     <ui:define name="ups-title">
@@ -19,13 +19,13 @@
 
     <ui:define name="ups-content-estructura">
         <uorg:estructura id="exap" value="#{orgEstructuraController.selected}" style="width: 20em;"   >
-            <p:ajax update=":PosReportesForm" listener="#{posRepResultadoController.callEventAjaxOrgEstructura()}"
+            <p:ajax update=":PosReportesCerForm" listener="#{posRepResultadoController.callEventAjaxOrgEstructura()}"
                     event="change" process="@this"/>
         </uorg:estructura>         
     </ui:define>
 
     <ui:define name="ups-content-center">
-        <ui:include src="/posRep_generico/List.xhtml"/>        
+        <ui:include src="/posRep_certificado/List.xhtml"/>        
 <!--        <ui:include src="/WEB-INF/templates/include/HotKey.xhtml">-->
     </ui:define>
     

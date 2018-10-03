@@ -1,0 +1,256 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package ec.edu.ups.pos.rep.view.controllers;
+
+import ec.edu.ups.pos.rep.data.entities.rep.RepParametroReporte;
+import ec.edu.ups.pos.rep.data.entities.rep.RepReportesSistema;
+import ec.edu.ups.pos.rep.data.entities.wrapper.InsAlumnoWrapper;
+import ec.edu.ups.pos.rep.data.entities.wrapper.PosgradoAlumnoWrapper;
+import ec.edu.ups.pos.rep.logic.sessions.ins.InsAlumnoFacade;
+import ec.edu.ups.pos.rep.logic.sessions.mat.MatMatriculaFacade;
+import ec.edu.ups.pos.rep.logic.sessions.rep.PosRepPosgradosFacade;
+import ec.edu.ups.pos.rep.logic.sessions.rep.RepParametroReporteFacade;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import org.omnifaces.util.Utils;
+import org.primefaces.context.RequestContext;
+
+/**
+ *
+ * @author UPS
+ */
+
+@Named(value = "posRepPosgradosController")
+@ViewScoped
+
+public class PosRepPosgradosController implements Serializable{
+    
+    @Inject
+    private InsAlumnoFacade insAlumnoFacade; 
+    @Inject
+    private PosRepPosgradosFacade posRepPosgradosFacade;
+    @Inject
+    private RepParametroReporteFacade repParametroReporteFacade;
+    @Inject
+    private MatMatriculaFacade matMatriculaFacade;
+   
+    private List<PosgradoAlumnoWrapper> listadoPosgrados;
+    private PosgradoAlumnoWrapper posgradoAlumnoWrapper;
+    private InsAlumnoWrapper insAlumnoWrapper;
+    private List<InsAlumnoWrapper> listadoAlumnos;
+    private Long aluCodigo;
+   // private List<Integer> pedMallaNivelList;
+   // private Integer pedNivelMalla;
+      
+    private boolean certificacion;
+    private List<String> listSecretariaGeneral;  
+    
+    private List<String> matNivelPeriodoEstructuraList; 
+    private String matNivelPeriodoEstructura;
+     
+    private String sedeFactura;
+    private String puntoFacturacion;
+    private String numFactura;
+    
+        
+    private String filtro = "";
+    private int maxResult = 10;
+    
+    /**
+     * Devuelve el objeto usado por PrimeFaces con opciones para poder modificar
+     * la respuesta de una solicitud.
+     *
+     * @return la instancia de RequestContext usada por PrimeFaces.
+     */
+    public RequestContext getRequestContext() {
+        return RequestContext.getCurrentInstance();
+    }
+    
+    
+    public void callEventAjaxOrgEstructura() {
+       
+        getRequestContext().update("PosReportesCerForm:PosReportesCerSistemaDataTable");
+        getRequestContext().update("PosReportesCerForm:PosRepCerExportToolbar");
+        getRequestContext().update("PosReportesCerForm:PosRepCerFiltroPanel");
+      //  getRequestContext().update("PosReportesForm:SbeRepFiltroPanel");
+//        updateSedeList();        
+    }
+    
+    public void cargarNiveles(){
+
+        matNivelPeriodoEstructuraList= matMatriculaFacade.obtieneSemestre(insAlumnoWrapper.getAluCodigo());
+        //System.out.println("insAlumnoWrapper.getAluCodigo()" + insAlumnoWrapper.getAluCodigo());
+
+    }
+
+      public List<InsAlumnoWrapper> autoCompleteAlumnos(String query) {
+        List<InsAlumnoWrapper> suggestions = new ArrayList<>();
+
+        if (!Utils.isEmpty(query)) {
+            String replace = query.replace(" ", "%%");
+            suggestions = insAlumnoFacade.findAlumnoWrapper(replace);
+        }
+
+        setListadoAlumnos(suggestions);
+
+        return suggestions;
+    }
+    
+   
+    public void cargarLista(){
+        System.out.println("insAlumnio: "+insAlumnoWrapper);
+       if(insAlumnoWrapper!=null){
+            listadoPosgrados=posRepPosgradosFacade.listaPosgrados(insAlumnoWrapper.getAluCodigo());
+            
+          /* for (int i = 0; i < listadoPosgrados.size(); i++) { 
+            System.out.println("listadoPosgrados: "+i+listadoPosgrados.get(i).getTitulo());
+            System.out.println("listadoPosgrados: "+i+listadoPosgrados.get(i).getAluCodigo());
+           }*/
+            
+        }  else{
+           actualizaFiltros();
+       
+       }      
+        
+    }
+    public void actualizaFiltros(){
+        setAluCodigo(null);
+        setCertificacion(false);
+        setListSecretariaGeneral(null);
+        setMatNivelPeriodoEstructuraList(null);
+        setMatNivelPeriodoEstructura(null);
+       
+    }  
+
+    public boolean compruebaParametro(RepReportesSistema repReportesSistema, Long codigoParametro){
+        List<RepParametroReporte> parametroReporteList=repParametroReporteFacade.obtieneParametroPorReporte(codigoParametro, repReportesSistema);
+        return !(parametroReporteList==null || parametroReporteList.isEmpty());
+    }
+    public Integer opcionCertificacion (){
+        Integer opcionSeleccionada = 0;
+        
+       If(isCertificacion()){
+            opcionSeleccionada = 1;
+        }
+       return opcionSeleccionada;
+    
+    } 
+    
+    
+    public List<PosgradoAlumnoWrapper> getListadoPosgrados() {
+        return listadoPosgrados;
+    }
+
+    public void setListadoPosgrados(List<PosgradoAlumnoWrapper> listadoPosgrados) {
+        this.listadoPosgrados = listadoPosgrados;
+    }
+
+    public PosgradoAlumnoWrapper getPosgradoAlumnoWrapper() {
+        return posgradoAlumnoWrapper;
+    }
+
+    public void setPosgradoAlumnoWrapper(PosgradoAlumnoWrapper posgradoAlumnoWrapper) {
+        this.posgradoAlumnoWrapper = posgradoAlumnoWrapper;
+    }
+
+    public InsAlumnoWrapper getInsAlumnoWrapper() {
+        return insAlumnoWrapper;
+    }
+
+    public void setInsAlumnoWrapper(InsAlumnoWrapper insAlumnoWrapper) {
+        this.insAlumnoWrapper = insAlumnoWrapper;
+    }
+
+    public List<InsAlumnoWrapper> getListadoAlumnos() {
+        return listadoAlumnos;
+    }
+
+    public void setListadoAlumnos(List<InsAlumnoWrapper> listadoAlumnos) {
+        this.listadoAlumnos = listadoAlumnos;
+    }
+    
+    public Long getAluCodigo() {
+        return aluCodigo;
+    }
+
+    public void setAluCodigo(Long aluCodigo) {
+        this.aluCodigo = aluCodigo;
+    }
+
+    public boolean isCertificacion() {
+        return certificacion;
+    }
+
+    public void setCertificacion(boolean certificacion) {
+        this.certificacion = certificacion;
+    }
+
+    public List<String> getListSecretariaGeneral() {
+        return listSecretariaGeneral;
+    }
+
+    public void setListSecretariaGeneral(List<String> listSecretariaGeneral) {
+        this.listSecretariaGeneral = listSecretariaGeneral;
+    }  
+
+    public List<String> getMatNivelPeriodoEstructuraList() {
+        return matNivelPeriodoEstructuraList;
+    }
+
+    public void setMatNivelPeriodoEstructuraList(List<String> matNivelPeriodoEstructuraList) {
+        this.matNivelPeriodoEstructuraList = matNivelPeriodoEstructuraList;
+    }
+
+    public String getMatNivelPeriodoEstructura() {
+        return matNivelPeriodoEstructura;
+    }
+
+    public void setMatNivelPeriodoEstructura(String matNivelPeriodoEstructura) {
+        this.matNivelPeriodoEstructura = matNivelPeriodoEstructura;
+    }  
+    
+    public InsAlumnoFacade getInsAlumnoFacade() {
+        return insAlumnoFacade;
+    }
+
+    public void setInsAlumnoFacade(InsAlumnoFacade insAlumnoFacade) {
+        this.insAlumnoFacade = insAlumnoFacade;
+    }
+
+    public String getSedeFactura() {
+        return sedeFactura;
+    }
+
+    public void setSedeFactura(String sedeFactura) {
+        this.sedeFactura = sedeFactura;
+    }
+
+    public String getPuntoFacturacion() {
+        return puntoFacturacion;
+    }
+
+    public void setPuntoFacturacion(String puntoFacturacion) {
+        this.puntoFacturacion = puntoFacturacion;
+    }
+
+    public String getNumFactura() {
+        return numFactura;
+    }
+
+    public void setNumFactura(String numFactura) {
+        this.numFactura = numFactura;
+    }
+   
+      
+}
+          
+
+
+

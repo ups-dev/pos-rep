@@ -54,6 +54,10 @@ public class PosRepConstants {
     //public static final Long REP_PARAMETRO_PROGRAMA = 12L;          //Parámetro de Programa
     public static final Long REP_PARAMETRO_ALUMNO = 12L;          //Parámetro de Alumno
     public static final Long REP_PARAMETRO_NIVEL = 14L;          //Parámetro de Nivel
+    public static final String REP_PARAMETRO_MODULO_REPORTES = "REPORTES";     //Parámetro fijo del Módulo
+    public static final String REP_PARAMETRO_MODULO_CERTIFICADOS = "REPORTES_CERTIFICADOS";     //Parámetro fijo del Módulo
+    public static final Long REP_PARAMETRO_SEMESTRE = 15L;          //Parámetro de Semestre
+    
     
     static {
 //        EMAIL_TO_ERROR.add("mpinedav@ups.edu.ec");        

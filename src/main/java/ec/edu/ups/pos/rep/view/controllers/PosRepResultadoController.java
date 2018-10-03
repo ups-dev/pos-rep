@@ -78,9 +78,9 @@ public class PosRepResultadoController implements Serializable{
     private Integer pedNivelMalla;
     private List<InsAlumnoWrapper> listadoAlumnos;
     
-    
     private InsAlumnoWrapper insAlumnoWrapper;
     
+
       
     @Inject
     private EvaEvaluacionCuestionarioFacade evaEvaluacionCuestionarioFacade;
@@ -129,7 +129,7 @@ public class PosRepResultadoController implements Serializable{
     
     public void callEventAjaxOrgEstructura() {
         actualizaFiltros();   
-        getRequestContext().update("PosReportesForm:EvaReportesSistemaDataTable");
+        getRequestContext().update("PosReportesForm:PosReportesSistemaDataTable");
         getRequestContext().update("PosReportesForm:PosRepExportToolbar");
         getRequestContext().update("PosReportesForm:PosRepFiltroPanel");
       //  getRequestContext().update("PosReportesForm:SbeRepFiltroPanel");
@@ -737,7 +737,7 @@ public List<InsAlumnoWrapper> getListadoAlumnos() {
     public void setListadoAlumnos(List<InsAlumnoWrapper> listadoAlumnos) {
         this.listadoAlumnos = listadoAlumnos;
     }
-public List<InsAlumnoWrapper> autoCompleteAlumnos(String query) {
+    public List<InsAlumnoWrapper> autoCompleteAlumnos(String query) {
         List<InsAlumnoWrapper> suggestions = new ArrayList<>();
 
         if (!Utils.isEmpty(query)) {
