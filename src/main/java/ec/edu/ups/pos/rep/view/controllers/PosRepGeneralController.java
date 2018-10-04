@@ -208,35 +208,7 @@ public class PosRepGeneralController implements Serializable{
             if(nivelPeriodoEstructura!=null){
                 codigoNivel=nivelPeriodoEstructura;
             }
-          
             
-            //Parámetro Sede Factura
-            String sedeFactura=posRepPosgradosController.getSedeFactura();
-            String numSedeFactura="";
-            if(sedeFactura!=null){
-                numSedeFactura= sedeFactura;
-            } 
-             //Parámetro Punto de Facturación
-            String puntoFacturacion=posRepPosgradosController.getPuntoFacturacion();
-            String numPuntoFacturacion="";
-            if(puntoFacturacion!=null){
-                numPuntoFacturacion= puntoFacturacion;
-            } 
-            
-             //Parámetro Número de Factura
-            String numeroFactura=posRepPosgradosController.getNumFactura();
-            String numFactura="";
-            if(numeroFactura!=null){
-                numFactura= numeroFactura;
-            } 
-            
-            //Parámetro Secretaria General
-               RepSecretarioGeneral secreGeneral= repSecretarioGeneralController.getSecretarioSeleccionado() ;
-               Integer secretarioGeneral=null;
-            if(secreGeneral!=null){    
-                secretarioGeneral=Integer.valueOf(String.valueOf(secreGeneral.getSegCodigo()));
-                
-            }    
             //Parámetro Periodo
             PosgradoAlumnoWrapper posAlumnoWrapper=posRepPosgradosController.getPosgradoAlumnoWrapper();
             Integer codigoPeriodo = null;
@@ -247,6 +219,42 @@ public class PosRepGeneralController implements Serializable{
                 estCampus =Integer.valueOf(posAlumnoWrapper.getEst_campus());
                 estPosgrado=Integer.valueOf(posAlumnoWrapper.getEst_posgrado());
             }    
+            
+            //Parámetro Sede Factura
+            String sedeFactura=posRepPosgradosController.getSedeFactura();
+            Integer numSedeFactura=null;
+            if(sedeFactura!=null){
+                numSedeFactura= Integer.valueOf(sedeFactura);
+            } 
+             //Parámetro Punto de Facturación
+            String puntoFacturacion=posRepPosgradosController.getPuntoFacturacion();
+            Integer numPuntoFacturacion=null;
+            if(puntoFacturacion!=null){
+                numPuntoFacturacion= Integer.valueOf(puntoFacturacion);
+            } 
+            
+             //Parámetro Número de Factura
+            String numeroFactura=posRepPosgradosController.getNumFactura();
+            Integer numFactura=null;
+            if(numeroFactura!=null){
+                numFactura= Integer.valueOf(numeroFactura);
+            } 
+            
+            //Parámetro Secretaria General
+            RepSecretarioGeneral secreGeneral= repSecretarioGeneralController.getSecretarioSeleccionado() ;
+            Integer secretarioGeneral=null;
+            if(secreGeneral!=null){    
+                secretarioGeneral=Integer.valueOf(String.valueOf(secreGeneral.getSegCodigo()));
+                
+            } 
+            
+            //Parámetro opcion Certificación
+            Integer opcion=posRepPosgradosController.opcionCertificacion();
+            Integer opcionCert= 0;
+            if(opcion!=null){
+                opcionCert= opcion;
+            } 
+            
                             
             System.out.println("pn_alu_codigo"+codigoAlumno);
             System.out.println("pv_nivel_matricula"+codigoNivel);
@@ -267,13 +275,12 @@ public class PosRepGeneralController implements Serializable{
             rpb.add("pv_nivel", codigoNivel);
             rpb.add("pn_est_codigo", estPosgrado);  
             rpb.add("pn_campus", estCampus);
-            rpb.add("pn_certificacion",1);  
+            rpb.add("pn_certificacion",opcionCert);  
             rpb.add("pn_seg_codigo", secretarioGeneral);
-            rpb.add("pv_sedeFactura", numSedeFactura);  
-            rpb.add("pv_puntoFacturacion", numPuntoFacturacion);  
-            rpb.add("pv_numFactura", numFactura);
-        //    rpb.add("pv_alu_codigo", codigoAlumno);
-           // rpb.add("pv_nivel_matricula", codigoNivel);
+            rpb.add("pn_sedeFacturacion", numSedeFactura);  
+            rpb.add("pn_puntoFacturacion", numPuntoFacturacion);  
+            rpb.add("pn_numFactura", numFactura);
+            
 
             //Definición de Formato de Archivo
             switch(formato){

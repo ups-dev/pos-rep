@@ -133,10 +133,11 @@ public class PosRepPosgradosController implements Serializable{
         List<RepParametroReporte> parametroReporteList=repParametroReporteFacade.obtieneParametroPorReporte(codigoParametro, repReportesSistema);
         return !(parametroReporteList==null || parametroReporteList.isEmpty());
     }
+    
     public Integer opcionCertificacion (){
         Integer opcionSeleccionada = 0;
         
-       If(isCertificacion()){
+       if(certificacion){
             opcionSeleccionada = 1;
         }
        return opcionSeleccionada;

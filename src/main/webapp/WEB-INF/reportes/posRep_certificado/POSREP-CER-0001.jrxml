@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-CER-0001" pageWidth="595" pageHeight="842" columnWidth="551" leftMargin="22" rightMargin="22" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="114"/>
+	<property name="ireport.x" value="139"/>
+	<property name="ireport.y" value="497"/>
 	<template><![CDATA["C:\\Users\\UPS\\Desktop\\Proyectos Ireport\\Reportes POS-REP\\estilosRep\\Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_pel_codigo" class="java.lang.Integer">
@@ -26,6 +26,11 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<parameter name="pn_certificacion" class="java.lang.Integer"/>
+	<parameter name="pn_sedeFacturacion" class="java.lang.Integer">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="pn_puntoFacturacion" class="java.lang.Integer"/>
+	<parameter name="pn_numFactura" class="java.lang.Integer"/>
 	<queryString>
 		<![CDATA[SELECT  dsed.dee_descripcion        sede,
         dcam.dee_descripcion        campus,
@@ -47,10 +52,11 @@
         decode(tap.tap_codigo,1,'N',5,'H.A.C',6,'H.V.C',NULL) tipo_aprobacion,
         mat.mat_observaciones       observaciones_matricula,
 decode(cal.cal_aprobado,'S','APROBADO',DECODE(pee.pee_vigente,'S','CURSANDO',DECODE(cal.cal_aprobado,'S','APROBADO','REPROBADO')) ) estado,
-'Cuenca, '||TO_CHAR(sysdate, 'DD')|| ' de '||DECODE(TO_CHAR(sysdate, 'MM'), '01', 'Enero', '02', 'Febrero', '03', 'Marzo', '04', 'Abril', '05', 'Mayo', '06', 'Junio',
+decode(dsed.dee_descripcion,'MATRIZ CUENCA','Cuenca',INITCAP(dsed.dee_descripcion))||', '||TO_CHAR(sysdate, 'DD')|| ' de '||DECODE(TO_CHAR(sysdate, 'MM'), '01', 'Enero', '02', 'Febrero', '03', 'Marzo', '04', 'Abril', '05', 'Mayo', '06', 'Junio',
                                        '07', 'Julio', '08', 'Agosto', '09', 'Septiembre', '10', 'Octubre', '11', 'Noviembre',
                                        '12', 'Diciembre')||' de '||
-                 TO_CHAR(sysdate, 'YYYY')||'.' fecha_actual
+                 TO_CHAR(sysdate, 'YYYY')||'.' fecha_actual,
+        cal.caa_observaciones_leg observaciones
 
 FROM    mat.mat_matricula           mat,
         cal.cal_calificacion        cal,
@@ -130,6 +136,7 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 	<field name="OBSERVACIONES_MATRICULA" class="java.lang.String"/>
 	<field name="ESTADO" class="java.lang.String"/>
 	<field name="FECHA_ACTUAL" class="java.lang.String"/>
+	<field name="OBSERVACIONES" class="java.lang.String"/>
 	<variable name="variable1" class="java.lang.String" calculation="Count"/>
 	<variable name="MODULO_1" class="java.lang.Integer" resetType="Group" resetGroup="coh_grup" calculation="Count">
 		<variableExpression><![CDATA[$F{MODULO}]]></variableExpression>
@@ -137,6 +144,7 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 	<variable name="NOTA_FINAL_1" class="java.math.BigDecimal" resetType="Group" resetGroup="coh_grup" calculation="Average">
 		<variableExpression><![CDATA[$F{NOTA_FINAL}]]></variableExpression>
 	</variable>
+	<variable name="varFacturacion" class="java.lang.String"/>
 	<group name="alu_grup">
 		<groupExpression><![CDATA[$F{CEDULA}]]></groupExpression>
 		<groupHeader>
@@ -376,7 +384,7 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 				<text><![CDATA[UNIVERSIDAD POLITECNICA SALESIANA]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Estilo_titulo" x="1" y="88" width="550" height="18" uuid="865a698f-ebce-4bf6-bd0c-c082e55cf570"/>
+				<reportElement style="Estilo_titulo" x="0" y="88" width="551" height="18" uuid="865a698f-ebce-4bf6-bd0c-c082e55cf570"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
@@ -462,6 +470,13 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ESTADO}]]></textFieldExpression>
 			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Estilo_contenido7" x="464" y="0" width="86" height="15" uuid="293874d6-06c7-4d14-91bc-d26ec17b78d6"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OBSERVACIONES}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<pageFooter>
@@ -497,7 +512,7 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 				<textFieldExpression><![CDATA[$P{pv_usuario}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="3" y="37" width="246" height="12" uuid="90338ad9-0332-4403-a3a9-0e332396ee44"/>
+				<reportElement x="3" y="37" width="417" height="12" uuid="90338ad9-0332-4403-a3a9-0e332396ee44"/>
 				<textElement verticalAlignment="Top">
 					<font size="6"/>
 				</textElement>
@@ -530,6 +545,13 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{FECHA_ACTUAL}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="55" y="37" width="346" height="12" uuid="ed920d88-7108-4596-bc3c-fb988042549b"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[String.format("%03d",$P{pn_sedeFacturacion})+"-"+String.format("%04d",$P{pn_puntoFacturacion})+"-"+String.format("%06d",$P{pn_numFactura})]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>
