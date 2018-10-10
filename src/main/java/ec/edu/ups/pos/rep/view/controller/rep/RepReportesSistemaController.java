@@ -3,22 +3,18 @@ package ec.edu.ups.pos.rep.view.controller.rep;
 import ec.edu.ups.pos.rep.data.entities.rep.RepReportesSistema;
 import ec.edu.ups.pos.rep.logic.sessions.rep.RepReportesSistemaFacade;
 import ec.edu.ups.pos.rep.view.controllers.AbstractController;
-import ec.edu.ups.util.jpa.search.DefaultParamSearch;
-import ec.edu.ups.util.jpa.search.SearchCondition;
-import ec.edu.ups.util.jpa.search.builder.ParamBuilder;
-import ec.edu.ups.util.jpa.search.builder.SearchBuilder;
-import ec.edu.ups.util.jpa.search.param.CacheStoreModeParam;
 import java.util.List;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
-import javax.persistence.CacheStoreMode;
 import org.omnifaces.util.Faces;
 
 @Named(value = "repReportesSistemaController")
 @ViewScoped
 public class RepReportesSistemaController extends AbstractController<RepReportesSistema> {
 
+    private String modulo;
+    
     @Inject
     private RepReportesSistemaFacade repReportesSistemaFacade;
        
@@ -26,6 +22,21 @@ public class RepReportesSistemaController extends AbstractController<RepReportes
         super(RepReportesSistema.class);
     }    
 
+    public String getModulo() {
+        return modulo;
+    }
+
+    public void setModulo(String modulo) {
+        this.modulo = modulo;
+    }
+
+    
+    public void preRenderView(String valor_modulo) {
+        if (!Faces.isPostback()) {
+            modulo = valor_modulo;
+        }
+    } 
+    
 //    @Override
 //    protected List<RepReportesSistema> findItems() {
 //        return getEjbFacade().findRecords(SearchBuilder.create(new DefaultParamSearch("audEliminado",
@@ -34,7 +45,10 @@ public class RepReportesSistemaController extends AbstractController<RepReportes
 //    }
     @Override
     protected List<RepReportesSistema> findItems() {
-        return repReportesSistemaFacade.listaReportesAutorizados(Faces.getRemoteUser(), "POS-REP");
+        return repReportesSistemaFacade.listaReportesAutorizados(Faces.getRemoteUser(), "POS-REP",modulo);
     }
+    
+    
+ 
 
 }

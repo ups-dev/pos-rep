@@ -82,7 +82,6 @@ AND     sed.dee_codigo  = dsed.dee_codigo
 AND     alu.cllc_cdg    = mat.cllc_cdg
 AND     fof.ins_codigo  = mat.ins_codigo
 AND     mat.mat_tipo_proceso = 'M'
-AND     pre.tpe_codigo  = 8
 AND     paf.tip_codigo  = 4
 AND     pel.pel_codigo  = pee.pel_codigo
 AND     pee.pel_codigo  = $P{pn_pel_codigo}
