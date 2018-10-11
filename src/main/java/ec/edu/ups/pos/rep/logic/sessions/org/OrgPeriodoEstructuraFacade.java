@@ -45,7 +45,7 @@ public class OrgPeriodoEstructuraFacade extends AbstractFacade<OrgPeriodoEstruct
     }*/
       public List<OrgPeriodoLectivo> obtieneCohortePorPrograma(OrgEstructura orgEstructuraPrograma){
         System.out.println("programa "+orgEstructuraPrograma);
-        Query q = getEntityManager().createQuery("SELECT pee.orgPeriodoLectivo FROM OrgPeriodoEstructura pee WHERE pee.orgEstructura = :orgEstructuraPrograma AND pee.orgPeriodoLectivo.pelTipo= 'P' AND pee.audEliminado= 'N' ORDER BY pee.orgPeriodoLectivo.pelCodigo DESC")
+        Query q = getEntityManager().createQuery("SELECT distinct pee.orgPeriodoLectivo FROM OrgPeriodoEstructura pee WHERE pee.orgEstructura = :orgEstructuraPrograma AND pee.orgPeriodoLectivo.pelTipo= 'P' AND pee.audEliminado= 'N' ORDER BY pee.orgPeriodoLectivo.pelCodigo DESC")
                 .setParameter("orgEstructuraPrograma", orgEstructuraPrograma);                
         (new CacheStoreModeParam(CacheStoreMode.REFRESH)).processParam(q);
         System.out.println("periodos "+q.getResultList().size());
