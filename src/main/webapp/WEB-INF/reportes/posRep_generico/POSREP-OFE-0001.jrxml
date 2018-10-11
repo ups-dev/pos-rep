@@ -69,7 +69,6 @@ AND     cam.est_codigo  = empe.est_codigo
 AND     cam.dee_codigo  = dcam.dee_codigo
 AND     sed.est_codigo  = cam.est_codigo_padre
 AND     sed.dee_codigo  = dsed.dee_codigo
-AND     pre.tpe_codigo  = 8
 AND     pel.pel_codigo  = pee.pel_codigo
 AND     pee.pel_codigo  = $P{pn_pel_codigo}
 AND     pos.est_codigo  IN (SELECT est_codigo e
@@ -78,6 +77,7 @@ AND     pos.est_codigo  IN (SELECT est_codigo e
                             START WITH e.est_codigo = $P{pn_est_codigo}
                             CONNECT BY PRIOR e.est_codigo = e.est_codigo_padre)
 AND     mal.mal_nivel   LIKE $P{pv_mal_nivel}
+AND     pee.pee_nivel     =   mal.mal_nivel
 AND     gru.gru_codigo    = dis.gru_codigo
 AND     dis.per_codigo    = per.per_codigo(+)
 AND     empe.emp_codigo    = gru.emp_codigo

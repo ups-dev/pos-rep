@@ -30,7 +30,7 @@ public class RepReportesSistemaFacade extends AbstractFacade<RepReportesSistema>
     }
 
         //Obtiene la lista de docentes de GthPersona y GthContrato
-    public List<RepReportesSistema> listaReportesAutorizados(String user, String sistema) {
+    public List<RepReportesSistema> listaReportesAutorizados(String user, String sistema, String modulo) {
         Query q = getEntityManager().createNativeQuery("SELECT DISTINCT res.* " +
                                                        "FROM   rep.rep_reportes_sistema       res, " +
                                                        "       rep.rep_reporte_rol            rer, " +
@@ -42,9 +42,11 @@ public class RepReportesSistemaFacade extends AbstractFacade<RepReportesSistema>
                                                        "AND    uer.use_codigo                 = use.use_codigo " +
                                                        "AND    use.usu_codigo                 = usu.usu_codigo " +
                                                        "AND    usu.usu_email                  = ?1 " +
-                                                       "AND    res.res_aplicacion             = ?2 ", RepReportesSistema.class)
+                                                       "AND    res.res_aplicacion             = ?2 " +
+                                                       "AND    res.res_modulo                 = ?3 " , RepReportesSistema.class)
                 .setParameter(1, user)
-                .setParameter(2, sistema);
+                .setParameter(2, sistema)
+                .setParameter(3, modulo);
         (new CacheStoreModeParam(CacheStoreMode.REFRESH)).processParam(q);
         return q.getResultList();
     }               
