@@ -23,15 +23,17 @@ public class PosgradoAlumnoWrapper implements Serializable {
     private String sede;
     private String campus;
     private String posgrado;
-    private Long estSede;
-    private Long estCampus;
-    private Long estPosgrado;
+    private String est_campus;
+    private String est_posgrado;
     private String modalidad;
     private String periodo;
     private Long   codPeriodo;
     private String titulo;
     
     
+    
+    
+
     public PosgradoAlumnoWrapper() {
     }
 
@@ -39,22 +41,20 @@ public class PosgradoAlumnoWrapper implements Serializable {
         this.aluCodigo = aluCodigo;
     }
 
-    public PosgradoAlumnoWrapper(String identificador, Long aluCodigo, String sede, String campus, String posgrado, Long estSede, Long estCampus, Long estPosgrado, String modalidad, String periodo, Long codPeriodo, String titulo) {
+    public PosgradoAlumnoWrapper(String identificador, Long aluCodigo, String sede, String campus, String posgrado, String est_campus, String est_posgrado, String modalidad, String periodo, Long codPeriodo, String titulo) {
         this.identificador = identificador;
         this.aluCodigo = aluCodigo;
         this.sede = sede;
         this.campus = campus;
         this.posgrado = posgrado;
-        this.estSede = estSede;
-        this.estCampus = estCampus;
-        this.estPosgrado = estPosgrado;
+        this.est_campus = est_campus;
+        this.est_posgrado = est_posgrado;
         this.modalidad = modalidad;
         this.periodo = periodo;
         this.codPeriodo = codPeriodo;
         this.titulo = titulo;
-    }
-
-
+    }     
+     
 
     public Long getAluCodigo() {
         return aluCodigo;
@@ -129,28 +129,20 @@ public class PosgradoAlumnoWrapper implements Serializable {
         this.identificador = identificador;
     }
 
-    public Long getEstSede() {
-        return estSede;
+    public String getEst_campus() {
+        return est_campus;
     }
 
-    public void setEstSede(Long estSede) {
-        this.estSede = estSede;
+    public void setEst_campus(String est_campus) {
+        this.est_campus = est_campus;
     }
 
-    public Long getEstCampus() {
-        return estCampus;
+    public String getEst_posgrado() {
+        return est_posgrado;
     }
 
-    public void setEstCampus(Long estCampus) {
-        this.estCampus = estCampus;
-    }
-
-    public Long getEstPosgrado() {
-        return estPosgrado;
-    }
-
-    public void setEstPosgrado(Long estPosgrado) {
-        this.estPosgrado = estPosgrado;
+    public void setEst_posgrado(String est_posgrado) {
+        this.est_posgrado = est_posgrado;
     }
    
     

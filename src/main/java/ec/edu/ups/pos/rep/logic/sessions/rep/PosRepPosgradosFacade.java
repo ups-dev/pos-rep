@@ -88,9 +88,8 @@ public class PosRepPosgradosFacade extends AbstractFacade<PosgradoAlumnoWrapper>
                                                     "        dsed.dee_descripcion        sede, " +
                                                     "        dcam.dee_descripcion        campus, " +
                                                     "        dpos.dee_descripcion        posgrado, " +
-                                                    "        sed.est_codigo              estSede, " +
-                                                    "        cam.est_codigo              estCampus, " +
-                                                    "        pos.est_codigo              estPosgrado, " +
+                                                    "        cam.est_codigo              est_campus, " +
+                                                    "        pos.est_codigo              est_posgrado, " +
                                                     "        mod.mod_descripcion         modalidad, " +
                                                     "        pel.pel_descripcion ||' ('||extract (year from pel.pel_fecha_inicio)||' - '||extract (year from pel.pel_fecha_fin)||') '   periodo, " +
                                                     "        pel.pel_codigo              codPeriodo, " +
@@ -122,6 +121,7 @@ public class PosRepPosgradosFacade extends AbstractFacade<PosgradoAlumnoWrapper>
                                                     " AND   mat.pee_codigo  = pee.pee_codigo " +
                                                     " AND   pee.pel_codigo  = pel.pel_codigo " +
                                                     " AND     mat.mat_tipo_proceso = 'M' " +
+                                                    " AND     pre.tpe_codigo  = 8 " +
                                                     " AND     paf.tip_codigo  = 4 " +
                                                     " AND     mat.aud_eliminado = 'N' " +
                                                     " AND     paf.paf_pagado    = 'S' " +
