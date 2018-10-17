@@ -23,8 +23,9 @@ public class PosgradoAlumnoWrapper implements Serializable {
     private String sede;
     private String campus;
     private String posgrado;
-    private String est_campus;
-    private String est_posgrado;
+    private String estSede;
+    private String estCampus;
+    private String estPosgrado;
     private String modalidad;
     private String periodo;
     private Long   codPeriodo;
@@ -41,19 +42,22 @@ public class PosgradoAlumnoWrapper implements Serializable {
         this.aluCodigo = aluCodigo;
     }
 
-    public PosgradoAlumnoWrapper(String identificador, Long aluCodigo, String sede, String campus, String posgrado, String est_campus, String est_posgrado, String modalidad, String periodo, Long codPeriodo, String titulo) {
+    public PosgradoAlumnoWrapper(String identificador, Long aluCodigo, String sede, String campus, String posgrado, String estSede, String estCampus, String estPosgrado, String modalidad, String periodo, Long codPeriodo, String titulo) {
         this.identificador = identificador;
         this.aluCodigo = aluCodigo;
         this.sede = sede;
         this.campus = campus;
         this.posgrado = posgrado;
-        this.est_campus = est_campus;
-        this.est_posgrado = est_posgrado;
+        this.estSede = estSede;
+        this.estCampus = estCampus;
+        this.estPosgrado = estPosgrado;
         this.modalidad = modalidad;
         this.periodo = periodo;
         this.codPeriodo = codPeriodo;
         this.titulo = titulo;
-    }     
+    }
+
+     
      
 
     public Long getAluCodigo() {
@@ -129,21 +133,30 @@ public class PosgradoAlumnoWrapper implements Serializable {
         this.identificador = identificador;
     }
 
-    public String getEst_campus() {
-        return est_campus;
+    public String getEstSede() {
+        return estSede;
     }
 
-    public void setEst_campus(String est_campus) {
-        this.est_campus = est_campus;
+    public void setEstSede(String estSede) {
+        this.estSede = estSede;
     }
 
-    public String getEst_posgrado() {
-        return est_posgrado;
+    public String getEstCampus() {
+        return estCampus;
     }
 
-    public void setEst_posgrado(String est_posgrado) {
-        this.est_posgrado = est_posgrado;
+    public void setEstCampus(String estCampus) {
+        this.estCampus = estCampus;
     }
+
+    public String getEstPosgrado() {
+        return estPosgrado;
+    }
+
+    public void setEstPosgrado(String estPosgrado) {
+        this.estPosgrado = estPosgrado;
+    }
+
    
     
     @Override

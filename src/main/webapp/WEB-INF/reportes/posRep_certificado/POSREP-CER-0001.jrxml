@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-CER-0001" pageWidth="595" pageHeight="842" columnWidth="551" leftMargin="22" rightMargin="22" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="139"/>
-	<property name="ireport.y" value="497"/>
+	<property name="ireport.x" value="339"/>
+	<property name="ireport.y" value="0"/>
 	<template><![CDATA["C:\\Users\\UPS\\Desktop\\Proyectos Ireport\\Reportes POS-REP\\estilosRep\\Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_pel_codigo" class="java.lang.Integer">
@@ -31,6 +31,7 @@
 	</parameter>
 	<parameter name="pn_puntoFacturacion" class="java.lang.Integer"/>
 	<parameter name="pn_numFactura" class="java.lang.Integer"/>
+	<parameter name="pn_secuencia" class="java.lang.Integer"/>
 	<queryString>
 		<![CDATA[SELECT  dsed.dee_descripcion        sede,
         dcam.dee_descripcion        campus,
@@ -390,6 +391,13 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 				</textElement>
 				<text><![CDATA[CERTIFICADO DE CALIFICACIONES POR SEMESTRE]]></text>
 			</staticText>
+			<textField>
+				<reportElement x="388" y="51" width="162" height="20" uuid="1d5f058d-92aa-4560-aec1-ff9a343f32f8"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["N° "+String.format("%010d",$P{pn_secuencia})]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<detail>
@@ -551,7 +559,7 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 				<textElement>
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[String.format("%03d",$P{pn_sedeFacturacion})+"-"+String.format("%04d",$P{pn_puntoFacturacion})+"-"+String.format("%06d",$P{pn_numFactura})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[String.format("%03d",$P{pn_sedeFacturacion})+"-"+String.format("%03d",$P{pn_puntoFacturacion})+"-"+String.format("%09d",$P{pn_numFactura})]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>

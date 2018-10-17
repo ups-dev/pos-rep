@@ -12,6 +12,7 @@ import ec.edu.ups.ped.common.data.entities.PedModalidad;
 import ec.edu.ups.pos.rep.data.entities.rep.RepSecretarioGeneral;
 import ec.edu.ups.pos.rep.data.entities.wrapper.InsAlumnoWrapper;
 import ec.edu.ups.pos.rep.data.entities.wrapper.PosgradoAlumnoWrapper;
+import ec.edu.ups.pos.rep.view.controller.rep.RepNumeroCertificadoController;
 import ec.edu.ups.pos.rep.view.controller.rep.RepSecretarioGeneralController;
 import ec.edu.ups.util.jasper.ReportParamBuilder;
 import ec.edu.ups.util.jasper.ReportType;
@@ -50,7 +51,8 @@ public class PosRepGeneralController implements Serializable{
     @Inject
     RepSecretarioGeneralController repSecretarioGeneralController;
     
-    
+    @Inject
+    RepNumeroCertificadoController repNumeroCertificadoController;
     
     /**
      * Generar reporte general.
@@ -210,7 +212,7 @@ public class PosRepGeneralController implements Serializable{
             }
             
             //Parámetro Periodo
-            PosgradoAlumnoWrapper posAlumnoWrapper=posRepPosgradosController.getPosgradoAlumnoWrapper();
+          /*  PosgradoAlumnoWrapper posAlumnoWrapper=posRepPosgradosController.getPosgradoAlumnoWrapper();
             Integer codigoPeriodo = null;
             Integer estCampus = null;
             Integer estPosgrado = null;
@@ -218,7 +220,24 @@ public class PosRepGeneralController implements Serializable{
                 codigoPeriodo=Integer.valueOf(String.valueOf(posAlumnoWrapper.getCodPeriodo()));
                 estCampus =Integer.valueOf(posAlumnoWrapper.getEst_campus());
                 estPosgrado=Integer.valueOf(posAlumnoWrapper.getEst_posgrado());
+            } */
+          
+           //Parámetro Periodo
+            PosgradoAlumnoWrapper posAlumnoWrapper=posRepPosgradosController.getPosgradoAlumnoWrapper();
+            Integer codigoPeriodo = null;
+            Integer estCampus = null;
+            Integer estPosgrado = null;
+            Long estSede = null;
+            if(posAlumnoWrapper!=null){
+                codigoPeriodo=Integer.valueOf(String.valueOf(posAlumnoWrapper.getCodPeriodo()));
+                estCampus = Integer.valueOf(String.valueOf(posAlumnoWrapper.getEstCampus()));
+                estPosgrado=Integer.valueOf(String.valueOf(posAlumnoWrapper.getEstPosgrado())); 
+                //estSede = posAlumnoWrapper.getEstSede();
+               // estCampus =Integer.valueOf(posAlumnoWrapper.getEst_campus());
+                //estPosgrado=Integer.valueOf(posAlumnoWrapper.getEst_posgrado());
+                estSede =Long.valueOf(posAlumnoWrapper.getEstSede());
             }    
+            
             
             //Parámetro Sede Factura
             String sedeFactura=posRepPosgradosController.getSedeFactura();
@@ -254,6 +273,13 @@ public class PosRepGeneralController implements Serializable{
             if(opcion!=null){
                 opcionCert= opcion;
             } 
+             //Parámetro Secuencia
+             Integer numSecuencia = 0;
+            if (estSede != null){
+                
+              numSecuencia = repNumeroCertificadoController.obtieneSecuenciaCertificado(estSede, posAlumnoWrapper.getCodPeriodo(), 1L);
+          
+            }
             
                             
             System.out.println("pn_alu_codigo"+codigoAlumno);
@@ -265,6 +291,7 @@ public class PosRepGeneralController implements Serializable{
             System.out.println("codPeriodo"+codigoPeriodo);
             System.out.println("estCampus"+estCampus);
             System.out.println("estPosgrado"+estPosgrado);
+            System.out.println("numSecuencia"+numSecuencia);
  
             //Definición de Parámetros
             ReportParamBuilder rpb =
@@ -280,8 +307,8 @@ public class PosRepGeneralController implements Serializable{
             rpb.add("pn_sedeFacturacion", numSedeFactura);  
             rpb.add("pn_puntoFacturacion", numPuntoFacturacion);  
             rpb.add("pn_numFactura", numFactura);
-            
-
+            rpb.add("pn_secuencia", numSecuencia);
+           
             //Definición de Formato de Archivo
             switch(formato){
                 case "pdf":

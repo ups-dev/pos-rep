@@ -66,7 +66,7 @@ AND    rownum             = 1]]>
 	<detail>
 		<band height="250" splitType="Stretch">
 			<textField>
-				<reportElement style="Estilo_titulo" x="131" y="92" width="299" height="12" uuid="94b98201-e934-40c9-88f7-ce92647e8bf9"/>
+				<reportElement style="Estilo_titulo" x="0" y="92" width="555" height="12" uuid="94b98201-e934-40c9-88f7-ce92647e8bf9"/>
 				<box>
 					<topPen lineWidth="0.0"/>
 				</box>
@@ -74,17 +74,17 @@ AND    rownum             = 1]]>
 				<textFieldExpression><![CDATA[$F{SECRE_CAMPUS}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="Estilo_titulo" x="131" y="104" width="299" height="12" uuid="02829035-2df4-48fe-856b-9744002b6772"/>
+				<reportElement style="Estilo_titulo" x="0" y="104" width="555" height="12" uuid="02829035-2df4-48fe-856b-9744002b6772"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{CAMPUS}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="Estilo_titulo" x="131" y="116" width="299" height="12" uuid="e18d2e1c-4517-4167-9183-a30fde71da65"/>
+				<reportElement style="Estilo_titulo" x="0" y="116" width="555" height="12" uuid="e18d2e1c-4517-4167-9183-a30fde71da65"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{SEDE}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="187" y="91" width="200" height="1" uuid="7b2ddae5-e85c-4fe5-9ca5-9925229f885f"/>
+				<reportElement x="180" y="91" width="200" height="1" uuid="7b2ddae5-e85c-4fe5-9ca5-9925229f885f"/>
 			</line>
 			<staticText>
 				<reportElement style="Estilo_contenido" x="0" y="0" width="555" height="20" uuid="513e5ac2-61d8-450e-b113-28ea1bdc2a89"/>
@@ -94,6 +94,7 @@ AND    rownum             = 1]]>
 				<reportElement style="Estilo_titulo" x="0" y="134" width="100" height="20" uuid="04a148bd-324d-4cec-9c98-7acc12343af7">
 					<printWhenExpression><![CDATA[$P{pn_certificacion}.equals( 1 )]]></printWhenExpression>
 				</reportElement>
+				<textElement verticalAlignment="Top"/>
 				<text><![CDATA[CERTIFICO:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
@@ -106,6 +107,7 @@ AND    rownum             = 1]]>
 				<reportElement style="Estilo_contenido" x="0" y="174" width="314" height="16" uuid="9239e415-5572-4268-8c16-21821d390a19">
 					<printWhenExpression><![CDATA[$P{pn_certificacion}.equals( 1 )]]></printWhenExpression>
 				</reportElement>
+				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{FECHA}]]></textFieldExpression>
 			</textField>
 			<textField>
