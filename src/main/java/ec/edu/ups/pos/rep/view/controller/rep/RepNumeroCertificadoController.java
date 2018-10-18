@@ -47,7 +47,6 @@ public class RepNumeroCertificadoController extends AbstractController<RepNumero
              return Integer.valueOf(String.valueOf(secuencia.getNceNumeroCertificado()));
         }     
            
-      // return null;
     }     
    
 }

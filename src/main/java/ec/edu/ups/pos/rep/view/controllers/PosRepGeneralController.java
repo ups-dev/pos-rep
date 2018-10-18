@@ -261,7 +261,7 @@ public class PosRepGeneralController implements Serializable{
             
             //Parámetro Secretaria General
             RepSecretarioGeneral secreGeneral= repSecretarioGeneralController.getSecretarioSeleccionado() ;
-            Integer secretarioGeneral=null;
+            Integer secretarioGeneral=1;
             if(secreGeneral!=null){    
                 secretarioGeneral=Integer.valueOf(String.valueOf(secreGeneral.getSegCodigo()));
                 
@@ -273,15 +273,15 @@ public class PosRepGeneralController implements Serializable{
             if(opcion!=null){
                 opcionCert= opcion;
             } 
+            
              //Parámetro Secuencia
-             Integer numSecuencia = 0;
+             Integer numSecuenciaCertificado = 0;
             if (estSede != null){
                 
-              numSecuencia = repNumeroCertificadoController.obtieneSecuenciaCertificado(estSede, posAlumnoWrapper.getCodPeriodo(), 1L);
+              numSecuenciaCertificado = repNumeroCertificadoController.obtieneSecuenciaCertificado(estSede, posAlumnoWrapper.getCodPeriodo(), 1L);
           
             }
-            
-                            
+                          
             System.out.println("pn_alu_codigo"+codigoAlumno);
             System.out.println("pv_nivel_matricula"+codigoNivel);
             System.out.println("numSedeFactura"+numSedeFactura);
@@ -291,7 +291,8 @@ public class PosRepGeneralController implements Serializable{
             System.out.println("codPeriodo"+codigoPeriodo);
             System.out.println("estCampus"+estCampus);
             System.out.println("estPosgrado"+estPosgrado);
-            System.out.println("numSecuencia"+numSecuencia);
+            System.out.println("numSecuenciaCertificado"+numSecuenciaCertificado);
+             System.out.println("opcionCert"+opcionCert);
  
             //Definición de Parámetros
             ReportParamBuilder rpb =
@@ -307,7 +308,7 @@ public class PosRepGeneralController implements Serializable{
             rpb.add("pn_sedeFacturacion", numSedeFactura);  
             rpb.add("pn_puntoFacturacion", numPuntoFacturacion);  
             rpb.add("pn_numFactura", numFactura);
-            rpb.add("pn_secuencia", numSecuencia);
+            rpb.add("pn_secuencia", numSecuenciaCertificado);
            
             //Definición de Formato de Archivo
             switch(formato){

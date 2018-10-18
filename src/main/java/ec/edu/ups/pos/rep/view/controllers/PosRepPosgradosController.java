@@ -87,6 +87,7 @@ public class PosRepPosgradosController implements Serializable{
 
         matNivelPeriodoEstructuraList= matMatriculaFacade.obtieneSemestre(insAlumnoWrapper.getAluCodigo());
         //System.out.println("insAlumnoWrapper.getAluCodigo()" + insAlumnoWrapper.getAluCodigo());
+        actualizaCamposFac();
 
     }
 
@@ -106,6 +107,8 @@ public class PosRepPosgradosController implements Serializable{
    
     public void cargarLista(){
         System.out.println("insAlumnio: "+insAlumnoWrapper);
+        actualizaFiltros();
+        
        if(insAlumnoWrapper!=null){
             listadoPosgrados=posRepPosgradosFacade.listaPosgrados(insAlumnoWrapper.getAluCodigo());
             
@@ -113,19 +116,28 @@ public class PosRepPosgradosController implements Serializable{
             System.out.println("listadoPosgrados: "+i+listadoPosgrados.get(i).getTitulo());
             System.out.println("listadoPosgrados: "+i+listadoPosgrados.get(i).getAluCodigo());
            }*/
-            
-        }  else{
-           actualizaFiltros();
-       
        }      
         
     }
     public void actualizaFiltros(){
         setAluCodigo(null);
-        setCertificacion(false);
-        setListSecretariaGeneral(null);
+        setPosgradoAlumnoWrapper(null);       
         setMatNivelPeriodoEstructuraList(null);
         setMatNivelPeriodoEstructura(null);
+        setListSecretariaGeneral(null);
+        setCertificacion(false);
+        setNumFactura(null);
+        setPuntoFacturacion(null);
+        setSedeFactura(null);
+       
+    }  
+     public void actualizaCamposFac(){
+       
+        setCertificacion(false);
+        setListSecretariaGeneral(null);
+        setNumFactura(null);
+        setPuntoFacturacion(null);
+        setSedeFactura(null);
        
     }  
 
