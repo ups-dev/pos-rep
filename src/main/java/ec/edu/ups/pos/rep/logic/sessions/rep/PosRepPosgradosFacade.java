@@ -33,57 +33,11 @@ public class PosRepPosgradosFacade extends AbstractFacade<PosgradoAlumnoWrapper>
         super(PosgradoAlumnoWrapper.class);
     }
   
-   //Obtiene la lista de docentes de GthPersona y GthContrato
+   //Obtiene el Posgrado del alumno con sus menciones
     public List<PosgradoAlumnoWrapper> listaPosgrados(Long aluCodigo) {
         
-        System.out.println("aluCodigoo: "+aluCodigo);
-
-//    Query q = getEntityManager().createNativeQuery( " SELECT  alu.alu_codigo             aluCodigo, " + 
-//                                                    "        dsed.dee_descripcion        sede, " +
-//                                                    "        dcam.dee_descripcion        campus, " +
-//                                                    "        dpos.dee_descripcion        posgrado, " +
-//                                                    "        mod.mod_descripcion         modalidad, " +
-//                                                    "        pel.pel_descripcion         periodo, " +
-//                                                    "        pel.pel_codigo              codPeriodo" +
-//                                                    " FROM  mat.mat_matricula           mat, " +
-//                                                    "      fac.fac_pago_factura        paf, " +
-//                                                    "      org.org_periodo_estructura  pee, " +
-//                                                    "      org.org_periodo_lectivo     pel, " +
-//                                                    "      ped.ped_proyecto_educacion  pre, " +
-//                                                    "      ped.ped_des_est_pro_edu     dep, " +
-//                                                    "      ped.ped_mod_pro_edu         mpe, " +
-//                                                    "      ped.ped_modalidad           mod, " +
-//                                                    "      org.org_descripcion_estructura dpos, " +
-//                                                    "      org.org_descripcion_estructura dcam, " +
-//                                                    "      org.org_descripcion_estructura dsed, " +
-//                                                    "      org.org_estructura          pos, " +
-//                                                    "      org.org_estructura          cam, " +
-//                                                    "      org.org_estructura          sed, " +
-//                                                    "      ins.ins_alumno              alu " +
-//                                                    " WHERE mat.mat_codigo  = paf.ins_codigo " +
-//                                                    " AND   mat.pee_codigo  = pee.pee_codigo " +
-//                                                    " AND   pee.pel_codigo  = pel.pel_codigo " +
-//                                                    " AND     mat.mat_tipo_proceso = 'M' " +
-//                                                    " AND     pre.tpe_codigo  = 8 " +
-//                                                    " AND     paf.tip_codigo  = 4 " +
-//                                                    " AND     mat.aud_eliminado = 'N' " +
-//                                                    " AND     paf.paf_pagado    = 'S' " +
-//                                                    " AND     pre.pre_numero    = dep.pre_numero " +
-//                                                    " AND     dep.dep_codigo    = mat.dep_codigo " +
-//                                                    " AND     pre.pre_numero  = mpe.pre_numero " +
-//                                                    " AND     mod.mod_codigo  = mpe.mod_codigo " +
-//                                                    " AND     dep.dee_codigo  = dpos.dee_codigo " +
-//                                                    " AND     pee.est_codigo  = pos.est_codigo " +
-//                                                    " AND     pos.dee_codigo  = dpos.dee_codigo " +
-//                                                    " AND     cam.est_codigo  = pos.est_codigo_padre " +
-//                                                    " AND     cam.dee_codigo  = dcam.dee_codigo " +
-//                                                    " AND     sed.est_codigo  = cam.est_codigo_padre " +
-//                                                    " AND     sed.dee_codigo  = dsed.dee_codigo " +
-//                                                    " AND     alu.cllc_cdg    = mat.cllc_cdg " +
-//                                                    " AND     alu.alu_codigo  = ?1 ", PosgradoAlumnoWrapper.class)   
-//          .setParameter(1, aluCodigo); 
-
- Query q = getEntityManager().createNativeQuery( " SELECT  distinct alu.alu_codigo      aluCodigo, " + 
+     //System.out.println("aluCodigoo: "+aluCodigo);
+     Query q = getEntityManager().createNativeQuery( " SELECT  distinct alu.alu_codigo      aluCodigo, " + 
                                                     "        alu.alu_codigo||'-'||cdd.cdd_codigo      identificador, " +
                                                     "        dsed.dee_descripcion        sede, " +
                                                     "        dcam.dee_descripcion        campus, " +
