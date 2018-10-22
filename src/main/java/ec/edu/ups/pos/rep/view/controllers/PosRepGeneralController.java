@@ -265,8 +265,6 @@ public class PosRepGeneralController implements Serializable{
               numSecuenciaCertificado = repNumeroCertificadoController.obtieneSecuenciaCertificado(estSede, posAlumnoWrapper.getCodPeriodo(), 1L);
           
             }
-            
-                          
             System.out.println("pn_alu_codigo"+codigoAlumno);
             System.out.println("pv_nivel_matricula"+codigoNivel);
             System.out.println("numSedeFactura"+numSedeFactura);
@@ -277,7 +275,9 @@ public class PosRepGeneralController implements Serializable{
             System.out.println("estCampus"+estCampus);
             System.out.println("estPosgrado"+estPosgrado);
             System.out.println("numSecuenciaCertificado"+numSecuenciaCertificado);
-             System.out.println("opcionCert"+opcionCert);
+            System.out.println("opcionCert"+opcionCert);
+            System.out.println("posAlumnoWrapper.getEstPosgrado()"+posAlumnoWrapper.getEstPosgrado());
+ 
  
             //Definición de Parámetros
             ReportParamBuilder rpb =
@@ -296,7 +296,7 @@ public class PosRepGeneralController implements Serializable{
             rpb.add("pn_secuencia", numSecuenciaCertificado);
             
            if (estSede != null){     
-             repEmisionCertificadoController.registraEmisionCertificado(Long.valueOf(numSecuenciaCertificado), Long.valueOf(codigoAlumno), estSede, posAlumnoWrapper.getCodPeriodo(), 1L);
+             repEmisionCertificadoController.registraEmisionCertificado(Long.valueOf(numSecuenciaCertificado), Long.valueOf(codigoAlumno), Long.valueOf(posAlumnoWrapper.getEstPosgrado()), posAlumnoWrapper.getCodPeriodo(), 1L);
          
             }
            

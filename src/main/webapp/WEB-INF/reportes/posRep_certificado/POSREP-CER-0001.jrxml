@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-CER-0001" pageWidth="595" pageHeight="842" columnWidth="551" leftMargin="22" rightMargin="22" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="339"/>
-	<property name="ireport.y" value="0"/>
-	<template><![CDATA["C:\\Users\\UPS\\Desktop\\Proyectos Ireport\\Reportes POS-REP\\estilosRep\\Estilo_insRep.jrtx"]]></template>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="500"/>
+	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_pel_codigo" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -367,7 +367,7 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 						<subreportParameterExpression><![CDATA[$P{pn_certificacion}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					<subreportExpression><![CDATA["C:\\Users\\UPS\\Documents\\Proyectos_Nuevos\\pos-rep\\src\\main\\webapp\\WEB-INF\\reportes\\posRep_certificado\\POSREP-CER-0001_subreport1.jasper"]]></subreportExpression>
+					<subreportExpression><![CDATA["POSREP-CER-0001_subreport1.jasper"]]></subreportExpression>
 				</subreport>
 			</band>
 		</groupFooter>
