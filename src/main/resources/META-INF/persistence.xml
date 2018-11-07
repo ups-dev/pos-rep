@@ -261,6 +261,7 @@
     <class>ec.edu.ups.pos.rep.data.entities.rep.RepSecretarioGeneral</class>
     <class>ec.edu.ups.pos.rep.data.entities.rep.RepNumeroCertificado</class>
     <class>ec.edu.ups.pos.rep.data.entities.rep.RepEmisionCertificado</class>
+    <class>ec.edu.ups.pos.rep.data.entities.rep.RepTipCerRepSis</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties/>
   </persistence-unit>

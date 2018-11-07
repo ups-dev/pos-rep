@@ -40,12 +40,16 @@
                          filteredValue="#{repReportesSistemaController.itemsFilter}">
                 <p:ajax event="rowSelect" update=":PosReportesCerForm:PosRepCerExportToolbar, 
                                                   :PosReportesCerForm:alumno,
-                                                  :PosReportesCerForm:semestre" 
-                                                  listener="#{posRepPosgradosController.actualizaFiltros()}"/>
+                                                  :PosReportesCerForm:semestre
+                                                  :PosReportesCerForm:panelDataTable,
+                                                  :PosReportesCerForm:PosRepFiltroPanel2"
+                                                  listener="#{posRepPosgradosController.limpiarFiltros()}"/>
                 
                 <p:ajax event="filter" update=":PosReportesCerForm:PosRepCerExportToolbar,
                                                   :PosReportesCerForm:alumno,
-                                                  :PosReportesCerForm:semestre" listener="#{repReportesSistemaController.setSelected(null)}"/>                 
+                                                  :PosReportesCerForm:semestre,
+                                                  :PosReportesCerForm:panelDataTable,
+                                                  :PosReportesCerForm:PosRepFiltroPanel2" listener="#{repReportesSistemaController.setSelected(null)}"/>                 
                 
                 <p:column sortBy="#{item.resReporte}" filterBy="#{item.resReporte}" filterMatchMode="contains">
                     <f:facet name="header">
@@ -159,7 +163,7 @@
                          emptyMessage="#{posRepBundle['TableEmpty']}"
                          rendered="#{posRepPosgradosController.insAlumnoWrapper ne null}"
                     >          
-              <p:ajax event="rowSelect" listener="#{posRepPosgradosController.cargarNiveles()}" update=":PosReportesCerForm:semestre,:PosReportesCerForm:PosRepFiltroPanel2" />
+              <p:ajax event="rowSelect" listener="#{posRepPosgradosController.cargarNiveles()}" update=":PosReportesCerForm:semestre,:PosReportesCerForm:PosRepFiltroPanel2,:PosReportesCerForm:PosRepCerExportToolbar" />
                 <!--<p:ajax event="filter" update=":SnaCambioSedeListForm:SnaCambioSedeToolbar" listener="#{posRepPosgradosController.setSelected(null)}"/>-->
 
 
@@ -237,14 +241,11 @@
                     </f:facet>
                     <h:outputText value="#{item.periodo}" />
                 </p:column>-->
-                                        
-            <!--</p:dataTable>--> 
-         
-           </h:panelGrid> 
 
+            <!--</p:dataTable>--> 
+           </h:panelGrid> 
        </p:panel>                  
-       
- 	
+       	
 
 <!--CERTIFICACIÓN -->    
      <p:panel id="PosRepFiltroPanel2" header="Certificación de Rúbricas" >    
@@ -263,7 +264,7 @@
               <p:selectBooleanCheckbox value="#{posRepPosgradosController.certificacion}" >
                   <p:ajax update="PosCertificar" listener="#{repSecretarioGeneralController.obtenerListSecretariaCert()}" />
               </p:selectBooleanCheckbox>
-            
+   
         </h:panelGrid>        
     
              <!--Filtro SECETRARIA GENERAL-->
@@ -301,7 +302,7 @@
        </p:panel> <!--certificación-->           
        </p:panel>
         
-        <p:toolbar id="PosRepCerExportToolbar">  
+       <p:toolbar id="PosRepCerExportToolbar">  
             <us:auth permissions="{'operations':['GENERAR']}">
 
                 <p:toolbarGroup align="center">                
@@ -309,7 +310,7 @@
                                    ajax="false"
                                    update="messagePanel"                                   
                                    actionListener="#{posRepGeneralController.generar_reporte_certificado('xlsx')}"
-                                   disabled="#{repReportesSistemaController.selected.resFormato eq null or (repReportesSistemaController.selected.resFormato ne 'EXCEL' and repReportesSistemaController.selected.resFormato ne 'PDF - EXCEL')}">  
+                                   disabled="#{(repReportesSistemaController.selected.resFormato eq null or (repReportesSistemaController.selected.resFormato ne 'EXCEL' and repReportesSistemaController.selected.resFormato ne 'PDF - EXCEL')) or posRepPosgradosController.posgradoAlumnoWrapper eq null}">  
                         <p:graphicImage library="ups-template" 
                                         name="images/icons/apps/xls.png" 
                                         alt="#{posRepBundle['ExportXls']}" 
@@ -319,7 +320,7 @@
                                    ajax="false"
                                    update="messagePanel"
                                    actionListener="#{posRepGeneralController.generar_reporte_certificado('pdf')}"
-                                   disabled="#{repReportesSistemaController.selected.resFormato eq null or (repReportesSistemaController.selected.resFormato ne 'PDF' and repReportesSistemaController.selected.resFormato ne 'PDF - EXCEL')}">
+                                   disabled="#{(repReportesSistemaController.selected.resFormato eq null or (repReportesSistemaController.selected.resFormato ne 'PDF' and repReportesSistemaController.selected.resFormato ne 'PDF - EXCEL'))or posRepPosgradosController.posgradoAlumnoWrapper eq null }">
                         <p:graphicImage library="ups-template" 
                                         name="images/icons/apps/pdf.png" 
                                         alt="#{posRepBundle['ExportPdf']}" 

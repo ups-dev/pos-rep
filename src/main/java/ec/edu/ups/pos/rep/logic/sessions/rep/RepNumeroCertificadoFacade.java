@@ -60,8 +60,8 @@ public class RepNumeroCertificadoFacade extends AbstractFacade<RepNumeroCertific
     }
 
     public RepNumeroCertificado consultaSecuenciaCertificado(Long estCodigo, Long pelCodigo, Long ticCodigo) {
-
-       Query q = getEntityManager().createNativeQuery(" select * from rep.rep_numero_certificado nce "
+      
+        Query q = getEntityManager().createNativeQuery(" select * from rep.rep_numero_certificado nce "
                                                     + " where nce.est_codigo = ?1 "
                                                     + " and   nce.pel_codigo = ?2 "
                                                     + " and   nce.tic_codigo = ?3 "

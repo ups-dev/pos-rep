@@ -25,7 +25,6 @@ import ec.edu.ups.org.common.data.entities.OrgEstructura;
 import ec.edu.ups.org.common.data.entities.OrgPeriodoLectivo;
 import ec.edu.ups.ped.common.data.entities.PedMalla;
 import ec.edu.ups.ped.common.data.entities.PedModalidad;
-import ec.edu.ups.pos.rep.data.entities.sigac.ClienteLocal;
 import ec.edu.ups.pos.rep.data.entities.wrapper.InsAlumnoWrapper;
 import ec.edu.ups.pos.rep.logic.sessions.ins.InsAlumnoFacade;
 import ec.edu.ups.util.jpa.search.DefaultParamOrderSearch;

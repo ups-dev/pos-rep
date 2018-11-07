@@ -106,7 +106,7 @@ public class PosRepPosgradosController implements Serializable{
     
    
     public void cargarLista(){
-        System.out.println("insAlumnio: "+insAlumnoWrapper);
+       // System.out.println("insAlumnio: "+insAlumnoWrapper);
         actualizaFiltros();
         
        if(insAlumnoWrapper!=null){
@@ -119,7 +119,21 @@ public class PosRepPosgradosController implements Serializable{
        }      
         
     }
+     public void limpiarFiltros(){
+        setInsAlumnoWrapper(null);
+        setAluCodigo(null);
+        setPosgradoAlumnoWrapper(null);       
+        setMatNivelPeriodoEstructuraList(null);
+        setMatNivelPeriodoEstructura(null);
+        setListSecretariaGeneral(null);
+        setCertificacion(false);
+        setNumFactura(null);
+        setPuntoFacturacion(null);
+        setSedeFactura(null);
+    
+    }  
     public void actualizaFiltros(){
+       
         setAluCodigo(null);
         setPosgradoAlumnoWrapper(null);       
         setMatNivelPeriodoEstructuraList(null);
@@ -131,6 +145,9 @@ public class PosRepPosgradosController implements Serializable{
         setSedeFactura(null);
        
     }  
+
+    
+    
      public void actualizaCamposFac(){
        
         setCertificacion(false);

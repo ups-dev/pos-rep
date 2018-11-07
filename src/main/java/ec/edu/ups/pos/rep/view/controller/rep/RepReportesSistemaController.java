@@ -48,7 +48,5 @@ public class RepReportesSistemaController extends AbstractController<RepReportes
         return repReportesSistemaFacade.listaReportesAutorizados(Faces.getRemoteUser(), "POS-REP",modulo);
     }
     
-    
- 
 
 }

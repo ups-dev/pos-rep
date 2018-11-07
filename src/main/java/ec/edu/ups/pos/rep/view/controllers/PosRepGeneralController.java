@@ -10,8 +10,10 @@ import ec.edu.ups.org.common.data.entities.OrgPeriodoLectivo;
 import ec.edu.ups.ped.common.data.entities.PedMalla;
 import ec.edu.ups.ped.common.data.entities.PedModalidad;
 import ec.edu.ups.pos.rep.data.entities.rep.RepSecretarioGeneral;
+import ec.edu.ups.pos.rep.data.entities.rep.RepTipCerRepSis;
 import ec.edu.ups.pos.rep.data.entities.wrapper.InsAlumnoWrapper;
 import ec.edu.ups.pos.rep.data.entities.wrapper.PosgradoAlumnoWrapper;
+import ec.edu.ups.pos.rep.logic.sessions.rep.RepTipCerRepSisFacade;
 import ec.edu.ups.pos.rep.view.controller.rep.RepEmisionCertificadoController;
 import ec.edu.ups.pos.rep.view.controller.rep.RepNumeroCertificadoController;
 import ec.edu.ups.pos.rep.view.controller.rep.RepSecretarioGeneralController;
@@ -58,8 +60,14 @@ public class PosRepGeneralController implements Serializable{
     @Inject
     RepEmisionCertificadoController repEmisionCertificadoController;
     
+    @Inject
+    RepTipCerRepSis repTipCerRepSis;
+            
+    @Inject
+    RepTipCerRepSisFacade repTipCerRepSisFacade;  
     
     
+
     /**
      * Generar reporte general.
      * @param formato  Extensión del archivo a obtener ej: "pdf" , "xlsx".
@@ -81,7 +89,7 @@ public class PosRepGeneralController implements Serializable{
             String nombreReporte = "/WEB-INF/reportes/posRep_generico/"+nombre;        
             String nombreArchivo = repReportesSistema.getResReporte();    
             
-            System.out.println("nombreArchivo   "+nombreArchivo);
+            //System.out.println("nombreArchivo   "+nombreArchivo);
             
             //Identificar la estructura seleccionada para el reporte
             OrgEstructura orgEstructura = posReporteController.identificarEstructura();
@@ -134,12 +142,12 @@ public class PosRepGeneralController implements Serializable{
             if(ofeGrupo!=null){
                 gruCodigo=String.valueOf(ofeGrupo.getGruCodigo());
             }                               
-            System.out.println("codigoEstructura"+codigoEstructura);
+           /* System.out.println("codigoEstructura"+codigoEstructura);
             System.out.println("pn_pel_codigo"+codigoPeriodo);
             System.out.println("pv_per_codigo"+codigoPersona);
             System.out.println("pv_mal_codigo"+malCodigo);
             System.out.println("pv_mal_nivel"+codigoNivel);
-            System.out.println("pv_gru_codigo"+gruCodigo);
+            System.out.println("pv_gru_codigo"+gruCodigo);*/
             
             
             //Definición de Parámetros
@@ -175,9 +183,15 @@ public class PosRepGeneralController implements Serializable{
      */
     public void generar_reporte_certificado(String formato){ 
             
-          System.out.println("generar_reporte_certificado");
+       //System.out.println("generar_reporte_certificado");
                 
-        RepReportesSistema repReportesSistema=repReportesSistemaController.getSelected();        
+       RepReportesSistema repReportesSistema=repReportesSistemaController.getSelected();   
+        
+       RepTipCerRepSis repTipCerRepSis = repTipCerRepSisFacade.consultaTipoCertificado(repReportesSistema.getResCodigo());
+        
+  
+        
+        
         if(repReportesSistema!=null){   
             String nombre="";//"repReportesSistema.getResArchivo();";
             if(formato.equals("pdf"))
@@ -193,7 +207,7 @@ public class PosRepGeneralController implements Serializable{
             String nombreReporte = "/WEB-INF/reportes/posRep_certificado/"+nombre;        
             String nombreArchivo = repReportesSistema.getResReporte();    
             
-            System.out.println("nombreArchivo   "+nombreArchivo);
+            //System.out.println("nombreArchivo   "+nombreArchivo);
             
             
             //Parámetro Alumno
@@ -216,11 +230,14 @@ public class PosRepGeneralController implements Serializable{
             Integer estCampus = null;
             Integer estPosgrado = null;
             Long estSede = null;
+            String tituloPosgrado = null;
+            
             if(posAlumnoWrapper!=null){
                 codigoPeriodo=Integer.valueOf(String.valueOf(posAlumnoWrapper.getCodPeriodo()));
                 estCampus = Integer.valueOf(String.valueOf(posAlumnoWrapper.getEstCampus()));
                 estPosgrado=Integer.valueOf(String.valueOf(posAlumnoWrapper.getEstPosgrado())); 
                 estSede =Long.valueOf(posAlumnoWrapper.getEstSede());
+                tituloPosgrado=String.valueOf(posAlumnoWrapper.getTitulo());
             }    
             
             
@@ -261,11 +278,13 @@ public class PosRepGeneralController implements Serializable{
             
              //Parámetro Secuencia
             Integer numSecuenciaCertificado = 0;
+           // Integer certificadoSemestre =1L;
+            
             if (estSede != null){      
-              numSecuenciaCertificado = repNumeroCertificadoController.obtieneSecuenciaCertificado(estSede, posAlumnoWrapper.getCodPeriodo(), 1L);
+              numSecuenciaCertificado = repNumeroCertificadoController.obtieneSecuenciaCertificado(estSede, posAlumnoWrapper.getCodPeriodo(), repTipCerRepSis.getTicCodigo());
           
             }
-            System.out.println("pn_alu_codigo"+codigoAlumno);
+            /*System.out.println("pn_alu_codigo"+codigoAlumno);
             System.out.println("pv_nivel_matricula"+codigoNivel);
             System.out.println("numSedeFactura"+numSedeFactura);
             System.out.println("numPuntoFacturacion"+numPuntoFacturacion);
@@ -276,7 +295,7 @@ public class PosRepGeneralController implements Serializable{
             System.out.println("estPosgrado"+estPosgrado);
             System.out.println("numSecuenciaCertificado"+numSecuenciaCertificado);
             System.out.println("opcionCert"+opcionCert);
-            System.out.println("posAlumnoWrapper.getEstPosgrado()"+posAlumnoWrapper.getEstPosgrado());
+            System.out.println("posAlumnoWrapper.getEstPosgrado()"+posAlumnoWrapper.getEstPosgrado());*/
  
  
             //Definición de Parámetros
@@ -294,9 +313,10 @@ public class PosRepGeneralController implements Serializable{
             rpb.add("pn_puntoFacturacion", numPuntoFacturacion);  
             rpb.add("pn_numFactura", numFactura);
             rpb.add("pn_secuencia", numSecuenciaCertificado);
+            rpb.add("pv_tituloPosgrado", tituloPosgrado);
             
            if (estSede != null){     
-             repEmisionCertificadoController.registraEmisionCertificado(Long.valueOf(numSecuenciaCertificado), Long.valueOf(codigoAlumno), Long.valueOf(posAlumnoWrapper.getEstPosgrado()), posAlumnoWrapper.getCodPeriodo(), 1L);
+             repEmisionCertificadoController.registraEmisionCertificado(Long.valueOf(numSecuenciaCertificado), Long.valueOf(codigoAlumno), Long.valueOf(posAlumnoWrapper.getEstPosgrado()), posAlumnoWrapper.getCodPeriodo(), repTipCerRepSis.getTicCodigo());
          
             }
            
