@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-CER-0001" pageWidth="595" pageHeight="842" columnWidth="551" leftMargin="22" rightMargin="22" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
-	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="192"/>
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="267"/>
+	<property name="ireport.y" value="499"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_pel_codigo" class="java.lang.Integer">
@@ -534,21 +534,21 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 				<text><![CDATA[El puntaje de calificación final corresponde a la escala de 0 a 100, la calificación mínima de aprobación es de 70 puntos.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="2" y="10" width="419" height="9" uuid="e1882118-cddc-4f7b-8577-f39567eec17a"/>
+				<reportElement x="2" y="10" width="548" height="9" isPrintWhenDetailOverflows="true" uuid="e1882118-cddc-4f7b-8577-f39567eec17a"/>
 				<textElement>
 					<font size="6"/>
 				</textElement>
 				<text><![CDATA[Escala de valoración de los Aprendizajes: 0-69 Deficiente        70-74 Regular        75-79 Buena        80-90 Muy Buena        91-100 Excelente ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="2" y="17" width="439" height="10" uuid="88e54e6d-75b0-46e6-96bb-54d93a555b26"/>
+				<reportElement x="2" y="19" width="439" height="9" uuid="88e54e6d-75b0-46e6-96bb-54d93a555b26"/>
 				<textElement verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
 				<text><![CDATA[TIPO APROBACIÓN:  N = Normal          H.A.C = Homologación por Análisis de Contenidos          H.V.C = Homologación por Validación de Conocimientos]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="420" y="10" width="129" height="9" uuid="98ece93e-8da2-4926-96e1-1151c1d6d3d6"/>
+				<reportElement x="437" y="10" width="112" height="9" uuid="98ece93e-8da2-4926-96e1-1151c1d6d3d6"/>
 				<textElement textAlignment="Right">
 					<font size="6"/>
 				</textElement>

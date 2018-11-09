@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-CER-0002" pageWidth="595" pageHeight="842" columnWidth="551" leftMargin="22" rightMargin="22" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="634"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_alu_codigo" class="java.lang.Integer">
@@ -416,7 +416,7 @@ ORDER BY semestre,modulo]]>
 						<subreportParameterExpression><![CDATA[$P{pn_campus}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "POSREP-CER-0002_subreport1.jasper"]]></subreportExpression>
+					<subreportExpression><![CDATA["POSREP-CER-0002_subreport1.jasper"]]></subreportExpression>
 				</subreport>
 				<subreport>
 					<reportElement stretchType="RelativeToTallestObject" x="2" y="194" width="549" height="73" uuid="3e8ec103-5b4f-4802-b822-bc2f0df9c69d">
@@ -432,7 +432,7 @@ ORDER BY semestre,modulo]]>
 						<subreportParameterExpression><![CDATA[$P{pn_campus}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "POSREP-CER-0002_subreport2.jasper"]]></subreportExpression>
+					<subreportExpression><![CDATA["POSREP-CER-0002_subreport2.jasper"]]></subreportExpression>
 				</subreport>
 			</band>
 		</groupFooter>
@@ -598,17 +598,66 @@ ORDER BY semestre,modulo]]>
 	<columnFooter>
 		<band height="37">
 			<rectangle>
-				<reportElement x="2" y="1" width="549" height="34" uuid="28a4906c-e509-4d18-bce5-fd4473cff572"/>
+				<reportElement x="2" y="0" width="549" height="37" uuid="28a4906c-e509-4d18-bce5-fd4473cff572"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</rectangle>
+			<textField>
+				<reportElement x="424" y="1" width="122" height="9" uuid="315668a8-8df7-4cc5-b22d-6a22b880f28b"/>
+				<textElement textAlignment="Right">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FECHA_ACTUAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="304" y="19" width="246" height="9" uuid="3ed1bb62-47d9-4439-a3f0-367570df8c64"/>
+				<textElement textAlignment="Right">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}.equals(1) ? " ":$F{ESTUDIANTE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="4" y="1" width="543" height="9" uuid="6aba5f2c-2934-4b6b-8bbe-0e24eb874310"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[El puntaje de calificación final corresponde a la escala de 0 a 100, la calificación mínima de aprobación es de 70 puntos.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Estilo_contenido6" x="4" y="10" width="546" height="9" uuid="848af7ae-8efa-4716-9712-2961485cbf68"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[Escala de valoración de los Aprendizajes: 0-69 Deficiente    70-74 Regular    75-79 Buena    80-90 Muy Buena    91-100 Excelente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="26" width="37" height="9" uuid="cabeeea7-c189-4dcb-a3cd-8c5099da07a7"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[Factura Nro.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="41" y="26" width="225" height="9" uuid="f535a63a-3190-4242-846d-8da119d2c78e"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[String.format("%03d",$P{pn_sedeFacturacion})+"-"+String.format("%03d",$P{pn_puntoFacturacion})+"-"+String.format("%09d",$P{pn_numFactura})]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="537" y="9" width="14" height="10" uuid="43900013-4c86-49bb-9101-1b71cd16fda9"/>
+				<textElement>
+					<font fontName="SansSerif" size="6" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnFooter>
 	<pageFooter>
 		<band height="55" splitType="Stretch">
 			<textField>
-				<reportElement x="4" y="-20" width="264" height="9" uuid="561d4da4-7c95-4462-91b0-4b0d2da5ef37"/>
+				<reportElement x="4" y="-19" width="264" height="9" uuid="561d4da4-7c95-4462-91b0-4b0d2da5ef37"/>
 				<textElement>
 					<font size="6" isBold="false"/>
 				</textElement>
@@ -620,55 +669,6 @@ ORDER BY semestre,modulo]]>
 					<font fontName="SansSerif" size="6" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["PÁGINA "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
-			</textField>
-			<textField evaluationTime="Report">
-				<reportElement x="537" y="-28" width="14" height="10" uuid="43900013-4c86-49bb-9101-1b71cd16fda9"/>
-				<textElement>
-					<font fontName="SansSerif" size="6" isBold="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="4" y="-11" width="37" height="10" uuid="cabeeea7-c189-4dcb-a3cd-8c5099da07a7"/>
-				<textElement>
-					<font size="6"/>
-				</textElement>
-				<text><![CDATA[Factura Nro.]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="4" y="-36" width="351" height="9" uuid="6aba5f2c-2934-4b6b-8bbe-0e24eb874310"/>
-				<textElement>
-					<font size="6"/>
-				</textElement>
-				<text><![CDATA[El puntaje de calificación final corresponde a la escala de 0 a 100, la calificación mínima de aprobación es de 70 puntos.]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="4" y="-28" width="419" height="9" uuid="c81519e5-64dc-4f0c-9149-5ac1f5fb5910"/>
-				<textElement>
-					<font size="6"/>
-				</textElement>
-				<text><![CDATA[Escala de valoración de los Aprendizajes: 0-69 Deficiente        70-74 Regular        75-79 Buena        80-90 Muy Buena        91-100 Excelente ]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="352" y="-36" width="194" height="9" uuid="315668a8-8df7-4cc5-b22d-6a22b880f28b"/>
-				<textElement textAlignment="Right">
-					<font size="6"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{FECHA_ACTUAL}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="40" y="-11" width="225" height="10" uuid="f535a63a-3190-4242-846d-8da119d2c78e"/>
-				<textElement>
-					<font size="6"/>
-				</textElement>
-				<textFieldExpression><![CDATA[String.format("%03d",$P{pn_sedeFacturacion})+"-"+String.format("%03d",$P{pn_puntoFacturacion})+"-"+String.format("%09d",$P{pn_numFactura})]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="304" y="-18" width="246" height="9" uuid="3ed1bb62-47d9-4439-a3f0-367570df8c64"/>
-				<textElement textAlignment="Right">
-					<font size="6"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}.equals(1) ? " ":$F{ESTUDIANTE}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>
