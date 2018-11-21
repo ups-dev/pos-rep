@@ -57,6 +57,7 @@ public class PosRepConstants {
     public static final String REP_PARAMETRO_MODULO_REPORTES = "REPORTES";     //Parámetro fijo del Módulo
     public static final String REP_PARAMETRO_MODULO_CERTIFICADOS = "REPORTES_CERTIFICADOS";     //Parámetro fijo del Módulo
     public static final Long REP_PARAMETRO_SEMESTRE = 15L;          //Parámetro de Semestre
+    public static final Long REP_PARAMETRO_CERTIFICACION = 16L;          //Parámetro de Certificación
     
     
     static {

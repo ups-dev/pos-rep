@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-CER-0002" pageWidth="595" pageHeight="842" columnWidth="551" leftMargin="22" rightMargin="22" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="634"/>
+	<property name="ireport.y" value="144"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_alu_codigo" class="java.lang.Integer">
@@ -159,6 +159,7 @@ from (
           AND     pel.pel_codigo  = pee.pel_codigo
           AND     pos.est_codigo  = $P{pn_est_codigo}
           AND     cal.aud_eliminado = 'N'
+          AND     cal.cal_retirado  = 'N'
           AND     mat.aud_eliminado = 'N'
           AND     paf.paf_pagado    = 'S'
           AND     alu.alu_codigo      = $P{pn_alu_codigo})cali
@@ -486,14 +487,14 @@ ORDER BY semestre,modulo]]>
 				<staticText>
 					<reportElement style="Estilo_titulo" x="385" y="33" width="55" height="23" uuid="4c717dba-d044-4143-862c-807f7a1293db"/>
 					<textElement verticalAlignment="Middle">
-						<font size="7"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 					<text><![CDATA[ESTADO]]></text>
 				</staticText>
 				<staticText>
 					<reportElement style="Estilo_titulo" x="440" y="33" width="110" height="23" uuid="5a877f57-463a-4946-a756-634caf5f24c9"/>
 					<textElement verticalAlignment="Middle">
-						<font size="7"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 					<text><![CDATA[TIPO APROBACIÓN]]></text>
 				</staticText>
@@ -507,7 +508,7 @@ ORDER BY semestre,modulo]]>
 				<staticText>
 					<reportElement style="Estilo_titulo" x="274" y="33" width="50" height="23" uuid="87ca3136-26ee-48e3-a506-2e8a2f02f58b"/>
 					<textElement verticalAlignment="Middle">
-						<font size="7"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 					<text><![CDATA[PERÍODO]]></text>
 				</staticText>

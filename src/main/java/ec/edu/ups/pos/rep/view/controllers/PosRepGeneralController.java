@@ -181,7 +181,7 @@ public class PosRepGeneralController implements Serializable{
      * Generar reporte Certificados.
      * @param formato  Extensión del archivo a obtener ej: "pdf" , "xlsx".
      */
-    public void generar_reporte_certificado(String formato){ 
+    public void generar_reporte_certificado(String formato,boolean certificacion){ 
             
        //System.out.println("generar_reporte_certificado");
                 
@@ -280,11 +280,11 @@ public class PosRepGeneralController implements Serializable{
             Integer numSecuenciaCertificado = 0;
            // Integer certificadoSemestre =1L;
             
-            if (estSede != null){      
+            if ((estSede != null) && (certificacion == true)){      
               numSecuenciaCertificado = repNumeroCertificadoController.obtieneSecuenciaCertificado(estSede, posAlumnoWrapper.getCodPeriodo(), repTipCerRepSis.getTicCodigo());
           
             }
-            /*System.out.println("pn_alu_codigo"+codigoAlumno);
+            System.out.println("pn_alu_codigo"+codigoAlumno);
             System.out.println("pv_nivel_matricula"+codigoNivel);
             System.out.println("numSedeFactura"+numSedeFactura);
             System.out.println("numPuntoFacturacion"+numPuntoFacturacion);
@@ -295,7 +295,7 @@ public class PosRepGeneralController implements Serializable{
             System.out.println("estPosgrado"+estPosgrado);
             System.out.println("numSecuenciaCertificado"+numSecuenciaCertificado);
             System.out.println("opcionCert"+opcionCert);
-            System.out.println("posAlumnoWrapper.getEstPosgrado()"+posAlumnoWrapper.getEstPosgrado());*/
+            System.out.println("posAlumnoWrapper.getEstPosgrado()"+posAlumnoWrapper.getEstPosgrado());
  
  
             //Definición de Parámetros
@@ -315,7 +315,7 @@ public class PosRepGeneralController implements Serializable{
             rpb.add("pn_secuencia", numSecuenciaCertificado);
             rpb.add("pv_tituloPosgrado", tituloPosgrado);
             
-           if (estSede != null){     
+           if ((estSede != null) && (certificacion == true)){     
              repEmisionCertificadoController.registraEmisionCertificado(Long.valueOf(numSecuenciaCertificado), Long.valueOf(codigoAlumno), Long.valueOf(posAlumnoWrapper.getEstPosgrado()), posAlumnoWrapper.getCodPeriodo(), repTipCerRepSis.getTicCodigo());
          
             }

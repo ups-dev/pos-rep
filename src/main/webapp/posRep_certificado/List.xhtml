@@ -248,8 +248,8 @@
        	
 
 <!--CERTIFICACIÓN -->    
-     <p:panel id="PosRepFiltroPanel2" header="Certificación de Rúbricas" >    
-         <h:panelGrid id="datosfactura" columns="3" cellpadding="15" rendered="#{not empty posRepPosgradosController.insAlumnoWrapper and not empty posRepPosgradosController.posgradoAlumnoWrapper}" >  
+<p:panel id="PosRepFiltroPanel2" header="Certificación de Rúbricas" >    
+         <h:panelGrid id="datosfactura" columns="3" cellpadding="15" rendered="#{not empty posRepPosgradosController.insAlumnoWrapper and not empty posRepPosgradosController.posgradoAlumnoWrapper and posRepPosgradosController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_CERTIFICACION)}" >  
              <p:outputLabel value="#{posRepBundle['PosRepSede']}:" /> 
              <p:outputLabel value="#{posRepBundle['PosRepPuntoFac']}:" />
              <p:outputLabel value="#{posRepBundle['PosRepNumFac']}:" />
@@ -259,7 +259,7 @@
              <p:inputText   value="#{posRepPosgradosController.numFactura}" required="true" requiredMessage="Ingrese el número de Factura."/>
         </h:panelGrid> 
          <br/> 
-        <h:panelGrid id="certificacionPanel" columns="2" rendered="#{not empty posRepPosgradosController.insAlumnoWrapper and not empty posRepPosgradosController.posgradoAlumnoWrapper}" >   
+        <h:panelGrid id="certificacionPanel" columns="2" rendered="#{not empty posRepPosgradosController.insAlumnoWrapper and not empty posRepPosgradosController.posgradoAlumnoWrapper and posRepPosgradosController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_CERTIFICACION)}" >   
               <p:outputLabel value="#{posRepBundle['PosRepCertificar']} " />
               <p:selectBooleanCheckbox value="#{posRepPosgradosController.certificacion}" >
                   <p:ajax update="PosCertificar" listener="#{repSecretarioGeneralController.obtenerListSecretariaCert()}" />
@@ -309,7 +309,7 @@
                     <p:commandLink id="nonAjaxExcel"                                    
                                    ajax="false"
                                    update="messagePanel"                                   
-                                   actionListener="#{posRepGeneralController.generar_reporte_certificado('xlsx')}"
+                                   actionListener="#{posRepGeneralController.generar_reporte_certificado('xlsx',posRepPosgradosController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_CERTIFICACION))}"
                                    disabled="#{(repReportesSistemaController.selected.resFormato eq null or (repReportesSistemaController.selected.resFormato ne 'EXCEL' and repReportesSistemaController.selected.resFormato ne 'PDF - EXCEL')) or posRepPosgradosController.posgradoAlumnoWrapper eq null}">  
                         <p:graphicImage library="ups-template" 
                                         name="images/icons/apps/xls.png" 
@@ -319,7 +319,7 @@
                     <p:commandLink id="nonAjaxPdf"                                    
                                    ajax="false"
                                    update="messagePanel"
-                                   actionListener="#{posRepGeneralController.generar_reporte_certificado('pdf')}"
+                                   actionListener="#{posRepGeneralController.generar_reporte_certificado('pdf',posRepPosgradosController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_CERTIFICACION))}"
                                    disabled="#{(repReportesSistemaController.selected.resFormato eq null or (repReportesSistemaController.selected.resFormato ne 'PDF' and repReportesSistemaController.selected.resFormato ne 'PDF - EXCEL'))or posRepPosgradosController.posgradoAlumnoWrapper eq null }">
                         <p:graphicImage library="ups-template" 
                                         name="images/icons/apps/pdf.png" 

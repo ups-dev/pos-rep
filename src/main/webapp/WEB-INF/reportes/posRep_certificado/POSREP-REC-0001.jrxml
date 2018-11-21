@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-REC-0001" pageWidth="590" pageHeight="842" columnWidth="546" leftMargin="22" rightMargin="22" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="377"/>
 	<template><![CDATA["C:\\Users\\UPS\\Desktop\\Proyectos Ireport\\PLANTILLAS REPORTES\\Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_alu_codigo" class="java.lang.Integer">
@@ -150,6 +150,7 @@ from (
 where    mall.est_codigo  = cali.est_codigo (+)
 AND      mall.mal_codigo = cali.mal_codigo(+)
 AND      mall.cllc_cdg   = cali.cllc_cdg(+)
+
 ORDER BY semestre,modulo]]>
 	</queryString>
 	<field name="CAMPUS" class="java.lang.String"/>
