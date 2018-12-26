@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-CER-0001" pageWidth="595" pageHeight="842" columnWidth="551" leftMargin="22" rightMargin="22" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="267"/>
+	<property name="ireport.y" value="309"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_pel_codigo" class="java.lang.Integer">
@@ -32,6 +32,8 @@
 	<parameter name="pn_puntoFacturacion" class="java.lang.Integer"/>
 	<parameter name="pn_numFactura" class="java.lang.Integer"/>
 	<parameter name="pn_secuencia" class="java.lang.Integer"/>
+	<parameter name="pn_tituloMencion" class="java.lang.Integer"/>
+	<parameter name="pv_tituloPosgrado" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT  distinct dsed.dee_descripcion        sede,
         dcam.dee_descripcion        campus,
@@ -284,9 +286,10 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 		<groupExpression><![CDATA[$F{TITULO}]]></groupExpression>
 		<groupHeader>
 			<band height="14">
-				<textField>
+				<printWhenExpression><![CDATA[$P{pn_tituloMencion}.equals(1)]]></printWhenExpression>
+				<textField isBlankWhenNull="true">
 					<reportElement style="Estilo_contenido7" x="130" y="0" width="417" height="14" uuid="f092b063-47c3-4e4e-811d-652ff98e35dc"/>
-					<textFieldExpression><![CDATA[$F{TITULO}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{pv_tituloPosgrado}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement style="Estilo_titulo" x="1" y="0" width="128" height="14" uuid="e933cef8-40c5-4bff-baa6-a3b5256bd7a7"/>
@@ -498,7 +501,7 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 	<pageHeader>
 		<band height="115" splitType="Stretch">
 			<rectangle>
-				<reportElement x="474" y="56" width="76" height="14" backcolor="#CCCCCC" uuid="ccda1ca0-9bec-4454-b9f3-1e1aaa90c5d6"/>
+				<reportElement x="475" y="56" width="74" height="14" backcolor="#CCCCCC" uuid="ccda1ca0-9bec-4454-b9f3-1e1aaa90c5d6"/>
 				<graphicElement>
 					<pen lineWidth="0.0"/>
 				</graphicElement>
@@ -518,8 +521,8 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 				<text><![CDATA[CERTIFICADO DE CALIFICACIONES POR PERÍODO]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="473" y="56" width="75" height="14" isPrintWhenDetailOverflows="true" forecolor="#000000" backcolor="#FFFFFF" uuid="1d5f058d-92aa-4560-aec1-ff9a343f32f8"/>
-				<textElement textAlignment="Right" verticalAlignment="Top">
+				<reportElement x="475" y="56" width="72" height="14" isPrintWhenDetailOverflows="true" forecolor="#000000" backcolor="#FFFFFF" uuid="1d5f058d-92aa-4560-aec1-ff9a343f32f8"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["N° "+String.format("%010d",$P{pn_secuencia})]]></textFieldExpression>
@@ -666,7 +669,7 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="3" y="28" width="98" height="9" uuid="561d4da4-7c95-4462-91b0-4b0d2da5ef37"/>
+				<reportElement x="3" y="28" width="101" height="9" uuid="561d4da4-7c95-4462-91b0-4b0d2da5ef37"/>
 				<box>
 					<topPen lineWidth="0.0"/>
 				</box>
@@ -676,11 +679,11 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 				<textFieldExpression><![CDATA[$P{pv_usuario}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="115" y="28" width="38" height="9" uuid="90338ad9-0332-4403-a3a9-0e332396ee44"/>
+				<reportElement x="112" y="28" width="49" height="9" uuid="90338ad9-0332-4403-a3a9-0e332396ee44"/>
 				<textElement verticalAlignment="Top">
 					<font size="6"/>
 				</textElement>
-				<text><![CDATA[Factura Nro:]]></text>
+				<text><![CDATA[Factura Nro.:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="3" y="2" width="537" height="9" uuid="39745afd-24d3-4c59-b9e0-14f4ecedcc64"/>
@@ -697,7 +700,7 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 				<text><![CDATA[Escala de valoración de los Aprendizajes: 0-69 Deficiente        70-74 Regular        75-79 Buena        80-90 Muy Buena        91-100 Excelente ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="3" y="19" width="439" height="9" uuid="88e54e6d-75b0-46e6-96bb-54d93a555b26"/>
+				<reportElement x="3" y="19" width="546" height="9" uuid="88e54e6d-75b0-46e6-96bb-54d93a555b26"/>
 				<textElement verticalAlignment="Middle">
 					<font size="6"/>
 				</textElement>
@@ -711,7 +714,7 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 				<textFieldExpression><![CDATA[$F{FECHA_ACTUAL}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0">
-				<reportElement x="152" y="28" width="346" height="9" uuid="ed920d88-7108-4596-bc3c-fb988042549b"/>
+				<reportElement x="161" y="28" width="387" height="9" uuid="ed920d88-7108-4596-bc3c-fb988042549b"/>
 				<textElement>
 					<font size="6"/>
 				</textElement>
