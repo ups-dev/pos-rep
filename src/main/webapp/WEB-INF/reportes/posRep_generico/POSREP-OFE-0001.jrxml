@@ -2,8 +2,9 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-OFE-0001" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="6"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
+	<template><![CDATA["C:\\Users\\UPS\\Documents\\Proyectos_Nuevos\\pos-rep\\src\\main\\webapp\\WEB-INF\\reportes\\estilosRep\\Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_pel_codigo" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -81,7 +82,7 @@ AND     pee.pee_nivel     =   mal.mal_nivel
 AND     gru.gru_codigo    = dis.gru_codigo
 AND     dis.per_codigo    = per.per_codigo(+)
 AND     empe.emp_codigo    = gru.emp_codigo
-ORDER   BY sede,campus,programa,nivel,modulo,grupo,docente]]>
+ORDER   BY sede,campus,cohorte,programa,nivel,modulo,grupo,docente]]>
 	</queryString>
 	<field name="PROGRAMA" class="java.lang.String"/>
 	<field name="SEDE" class="java.lang.String"/>
@@ -101,7 +102,7 @@ ORDER   BY sede,campus,programa,nivel,modulo,grupo,docente]]>
 	<group name="FORMULARIO_GROUP" isReprintHeaderOnEachPage="true">
 		<groupExpression><![CDATA[]]></groupExpression>
 	</group>
-	<group name="sede_grup" isStartNewPage="true">
+	<group name="sede_grup" isStartNewPage="true" isReprintHeaderOnEachPage="true">
 		<groupExpression><![CDATA[$F{SEDE}]]></groupExpression>
 		<groupHeader>
 			<band height="16">
@@ -134,7 +135,7 @@ ORDER   BY sede,campus,programa,nivel,modulo,grupo,docente]]>
 			</band>
 		</groupHeader>
 	</group>
-	<group name="camp_grup" isStartNewPage="true">
+	<group name="camp_grup" isStartNewPage="true" isReprintHeaderOnEachPage="true">
 		<groupExpression><![CDATA[$F{CAMPUS}]]></groupExpression>
 		<groupHeader>
 			<band height="16">
@@ -161,7 +162,7 @@ ORDER   BY sede,campus,programa,nivel,modulo,grupo,docente]]>
 			</band>
 		</groupHeader>
 	</group>
-	<group name="prog_grup" isStartNewPage="true">
+	<group name="prog_grup" isStartNewPage="true" isReprintHeaderOnEachPage="true">
 		<groupExpression><![CDATA[]]></groupExpression>
 		<groupHeader>
 			<band height="16">
@@ -188,7 +189,7 @@ ORDER   BY sede,campus,programa,nivel,modulo,grupo,docente]]>
 			</band>
 		</groupHeader>
 	</group>
-	<group name="nivel_grup" isStartNewPage="true">
+	<group name="nivel_grup" isStartNewPage="true" isReprintHeaderOnEachPage="true">
 		<groupExpression><![CDATA[$F{NIVEL}]]></groupExpression>
 		<groupHeader>
 			<band height="74">
@@ -217,7 +218,7 @@ ORDER   BY sede,campus,programa,nivel,modulo,grupo,docente]]>
 					</graphicElement>
 				</rectangle>
 				<staticText>
-					<reportElement style="Estilo_titulo" x="2" y="0" width="84" height="16" uuid="614c16fe-ce8d-45e7-a84e-2e0886550630"/>
+					<reportElement style="Estilo_titulo" x="2" y="0" width="84" height="16" isPrintWhenDetailOverflows="true" uuid="614c16fe-ce8d-45e7-a84e-2e0886550630"/>
 					<box>
 						<topPen lineWidth="0.0"/>
 						<leftPen lineWidth="0.0"/>
@@ -229,14 +230,14 @@ ORDER   BY sede,campus,programa,nivel,modulo,grupo,docente]]>
 					<text><![CDATA[NIVEL:]]></text>
 				</staticText>
 				<textField>
-					<reportElement style="Estilo_contenido" x="88" y="0" width="437" height="16" uuid="1d76bedc-a14a-4575-9e7b-1d3ef9fc12a9"/>
+					<reportElement style="Estilo_contenido" x="88" y="0" width="437" height="16" isPrintWhenDetailOverflows="true" uuid="1d76bedc-a14a-4575-9e7b-1d3ef9fc12a9"/>
 					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{NIVEL}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement style="Estilo_titulo" x="2" y="32" width="83" height="16" uuid="197ae8fd-646a-467e-a831-1a2ede26655c"/>
+					<reportElement style="Estilo_titulo" x="2" y="32" width="83" height="16" isPrintWhenDetailOverflows="true" uuid="197ae8fd-646a-467e-a831-1a2ede26655c"/>
 					<box>
 						<topPen lineWidth="0.0"/>
 						<leftPen lineWidth="0.0"/>
@@ -248,7 +249,7 @@ ORDER   BY sede,campus,programa,nivel,modulo,grupo,docente]]>
 					<text><![CDATA[SEMESTRE:]]></text>
 				</staticText>
 				<textField>
-					<reportElement style="Estilo_contenido" x="88" y="32" width="437" height="16" uuid="8059e1de-c21c-4650-9d5a-c99bd792733d"/>
+					<reportElement style="Estilo_contenido" x="88" y="32" width="437" height="16" isPrintWhenDetailOverflows="true" uuid="8059e1de-c21c-4650-9d5a-c99bd792733d"/>
 					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
@@ -283,14 +284,14 @@ ORDER   BY sede,campus,programa,nivel,modulo,grupo,docente]]>
 					<text><![CDATA[GRUPO]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="88" y="16" width="437" height="16" uuid="60e30567-dbab-47df-84c7-6a580a1a9656"/>
+					<reportElement x="88" y="16" width="437" height="16" isPrintWhenDetailOverflows="true" uuid="60e30567-dbab-47df-84c7-6a580a1a9656"/>
 					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{COHORTE}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement style="Estilo_titulo" x="2" y="16" width="84" height="16" uuid="0058002a-9dce-42c8-a9e6-83ae3bd1946b"/>
+					<reportElement style="Estilo_titulo" x="2" y="16" width="84" height="16" isPrintWhenDetailOverflows="true" uuid="0058002a-9dce-42c8-a9e6-83ae3bd1946b"/>
 					<box>
 						<topPen lineWidth="0.0"/>
 						<leftPen lineWidth="0.0"/>

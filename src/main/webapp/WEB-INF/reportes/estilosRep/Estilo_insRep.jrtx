@@ -3,7 +3,9 @@
 
 <jasperTemplate>
 	<style name="Estilo_contenido" isDefault="true" forecolor="#000000" fill="Solid" hAlign="Left" fontName="SansSerif" fontSize="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
-	<style name="Estilo_titulo" fontName="SansSerif" fontSize="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="Estilo_titulo" forecolor="#000000" fontName="SansSerif" fontSize="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 	<style name="Estilo_contenido7" forecolor="#000000" fill="Solid" hAlign="Left" fontSize="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 	<style name="Estilo_titulo7" forecolor="#000000" fontSize="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="Estilo_contenido6" forecolor="#000000" fill="Solid" fontSize="6" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="Estilo_titulo6" forecolor="#000000" fill="Solid" fontSize="6" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 </jasperTemplate>

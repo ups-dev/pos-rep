@@ -45,6 +45,7 @@ public class RepReportesSistemaController extends AbstractController<RepReportes
 //    }
     @Override
     protected List<RepReportesSistema> findItems() {
+        System.out.println("1s");
         return repReportesSistemaFacade.listaReportesAutorizados(Faces.getRemoteUser(), "POS-REP",modulo);
     }
     

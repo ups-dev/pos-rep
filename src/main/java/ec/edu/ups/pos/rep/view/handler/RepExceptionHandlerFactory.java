@@ -8,14 +8,12 @@ import javax.faces.context.ExceptionHandlerFactory;
  */
 public class RepExceptionHandlerFactory extends ExceptionHandlerFactory {
 
-    private final javax.faces.context.ExceptionHandlerFactory parent;
-
     public RepExceptionHandlerFactory(final javax.faces.context.ExceptionHandlerFactory parent) {
-        this.parent = parent;
+        super(parent);
     }
 
     @Override
     public RepExceptionHandler getExceptionHandler() {
-        return new RepExceptionHandler(this.parent.getExceptionHandler());
+        return new RepExceptionHandler(getWrapped().getExceptionHandler());
     }
 }

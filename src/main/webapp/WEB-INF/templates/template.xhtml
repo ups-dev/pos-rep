@@ -5,6 +5,7 @@
                 template="/WEB-INF/templates/ups-master.xhtml">
 
     <ui:define name="ups-head-top">        
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['ups-template:images/icons/favicon.ico']}" />
     </ui:define>
     
     <ui:define name="ups-title-before" >
@@ -19,37 +20,26 @@
     </ui:define>
 
     <ui:define name="ups-header-session">    
+        <ui:include src="/security-ups-logout.xhtml" />
     </ui:define>
 
-    <ui:define name="ups-header-content">
-        <ui:decorate template="/WEB-INF/templates/decorators/header/ups-header-content.xhtml">
             <ui:define name="ups-header-content-title">
                 Generación de Reportes
             </ui:define>
-        </ui:decorate>
-    </ui:define>
 
     <ui:define name="ups-header-menu">
-        <div class="col-xs-12">
-            <ui:include src="/security-ups-logout.xhtml" />
-        </div>
-
-        <h:panelGroup styleClass="col-xs-12" rendered="#{facesContext.application.projectStage ne 'Production'}" layout="block">
+        <h:panelGroup styleClass="col-12" rendered="#{facesContext.application.projectStage ne 'Production'}" layout="block">
             <div class="row">
                 <ui:include src="/appmenu.xhtml" />
             </div>
         </h:panelGroup>
     </ui:define>
     
-    <ui:define name="ups-breadcrumb-wrapper">
+    <ui:define name="ups-breadcrumb-contenido-secundario">
     </ui:define>
     
     <ui:define name="ups-body-top">
         <h:outputStylesheet library="default" name="css/pfcrud.css" />
-    </ui:define>
-    
-    <ui:define name="ups-content-left-title">
-        Accesos
     </ui:define>
     
     <ui:define name="ups-content-left">
@@ -58,17 +48,14 @@
                 <ui:insert name="ups-content-estructura" />
             </h:form>
         </p:panel>
-        <p:panel header="Menú" >
+        <p:panel header="Menú" styleClass="mt-3">
             <ui:include src="/security-ups-menu.xhtml" />
         </p:panel>
     </ui:define>
 
     <ui:define name="ups-body-bottom">
         <ui:include src="/confirmation.xhtml"/>
-
         <h:outputScript library="default" name="js/pfcrud.js"/>
-
-        <ui:debug />
     </ui:define>
 
     <ui:define name="ups-footer-content">

@@ -1,13 +1,11 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
-                template="/WEB-INF/templates/template-menu.xhtml"
-                xmlns:h="http://java.sun.com/jsf/html">
+                template="/WEB-INF/templates/template-menu.xhtml">
 
-    <ui:define name="ups-title">
-        <h:outputText value="Recurso no disponible"/>
+    <ui:define name="ups-breadcrumb-contenido">
     </ui:define>
 
-    <ui:define name="ups-content-center">
+    <ui:define name="ups-content">
         <ui:decorate template="/WEB-INF/templates/decorators/error/ups-404.xhtml" />
     </ui:define>
 </ui:composition>
