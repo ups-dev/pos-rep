@@ -23,6 +23,8 @@ import org.omnifaces.util.Faces;
 @ViewScoped
 public class OrgEstructuraController extends AbstractController<OrgEstructura> {
 
+    @Inject
+    private OrgEstructuraFacade orgEstructuraFacade;
     private List<OrgEstructura> orgEstructuraSedeList;
     private List<OrgEstructura> orgEstructuraCampusList;
     private List<OrgEstructura> orgEstructuraCarreraList;
@@ -33,7 +35,8 @@ public class OrgEstructuraController extends AbstractController<OrgEstructura> {
     private OrgEstructura orgEstructuraSede;
     private OrgEstructura orgEstructuraCampus;
     private OrgEstructura orgEstructuraCarrera;
-
+    private OrgEstructura orgEstructura;
+    
     @Inject
     private SecOrgEstructuraController secOrgEstructuraController;
    
@@ -42,12 +45,12 @@ public class OrgEstructuraController extends AbstractController<OrgEstructura> {
     }
 
     public void updateSedeList() {        
-        if (secOrgEstructuraController.getOrgEstructuraSede().getEstCodigo().equals(PosRepConstants.TODAS_SEDES)) {
+        if (secOrgEstructuraController.getEstructuraSede().getEstCodigo().equals(PosRepConstants.TODAS_SEDES)) {
             orgEstructuraSedeList = getEjbFacade()
                     .findRecords(SearchBuilder.create(new DefaultParamSearch("orgEstructuraPadre.estCodigo", PosRepConstants.CERO, SearchCondition.EQUAL))
                             .addParam(new DefaultParamOrderSearch("estCodigo", SearchOrder.ASC)));
         } else {
-            setOrgEstructuraSedeList(Arrays.asList(secOrgEstructuraController.getOrgEstructuraSede()));
+            setOrgEstructuraSedeList(Arrays.asList(orgEstructuraFacade.find(secOrgEstructuraController.getEstructuraSede().getEstCodigo(), true)));            
         }
 //        setOrgEstructuraSede(getOrgEstructuraSedeList().get(0));
         updateCampusList();
@@ -56,8 +59,8 @@ public class OrgEstructuraController extends AbstractController<OrgEstructura> {
     public void updateCampusList() {
         if (orgEstructuraSede != null && !orgEstructuraSede.getOrgEstructuraCollection().isEmpty()) {
             setOrgEstructuraCampusList(new ArrayList(orgEstructuraSede.getOrgEstructuraCollection()));
-            if (!secOrgEstructuraController.getOrgEstructuraCampus().getEstCodigo().equals(PosRepConstants.TODOS_CAMPUS)) {
-                getOrgEstructuraCampusList().retainAll(Arrays.asList(secOrgEstructuraController.getOrgEstructuraCampus()));
+            if (!secOrgEstructuraController.getEstructuraCampus().getEstCodigo().equals(PosRepConstants.TODOS_CAMPUS)) {
+                getOrgEstructuraCampusList().retainAll(Arrays.asList(secOrgEstructuraController.getEstructuraCampus()));
             }
             //setOrgEstructuraCampus(getOrgEstructuraCampusList().get(0));
             updateCarreraList();
@@ -68,8 +71,8 @@ public class OrgEstructuraController extends AbstractController<OrgEstructura> {
         if (orgEstructuraCampus != null && !orgEstructuraCampus.getOrgEstructuraCollection().isEmpty()) {
             setOrgEstructuraCarreraList(new ArrayList(orgEstructuraCampus.getOrgEstructuraCollection()));
             //setOrgEstructuraCarreraList(orgEstructuraFacade.lisEstructuraTipo(orgEstructuraCampus, secOrgEstructuraController.getTipoEstructura().getTieCodigo()));
-            if (!secOrgEstructuraController.getOrgEstructuraCarrera().getEstCodigo().equals(PosRepConstants.TODAS_CARRERAS)) {
-                getOrgEstructuraCarreraList().retainAll(Arrays.asList(secOrgEstructuraController.getOrgEstructuraCarrera()));
+            if (!secOrgEstructuraController.getEstructuraCarrera().getEstCodigo().equals(PosRepConstants.TODAS_CARRERAS)) {
+                getOrgEstructuraCarreraList().retainAll(Arrays.asList(secOrgEstructuraController.getEstructuraCarrera()));
             }
             //setOrgEstructuraCarrera(getOrgEstructuraCarreraList().get(0));
         }
@@ -191,4 +194,12 @@ public class OrgEstructuraController extends AbstractController<OrgEstructura> {
         this.orgEstructuraList = orgEstructuraList;
     }
 
+    public OrgEstructura getOrgEstructura() {
+        return orgEstructura;
+    }
+
+    public void setOrgEstructura(OrgEstructura orgEstructura) {
+        this.orgEstructura = orgEstructura;
+    }
+  
 }

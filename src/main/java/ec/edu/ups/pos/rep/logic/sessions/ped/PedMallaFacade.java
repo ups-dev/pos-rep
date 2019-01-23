@@ -3,7 +3,6 @@ package ec.edu.ups.pos.rep.logic.sessions.ped;
 
 import ec.edu.ups.pos.rep.data.entities.gth.GthPersona;
 import ec.edu.ups.pos.rep.logic.sessions.AbstractFacade;
-import ec.edu.ups.org.common.data.entities.OrgEstructura;
 import ec.edu.ups.ped.common.data.entities.PedMalla;
 import ec.edu.ups.util.jpa.search.param.CacheStoreModeParam;
 import java.util.List;
@@ -37,7 +36,7 @@ public class PedMallaFacade extends AbstractFacade<PedMalla> {
      * @param pelCodigo Periodo Lectivo
      * @return Mallas por carrera.
      */
-    public List<PedMalla> obtieneMalla(Long orgEstructuraCarrera, Long pelCodigo){
+  /*  public List<PedMalla> obtieneMalla(Long orgEstructuraCarrera, Long pelCodigo){
         Query q = getEntityManager().createQuery("SELECT distinct mal "
                                                + "FROM   PedMalla mal, "
                                                + "       OfeGrupo gru, "
@@ -47,12 +46,12 @@ public class PedMallaFacade extends AbstractFacade<PedMalla> {
                                                + "AND    dis.estCodigo = :estCodigoCarrera "
                                                + "AND    gru.pelCodigo  = :pelCodigo "
                                                + "AND    mal.audEliminado = 'N' "
-                                               + "ORDER BY mal.pedMateria.matDescripcion ")
+                                               + "ORDER BY mal.pedMateria.matDescripcion,mal.malNivel ")
                 .setParameter("estCodigoCarrera", orgEstructuraCarrera)
                 .setParameter("pelCodigo", pelCodigo);
         (new CacheStoreModeParam(CacheStoreMode.REFRESH)).processParam(q);
         return q.getResultList();
-    }
+    }*/
     
     /**
      * Lista mallas por carrera y docente.     
@@ -62,6 +61,7 @@ public class PedMallaFacade extends AbstractFacade<PedMalla> {
      * @return Mallas por carrera.
      */
     public List<PedMalla> obtieneMallaDocente(Long orgEstructuraCarrera, GthPersona gthPersona, Long pelCodigo){
+        
 //        Query q = getEntityManager().createQuery("SELECT distinct mal "
 //                                               + "FROM   PedMalla mal, "
 //                                               + "       OfeGrupo gru, "
@@ -102,21 +102,28 @@ public class PedMallaFacade extends AbstractFacade<PedMalla> {
         return q.getResultList();
     }
     
-     public List<Integer> obtieneNivelMalla(Long orgEstructuraCarrera, Long pelCodigo){
-        Query q = getEntityManager().createQuery("SELECT distinct mal.malNivel "
-                                               + "FROM   PedMalla mal, "
-                                               + "       OfeGrupo gru, "
-                                               + "       OfeDistributivo dis "
-                                               + "WHERE  mal.malCodigo    = gru.malCodigo "
-                                               + "AND    gru.gruCodigo = dis.ofeGrupo.gruCodigo "
-                                               + "AND    dis.estCodigo = :estCodigoCarrera "
-                                               + "AND    gru.pelCodigo  = :pelCodigo "
-                                               + "AND    mal.audEliminado = 'N' "
-                                               + "ORDER BY mal.pedMateria.matDescripcion ")
-                .setParameter("estCodigoCarrera", orgEstructuraCarrera)
-                .setParameter("pelCodigo", pelCodigo);
-        (new CacheStoreModeParam(CacheStoreMode.REFRESH)).processParam(q);
-        return q.getResultList();
+    public List<Integer> obtieneNivelMalla(Long orgEstructura, Long pelCodigo){
+          
+        System.err.println("orgEstructuraaaa "+orgEstructura+pelCodigo);
+                  
+             Query q = getEntityManager().createNativeQuery(" SELECT distinct mal.mal_Nivel " +
+                                                            " FROM   ped.Ped_Malla mal, " +
+                                                            "       ofe.Ofe_Grupo gru, " +
+                                                            "       ofe.ofe_distributivo dis " +
+                                                            " WHERE  mal.mal_Codigo    = gru.mal_Codigo " +
+                                                            " AND    gru.gru_Codigo = dis.gru_Codigo " +
+                                                            " AND    dis.est_Codigo IN     (SELECT est_codigo e " +
+                                                            "                              FROM   org.org_estructura e " +
+                                                            "                              WHERE  e.est_nivel  = 4 " +
+                                                            "                              START WITH e.est_codigo = ?1 " +
+                                                            "                              CONNECT BY PRIOR e.est_codigo = e.est_codigo_padre) " +
+                                                            " AND    gru.pel_Codigo  = ?2 " +
+                                                            " AND    mal.aud_Eliminado = 'N' " +
+                                                            " ORDER BY mal.mal_Nivel ")
+                .setParameter(1, orgEstructura)
+                .setParameter(2, pelCodigo);
+              //  (new CacheStoreModeParam(CacheStoreMode.REFRESH)).processParam(q);
+                return q.getResultList();
     }
     
 }

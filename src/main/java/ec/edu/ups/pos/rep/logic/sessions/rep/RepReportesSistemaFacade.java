@@ -31,6 +31,7 @@ public class RepReportesSistemaFacade extends AbstractFacade<RepReportesSistema>
 
         //Obtiene la lista de docentes de GthPersona y GthContrato
     public List<RepReportesSistema> listaReportesAutorizados(String user, String sistema, String modulo) {
+        System.out.println("2s: "+user+" sistema: "+sistema+" módulo: "+modulo);
         Query q = getEntityManager().createNativeQuery("SELECT DISTINCT res.* " +
                                                        "FROM   rep.rep_reportes_sistema       res, " +
                                                        "       rep.rep_reporte_rol            rer, " +
