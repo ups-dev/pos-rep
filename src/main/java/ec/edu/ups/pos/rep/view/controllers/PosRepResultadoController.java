@@ -226,31 +226,6 @@ public class PosRepResultadoController implements Serializable{
          updatePeriodoPorCampusList();
     }
 
-    /**
-     * Actualizar lista de Periodo por Campus
-     */
-   /* public void updatePeriodoPorCampusList() {
-        setOrgPeriodoInicial(null);
-        setOrgPeriodoFinal(null);
-        setOrgPeriodoLectivoList(null);
-        updateGrupoList();
-        if(getOrgEstructuraCampus()!=null){            
-            setOrgPeriodoLectivoList(orgPeriodoEstructuraFacade.obtienePeriodoPorCampus(getOrgEstructuraCampus()));
-        }else{
-            setOrgPeriodoLectivoList(orgPeriodoEstructuraFacade.obtienePeriodoLectivo());
-        }          
-    }*/
-    
-//        public void updatePeriodoPorCampusList() {
-//        setOrgPeriodoInicial(null);
-//        setOrgPeriodoFinal(null);
-//        setOrgPeriodoLectivoList(null);
-//        updateGrupoList();
-//        if(getOrgEstructuraCampus()!=null){            
-//            setOrgPeriodoLectivoList(orgPeriodoEstructuraFacade.obtieneCohortePorPrograma(getOrgEstructuraCarrera()));
-//        }else{
-//            setOrgPeriodoLectivoList(orgPeriodoEstructuraFacade.obtienePeriodoLectivo());
-//        }   
     
        public void updatePeriodoPorCampusList() {
         setOrgPeriodoInicial(null);
@@ -258,30 +233,15 @@ public class PosRepResultadoController implements Serializable{
         setOrgPeriodoLectivoList(null);
         updateGrupoList();
         
-        ///////corregir
         if (obtenerEstructura() != null) { 
              
              setOrgPeriodoLectivoList(orgPeriodoEstructuraFacade.obtieneCohortePorEstructura(obtenerEstructura()));
       
         }else{
-            System.out.println("igual a NULL");
+           // System.out.println("igual a NULL");
             setOrgPeriodoLectivoList(orgPeriodoEstructuraFacade.obtienePeriodoLectivo());
         }
-        
-        /*    if(getOrgEstructuraCarrera()!=null){
-        
-        
-               setOrgPeriodoLectivoList(orgPeriodoEstructuraFacade.obtieneCohortePorEstructura(getOrgEstructuraCarrera()));
-        
-        
-            }else if (getOrgEstructuraCampus()!=null && getOrgEstructuraCarrera()==null){            
-                setOrgPeriodoLectivoList(orgPeriodoEstructuraFacade.obtieneCohortePorEstructura(getOrgEstructuraCampus()));
-            }else if (getOrgEstructuraSede()!=null && getOrgEstructuraCampus()==null && getOrgEstructuraCarrera()==null){   
-                setOrgPeriodoLectivoList(orgPeriodoEstructuraFacade.obtieneCohortePorEstructura(getOrgEstructuraSede()));
-            }else{
-                setOrgPeriodoLectivoList(orgPeriodoEstructuraFacade.obtienePeriodoLectivo());
-            }  */
-        
+               
             updateNivelMallaList();
         
        }          
@@ -743,23 +703,6 @@ public class PosRepResultadoController implements Serializable{
     public void setPafPagado(String pafPagado) {
         this.pafPagado = pafPagado;
     }
-
-   /* public OrgEstructura getOrgEstructura() {
-        return orgEstructura;
-    }
-
-    public void setOrgEstructura(OrgEstructura orgEstructura) {
-        this.orgEstructura = orgEstructura;
-    }
-
-    public List<OrgEstructura> getOrgEstructuraList() {
-        return orgEstructuraList;
-    }
-
-    public void setOrgEstructuraList(List<OrgEstructura> orgEstructuraList) {
-        this.orgEstructuraList = orgEstructuraList;
-    }
-    */
    
 }
           

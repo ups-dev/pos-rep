@@ -5,7 +5,6 @@ import ec.edu.ups.pos.rep.logic.sessions.AbstractFacade;
 import ec.edu.ups.org.common.data.entities.OrgEstructura;
 import ec.edu.ups.org.common.data.entities.OrgPeriodoEstructura;
 import ec.edu.ups.org.common.data.entities.OrgPeriodoLectivo;
-import ec.edu.ups.ped.common.data.entities.PedMalla;
 import ec.edu.ups.util.jpa.search.param.CacheStoreModeParam;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -44,6 +43,7 @@ public class OrgPeriodoEstructuraFacade extends AbstractFacade<OrgPeriodoEstruct
         System.out.println("periodos "+q.getResultList().size());
         return q.getResultList();
     }*/
+    
     public List<OrgPeriodoLectivo> obtieneCohortePorPrograma(OrgEstructura orgEstructuraPrograma){
         System.out.println("programa "+orgEstructuraPrograma);
         Query q = getEntityManager().createQuery("SELECT distinct pee.orgPeriodoLectivo FROM OrgPeriodoEstructura pee WHERE pee.orgEstructura = :orgEstructuraPrograma AND pee.orgPeriodoLectivo.pelTipo= 'P' AND pee.audEliminado= 'N' ORDER BY pee.orgPeriodoLectivo.pelCodigo DESC")
@@ -68,20 +68,12 @@ public class OrgPeriodoEstructuraFacade extends AbstractFacade<OrgPeriodoEstruct
                         "                            CONNECT BY PRIOR e.est_codigo = e.est_codigo_padre) " +
                         " and pel.pel_Tipo = 'P' " +
                         " and pel.aud_eliminado = 'N' " +
-                        " order by 1 ", OrgPeriodoLectivo.class )
+                        " order by 1 DESC ", OrgPeriodoLectivo.class )
 
                 .setParameter(1, orgEstructura.getEstCodigo());
                 
         (new CacheStoreModeParam(CacheStoreMode.REFRESH)).processParam(q);
         return q.getResultList();
-        
-        
-        
-       /* Query q = getEntityManager().createQuery("SELECT distinct pee.orgPeriodoLectivo FROM OrgPeriodoEstructura pee WHERE pee.orgEstructura = :orgEstructuraPrograma AND pee.orgPeriodoLectivo.pelTipo= 'P' AND pee.audEliminado= 'N' ORDER BY pee.orgPeriodoLectivo.pelCodigo DESC")
-                .setParameter("orgEstructuraPrograma", orgEstructura);                
-        (new CacheStoreModeParam(CacheStoreMode.REFRESH)).processParam(q);
-        System.out.println("periodos "+q.getResultList().size());
-        return q.getResultList();*/
     }  
       
     /**
@@ -89,7 +81,7 @@ public class OrgPeriodoEstructuraFacade extends AbstractFacade<OrgPeriodoEstruct
      * @return Periodos.
      */
     public List<OrgPeriodoLectivo> obtienePeriodoLectivo(){
-        Query q = getEntityManager().createQuery("SELECT pel FROM OrgPeriodoLectivo pel WHERE pel.pelTipo= 'P' AND pel.audEliminado= 'N' ORDER BY pel.pelCodigo");                
+        Query q = getEntityManager().createQuery("SELECT pel FROM OrgPeriodoLectivo pel WHERE pel.pelTipo= 'P' AND pel.audEliminado= 'N' ORDER BY pel.pelCodigo DESC");                
         (new CacheStoreModeParam(CacheStoreMode.REFRESH)).processParam(q);
         return q.getResultList();
     }

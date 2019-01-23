@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-MAT-0001" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="34"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_pel_codigo" class="java.lang.Integer">
@@ -408,42 +408,42 @@ ORDER   BY campus,posgrado,nivel,modulo,grupo,docente,estudiante]]>
 				</graphicElement>
 			</rectangle>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido" x="20" y="0" width="66" height="16" isPrintWhenDetailOverflows="true" uuid="109f43c8-2a02-435f-aa0d-29f727bc0d88"/>
+				<reportElement style="Estilo_contenido7" x="20" y="0" width="66" height="16" isPrintWhenDetailOverflows="true" uuid="109f43c8-2a02-435f-aa0d-29f727bc0d88"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{CEDULA}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido" x="87" y="0" width="204" height="16" isPrintWhenDetailOverflows="true" uuid="c7f1f9be-21fb-4ef0-b850-8a190a4a431f"/>
+				<reportElement style="Estilo_contenido7" x="87" y="0" width="204" height="16" isPrintWhenDetailOverflows="true" uuid="c7f1f9be-21fb-4ef0-b850-8a190a4a431f"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ESTUDIANTE}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido" x="294" y="0" width="163" height="16" isPrintWhenDetailOverflows="true" uuid="39522700-e97d-4a7f-a3be-119d0c761c71"/>
+				<reportElement style="Estilo_contenido7" x="294" y="0" width="163" height="16" isPrintWhenDetailOverflows="true" uuid="39522700-e97d-4a7f-a3be-119d0c761c71"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{EMAIL}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido" x="457" y="0" width="43" height="16" isPrintWhenDetailOverflows="true" uuid="d69e5733-7394-4f30-93c9-91a40c7c99b3"/>
+				<reportElement style="Estilo_contenido7" x="457" y="0" width="43" height="16" isPrintWhenDetailOverflows="true" uuid="d69e5733-7394-4f30-93c9-91a40c7c99b3"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{PAGADO}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido" x="500" y="0" width="55" height="16" isPrintWhenDetailOverflows="true" uuid="d9f5088d-bf29-407c-a464-4a9a97d4b129"/>
+				<reportElement style="Estilo_contenido7" x="500" y="0" width="55" height="16" isPrintWhenDetailOverflows="true" uuid="d9f5088d-bf29-407c-a464-4a9a97d4b129"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{NOTA_FINAL}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="Estilo_contenido" x="2" y="0" width="18" height="16" uuid="f4b55b7d-5661-4d5f-a659-b89e2986362a"/>
+				<reportElement style="Estilo_contenido7" x="2" y="0" width="18" height="16" uuid="f4b55b7d-5661-4d5f-a659-b89e2986362a"/>
 				<textFieldExpression><![CDATA[$V{ESTUDIANTE_1}]]></textFieldExpression>
 			</textField>
 		</band>
