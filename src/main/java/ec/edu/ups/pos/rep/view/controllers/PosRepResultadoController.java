@@ -1,16 +1,11 @@
 package ec.edu.ups.pos.rep.view.controllers;
 
-import ec.edu.ups.pos.rep.data.entities.eva.EvaEvaCueInf;
-import ec.edu.ups.pos.rep.data.entities.eva.EvaEvaluacionCuestionario;
-import ec.edu.ups.pos.rep.data.entities.eva.EvaTipoInformante;
+
 import ec.edu.ups.pos.rep.data.entities.gth.GthPersona;
 import ec.edu.ups.pos.rep.data.entities.ofe.OfeGrupo;
 import ec.edu.ups.pos.rep.data.entities.rep.RepParametroReporte;
 import ec.edu.ups.pos.rep.data.entities.rep.RepReportesSistema;
 import ec.edu.ups.pos.rep.data.utils.PosRepConstants;
-import ec.edu.ups.pos.rep.logic.sessions.eva.EvaEvaCueInfFacade;
-import ec.edu.ups.pos.rep.logic.sessions.eva.EvaEvaluacionCuestionarioFacade;
-import ec.edu.ups.pos.rep.logic.sessions.eva.EvaTipoInformanteFacade;
 import ec.edu.ups.pos.rep.logic.sessions.gth.GthPersonaFacade;
 import ec.edu.ups.pos.rep.logic.sessions.ofe.OfeGrupoFacade;
 import ec.edu.ups.pos.rep.logic.sessions.org.OrgEstructuraFacade;
@@ -25,6 +20,7 @@ import ec.edu.ups.org.common.data.entities.OrgEstructura;
 import ec.edu.ups.org.common.data.entities.OrgPeriodoLectivo;
 import ec.edu.ups.ped.common.data.entities.PedMalla;
 import ec.edu.ups.ped.common.data.entities.PedModalidad;
+//import ec.edu.ups.pos.rep.data.entities.sigac.ClienteLocal;
 import ec.edu.ups.pos.rep.data.entities.wrapper.InsAlumnoWrapper;
 import ec.edu.ups.pos.rep.logic.sessions.ins.InsAlumnoFacade;
 import ec.edu.ups.util.jpa.search.DefaultParamOrderSearch;
@@ -44,6 +40,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.persistence.CacheStoreMode;
 import org.omnifaces.util.Utils;
+import org.primefaces.PrimeFaces;
 import org.primefaces.context.RequestContext;
 
 @Named(value = "posRepResultadoController")
@@ -53,22 +50,18 @@ public class PosRepResultadoController implements Serializable{
     private OrgEstructura orgEstructuraSede;
     private OrgEstructura orgEstructuraCampus;
     private OrgEstructura orgEstructuraCarrera;
+     
     private OrgPeriodoLectivo orgPeriodoInicial;
     private OrgPeriodoLectivo orgPeriodoFinal;
     private PedModalidad pedModalidad;
-    private EvaEvaluacionCuestionario evaEvaluacionCuestionario;
-    private EvaEvaCueInf evaEvaCueInf;
-    private EvaTipoInformante evaTipoInformante;
-    private List<EvaTipoInformante> evaTipoInformanteList;
     private GthPersona gthPersona;
     private PedMalla pedMalla;
     private OfeGrupo ofeGrupo;
     private List<OrgEstructura> orgEstructuraSedeList;
     private List<OrgEstructura> orgEstructuraCampusList;
     private List<OrgEstructura> orgEstructuraCarreraList;
+  
     private List<OrgPeriodoLectivo> orgPeriodoLectivoList;
-    private List<EvaEvaluacionCuestionario> evaEvaluacionCuestionarioList;
-    private List<EvaEvaCueInf> evaEvaCueInfList;
     private List<RepReportesSistema> repReportesSistemaList;
     private List<GthPersona> gthPersonaList;
     private List<PedMalla> pedMallaList;
@@ -76,21 +69,16 @@ public class PosRepResultadoController implements Serializable{
     private List<Integer> pedMallaNivelList;
     private Integer pedNivelMalla;
     private List<InsAlumnoWrapper> listadoAlumnos;
-    
+    private String pafPagado;
+      
     private InsAlumnoWrapper insAlumnoWrapper;
     
 
       
     @Inject
-    private EvaEvaluacionCuestionarioFacade evaEvaluacionCuestionarioFacade;
-    @Inject
     private SecOrgEstructuraController secOrgEstructuraController;
     @Inject
     private OrgEstructuraFacade orgEstructuraFacade;
-    @Inject
-    private EvaEvaCueInfFacade evaCueInfFacade;
-    @Inject
-    private EvaTipoInformanteFacade evaTipoInformanteFacade;
     @Inject
     private RepReportesSistemaController repReportesSistemaController;  
     @Inject
@@ -108,6 +96,10 @@ public class PosRepResultadoController implements Serializable{
     
     @Inject
     private InsAlumnoFacade insAlumnoFacade; 
+ 
+             
+          
+    
     
     private String filtro = "";
     private int maxResult = 10;
@@ -128,9 +120,11 @@ public class PosRepResultadoController implements Serializable{
     
     public void callEventAjaxOrgEstructura() {
         actualizaFiltros();   
-        getRequestContext().update("PosReportesForm:PosReportesSistemaDataTable");
-        getRequestContext().update("PosReportesForm:PosRepExportToolbar");
-        getRequestContext().update("PosReportesForm:PosRepFiltroPanel");
+        
+        PrimeFaces.current().ajax().update("PosReportesForm:PosReportesSistemaDataTable");
+        PrimeFaces.current().ajax().update("PosReportesForm:PosRepExportToolbar");
+        PrimeFaces.current().ajax().update("PosReportesForm:PosRepFiltroPanel09"); 
+        
       //  getRequestContext().update("PosReportesForm:SbeRepFiltroPanel");
 //        updateSedeList();        
     }
@@ -151,12 +145,12 @@ public class PosRepResultadoController implements Serializable{
     }
     
     public void updateSedeList() {        
-        if (secOrgEstructuraController.getOrgEstructuraSede().getEstCodigo().equals(PosRepConstants.TODAS_SEDES)) {
+        if (secOrgEstructuraController.getEstructuraSede().getEstCodigo().equals(PosRepConstants.TODAS_SEDES)) {
             setValidaSeleccionEstructuraSeguridadSede(false);
             orgEstructuraSedeList = orgEstructuraFacade.listaEstructuraSedeActivo();
         } else {
             setValidaSeleccionEstructuraSeguridadSede(true);
-            setOrgEstructuraSedeList(Arrays.asList(secOrgEstructuraController.getOrgEstructuraSede()));
+            setOrgEstructuraSedeList(Arrays.asList(orgEstructuraFacade.find(secOrgEstructuraController.getEstructuraSede().getEstCodigo(), true)));
             if(!orgEstructuraSedeList.isEmpty()){
                 setOrgEstructuraSede(getOrgEstructuraSedeList().get(0));
             }            
@@ -168,46 +162,47 @@ public class PosRepResultadoController implements Serializable{
         setOrgEstructuraCampus(null);
         setOrgEstructuraCampusList(null);        
         if (getOrgEstructuraSede() != null) {
-            if (!Objects.equals(secOrgEstructuraController.getOrgEstructuraCampus().getEstCodigo(), PosRepConstants.TODOS_CAMPUS)
-                    && !Objects.equals(secOrgEstructuraController.getOrgEstructuraSede().getEstCodigo(), PosRepConstants.TODAS_SEDES)) {
+            if (!Objects.equals(secOrgEstructuraController.getEstructuraCampus().getEstCodigo(), PosRepConstants.TODOS_CAMPUS)
+                    && !Objects.equals(secOrgEstructuraController.getEstructuraSede().getEstCodigo(), PosRepConstants.TODAS_SEDES)) {
                 validaSeleccionEstructuraSeguridadCampus=true;
-                setOrgEstructuraCampusList(Arrays.asList(secOrgEstructuraController.getOrgEstructuraCampus()));
+                setOrgEstructuraCampusList(Arrays.asList(orgEstructuraFacade.find(secOrgEstructuraController.getEstructuraCampus().getEstCodigo(), true)));
                 if(!(orgEstructuraCampusList.isEmpty())){
                     setOrgEstructuraCampus(orgEstructuraCampusList.get(0));
                 }
             } else {
                 validaSeleccionEstructuraSeguridadCampus=false;
                 orgEstructuraCampusList = orgEstructuraFacade.listaEstructuraCampusActivo(getOrgEstructuraSede());
-                orgEstructuraCampusList.retainAll(secOrgEstructuraController.updateCampusList(getOrgEstructuraSede()));                 
+//                orgEstructuraCampusList.retainAll(secOrgEstructuraController.updateCampusList(new SecEstructuraWrapper(getOrgEstructuraSede().getEstCodigo())));                 
             }            
         }  
         updateCarreraList();
+  
     }
 
     public void updateCarreraList() {
-        //setOrgEstructuraCarrera(null);
+        
+        setOrgEstructuraCarrera(null);
         setOrgEstructuraCarreraList(null);
         //updatePeriodoPorCampusList();
-        updateEvaluacionCuestionarioList(); 
         updateAsignaturaList();
         setGthPersona(null);
         //setGthPersonaList(null);
         if (getOrgEstructuraCampus() != null) {
             if (secOrgEstructuraController.getTipoEstructura()==TipoEstructura.PROGRAMA) {
-                if (Objects.equals(secOrgEstructuraController.getOrgEstructuraCarrera().getEstCodigo(), PosRepConstants.TODAS_CARRERAS)) {
+                if (Objects.equals(secOrgEstructuraController.getEstructuraCarrera().getEstCodigo(), PosRepConstants.TODAS_CARRERAS)) {
                     orgEstructuraCarreraList = orgEstructuraFacade.listaEstructuraPostGradoSelecActivo(getOrgEstructuraCampus());
-                    orgEstructuraCarreraList.retainAll(secOrgEstructuraController.updateCarreraList(getOrgEstructuraCampus()));
+                    //orgEstructuraCarreraList.retainAll(secOrgEstructuraController.updateCarreraList(new SecEstructuraWrapper(getOrgEstructuraCampus().getEstCodigo())));
                 } else {
                     orgEstructuraCarreraList = orgEstructuraFacade.listaEstructuraPostGradoSelecActivo(getOrgEstructuraCampus());
-                    if (orgEstructuraCarreraList.contains(secOrgEstructuraController.getOrgEstructuraCarrera())) {
+                    if (orgEstructuraCarreraList.contains(secOrgEstructuraController.getEstructuraCarrera())) {
                         orgEstructuraCarreraList = new ArrayList<>();
-                        orgEstructuraCarreraList.add(secOrgEstructuraController.getOrgEstructuraCarrera());
+                        orgEstructuraCarreraList.add(orgEstructuraFacade.find(secOrgEstructuraController.getEstructuraCarrera().getEstCodigo(), true));
                     } else {
                         orgEstructuraCarreraList = new ArrayList<>();
                     }
                 }
             }
-           updatePeriodoPorCampusList();
+          
            
            /* if (secOrgEstructuraController.getTipoEstructura()==TipoEstructura.CARRERA) {
                 if (Objects.equals(secOrgEstructuraController.getOrgEstructuraCarrera().getEstCodigo(), PosRepConstants.TODAS_CARRERAS)) {
@@ -228,82 +223,29 @@ public class PosRepResultadoController implements Serializable{
                     }
                 }
             }*/
-        }                                        
+        }  
+         updatePeriodoPorCampusList();
     }
+
     
-    /**
-     * Actualizar lista de EvaluacionCuestionario
-     */
-    public void updateEvaluacionCuestionarioList() { 
-        setEvaEvaluacionCuestionario(null);
-        setEvaEvaluacionCuestionarioList(null);
-        setEvaEvaCueInf(null);
-        setEvaEvaCueInfList(null);
-        updateGrupoList();  
-//        if(getOrgPeriodoInicial()!=null){
-        setEvaEvaluacionCuestionarioList(evaEvaluacionCuestionarioFacade.obtieneEvaluacionCuestionario(getPedModalidad(), getOrgPeriodoInicial(), getOrgPeriodoFinal(), getOrgEstructuraCampus()));        
-//        }
-    }
-    
-    /**
-     * Actualizar lista de EvaluacionCuestionario
-     */
-    public void updateInformanteList() {
-        updateTipoInformanteList();
-        if(getEvaEvaluacionCuestionario()!=null){            
-            setEvaEvaCueInfList(evaCueInfFacade.obtieneInformantePorEvaluacionCuestionario(getEvaEvaluacionCuestionario()));
+       public void updatePeriodoPorCampusList() {
+        setOrgPeriodoInicial(null);
+        setOrgPeriodoFinal(null);
+        setOrgPeriodoLectivoList(null);
+        updateGrupoList();
+        
+        if (obtenerEstructura() != null) { 
+             
+             setOrgPeriodoLectivoList(orgPeriodoEstructuraFacade.obtieneCohortePorEstructura(obtenerEstructura()));
+      
+        }else{
+           // System.out.println("igual a NULL");
+            setOrgPeriodoLectivoList(orgPeriodoEstructuraFacade.obtienePeriodoLectivo());
         }
-    }
-    
-    public void updateTipoInformanteList(){
-        setEvaTipoInformanteList(evaTipoInformanteFacade.obtieneTipoInformante());
-    }
-
-    public EvaTipoInformante getEvaTipoInformante() {
-        return evaTipoInformante;
-    }
-
-    public void setEvaTipoInformante(EvaTipoInformante evaTipoInformante) {
-        this.evaTipoInformante = evaTipoInformante;
-    }
-
-    public List<EvaTipoInformante> getEvaTipoInformanteList() {
-        updateTipoInformanteList();
-        return evaTipoInformanteList;
-    }
-
-    public void setEvaTipoInformanteList(List<EvaTipoInformante> evaTipoInformanteList) {
-        this.evaTipoInformanteList = evaTipoInformanteList;
-    }
-
-    /**
-     * Actualizar lista de Periodo por Campus
-     */
-   /* public void updatePeriodoPorCampusList() {
-        setOrgPeriodoInicial(null);
-        setOrgPeriodoFinal(null);
-        setOrgPeriodoLectivoList(null);
-        updateGrupoList();
-        if(getOrgEstructuraCampus()!=null){            
-            setOrgPeriodoLectivoList(orgPeriodoEstructuraFacade.obtienePeriodoPorCampus(getOrgEstructuraCampus()));
-        }else{
-            setOrgPeriodoLectivoList(orgPeriodoEstructuraFacade.obtienePeriodoLectivo());
-        }          
-    }*/
-    
-        public void updatePeriodoPorCampusList() {
-        setOrgPeriodoInicial(null);
-        setOrgPeriodoFinal(null);
-        setOrgPeriodoLectivoList(null);
-        updateGrupoList();
-        if(getOrgEstructuraCampus()!=null){            
-            setOrgPeriodoLectivoList(orgPeriodoEstructuraFacade.obtieneCohortePorPrograma(getOrgEstructuraCarrera()));
-        }else{
-            setOrgPeriodoLectivoList(orgPeriodoEstructuraFacade.obtienePeriodoLectivo());
-        }          
-    }
-    
-  
+               
+            updateNivelMallaList();
+        
+       }          
     
     /**
      * Actualizar lista de Asignaturas por Carrera
@@ -417,22 +359,6 @@ public class PosRepResultadoController implements Serializable{
         this.pedModalidad = pedModalidad;
     }    
 
-    public EvaEvaluacionCuestionario getEvaEvaluacionCuestionario() {
-        return evaEvaluacionCuestionario;
-    }
-
-    public void setEvaEvaluacionCuestionario(EvaEvaluacionCuestionario evaEvaluacionCuestionario) {
-        this.evaEvaluacionCuestionario = evaEvaluacionCuestionario;
-    }  
-
-    public EvaEvaCueInf getEvaEvaCueInf() {
-        return evaEvaCueInf;
-    }
-
-    public void setEvaEvaCueInf(EvaEvaCueInf evaEvaCueInf) {
-        this.evaEvaCueInf = evaEvaCueInf;
-    } 
-
     public GthPersona getGthPersona() {
         return gthPersona;
     }
@@ -494,30 +420,8 @@ public class PosRepResultadoController implements Serializable{
     public void setOrgPeriodoLectivoList(List<OrgPeriodoLectivo> orgPeriodoLectivoList) {
         this.orgPeriodoLectivoList = orgPeriodoLectivoList;
     }        
-    
-    
-    
-    public List<EvaEvaluacionCuestionario> getEvaEvaluacionCuestionarioList() {
-//        if(evaEvaluacionCuestionarioList==null){
-//            updateEvaluacionCuestionarioList();
-//        }
-        return evaEvaluacionCuestionarioList;
-    }
-
-    public void setEvaEvaluacionCuestionarioList(List<EvaEvaluacionCuestionario> evaEvaluacionCuestionarioList) {
-        this.evaEvaluacionCuestionarioList = evaEvaluacionCuestionarioList;
-    }   
-
-    public List<EvaEvaCueInf> getEvaEvaCueInfList() {
-        return evaEvaCueInfList;
-    }
-
-    public void setEvaEvaCueInfList(List<EvaEvaCueInf> evaEvaCueInfList) {
-        this.evaEvaCueInfList = evaEvaCueInfList;
-    }    
 
     public List<GthPersona> getGthPersonaList() {
-               
         Long pelCodigo = 0L;
         if (getOrgPeriodoInicial() != null)
             if (getOrgPeriodoInicial().getPelCodigo() != null)
@@ -545,7 +449,6 @@ public class PosRepResultadoController implements Serializable{
 
     public void setGthPersonaList(List<GthPersona> gthPersonaList) {
         this.gthPersonaList = gthPersonaList;
-            
     }
 
     public List<PedMalla> getPedMallaList() {
@@ -573,7 +476,6 @@ public class PosRepResultadoController implements Serializable{
     }    
 
     public List<GthPersona> completePersona(String query) {
-            
         List<GthPersona> suggestions = new ArrayList<>();
         filtrarDocente(query.toUpperCase(Locale.getDefault()));
         for (GthPersona i : getGthPersonaList()) {
@@ -590,7 +492,6 @@ public class PosRepResultadoController implements Serializable{
          System.out.println("value" +value);
         setFiltro(value);
         setGthPersonaList(null);
-              
     }
     
     public void cambioSede(){
@@ -617,10 +518,6 @@ public class PosRepResultadoController implements Serializable{
         setPedModalidad(null);
         setPedMallaNivelList(null);
         setPedNivelMalla(null);
-        setEvaEvaluacionCuestionario(null);
-        setEvaEvaluacionCuestionarioList(null);
-        setEvaEvaCueInf(null);
-        setEvaEvaCueInfList(null);
         setGthPersona(null);
         setGthPersonaList(null);
         setPedMalla(null);
@@ -698,9 +595,57 @@ public class PosRepResultadoController implements Serializable{
      * Actualizar lista de Nivel de asignatura  revisaaaaaar
      */
     public void updateNivelMallaList() {  
-       pedMallaNivelList = pedMallaFacade.obtieneNivelMalla(getOrgEstructuraCarrera().getEstCodigo(), getOrgPeriodoInicial().getPelCodigo());
+        
+        setPedMallaNivelList(null);
+         OrgPeriodoLectivo orgPeriodoInicial=getOrgPeriodoInicial();
+          //  Long codigoPeriodo= orgPeriodoInicial.getPelCodigo();
+           
+          
+         System.out.println("getOrgEstructuraCarrera().getEstCodigo()"+getOrgEstructuraCarrera());
+         System.out.println("getOrgEstructuraCampus().getEstCodigo()"+getOrgEstructuraCampus());
+         System.out.println("getOrgEstructuraSede().getEstCodigo()"+getOrgEstructuraSede());
+         System.out.println("periodouuuu "+getOrgPeriodoInicial());
+                
+        if (obtenerEstructura() != null) {
+           
+             pedMallaNivelList = pedMallaFacade.obtieneNivelMalla(obtenerEstructura().getEstCodigo(),2001L); 
+             //pedMallaNivelList = pedMallaFacade.obtieneNivelMalla(obtenerEstructura().getEstCodigo(),getOrgPeriodoInicial().getPelCodigo());
+        
+        }else 
+        {
+            System.out.println("igual a NULL");
+            pedMallaNivelList = pedMallaFacade.obtieneNivelMalla(PosRepConstants.TODAS_SEDES, 2001L);   
+        }
         
     }
+    public OrgEstructura obtenerEstructura(){
+        
+        OrgEstructura estructuraSeleccionada = null;
+        
+        if( getOrgEstructuraCarrera() != null){
+            
+            estructuraSeleccionada = getOrgEstructuraCarrera();
+            
+        
+        }else {
+        
+           if (getOrgEstructuraCampus()!=null){            
+           estructuraSeleccionada = getOrgEstructuraCampus();
+            
+            }else 
+           {
+               if (getOrgEstructuraSede()!=null) {
+                   estructuraSeleccionada = getOrgEstructuraSede();
+                   
+               }
+           
+           }
+        
+        }
+        return estructuraSeleccionada;
+
+    }
+    
     public String obtenerAnioPosgrado(Date fechaInicio, Date fechaFin ){
        
         Calendar fecha1 = Calendar.getInstance();
@@ -713,9 +658,6 @@ public class PosRepResultadoController implements Serializable{
        
     return anio_posgrado;
     }
-    
-
-
 
     public InsAlumnoFacade getInsAlumnoFacade() {
         return insAlumnoFacade;
@@ -724,19 +666,17 @@ public class PosRepResultadoController implements Serializable{
     public void setInsAlumnoFacade(InsAlumnoFacade insAlumnoFacade) {
         this.insAlumnoFacade = insAlumnoFacade;
     }
- 
-    
     
     //Metodo controller
 
-public List<InsAlumnoWrapper> getListadoAlumnos() {
+    public List<InsAlumnoWrapper> getListadoAlumnos() {
         return listadoAlumnos;
     }
 
     public void setListadoAlumnos(List<InsAlumnoWrapper> listadoAlumnos) {
         this.listadoAlumnos = listadoAlumnos;
     }
-    public List<InsAlumnoWrapper> autoCompleteAlumnos(String query) {
+   public List<InsAlumnoWrapper> autoCompleteAlumnos(String query) {
         List<InsAlumnoWrapper> suggestions = new ArrayList<>();
 
         if (!Utils.isEmpty(query)) {
@@ -757,8 +697,13 @@ public List<InsAlumnoWrapper> getListadoAlumnos() {
         this.insAlumnoWrapper = insAlumnoWrapper;
     }
 
+    public String getPafPagado() {
+        return pafPagado;
+    }
+
+    public void setPafPagado(String pafPagado) {
+        this.pafPagado = pafPagado;
+    }
    
-    
-    
 }
           

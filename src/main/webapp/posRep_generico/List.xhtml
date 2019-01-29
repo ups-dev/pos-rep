@@ -43,22 +43,22 @@
                                                   :PosReportesForm:campus, 
                                                   :PosReportesForm:programa,
                                                   :PosReportesForm:cohorte,
-                                                  :PosReportesForm:modalidad,
                                                   :PosReportesForm:nivel,
                                                   :PosReportesForm:docente, 
                                                   :PosReportesForm:asignatura, 
-                                                  :PosReportesForm:grupo" listener="#{posRepResultadoController.actualizaFiltros()}"/>
+                                                  :PosReportesForm:grupo,
+                                                  :PosReportesForm:pagado" listener="#{posRepResultadoController.actualizaFiltros()}"/>
                 <p:ajax event="filter" update=":PosReportesForm:PosRepExportToolbar, 
                                                   :PosReportesForm:alumno, 
                                                   :PosReportesForm:sede, 
                                                   :PosReportesForm:campus, 
                                                   :PosReportesForm:programa, 
-                                                  :PosReportesForm:cohorte, 
-                                                  :PosReportesForm:modalidad, 
+                                                  :PosReportesForm:cohorte,  
                                                   :PosReportesForm:nivel,
                                                   :PosReportesForm:docente, 
                                                   :PosReportesForm:asignatura, 
-                                                  :PosReportesForm:grupo" listener="#{repReportesSistemaController.setSelected(null)}"/>   
+                                                  :PosReportesForm:grupo,
+                                                  :PosReportesForm:pagado" listener="#{repReportesSistemaController.setSelected(null)}"/>   
                 
                 
                 <p:column sortBy="#{item.resReporte}" filterBy="#{item.resReporte}" filterMatchMode="contains">
@@ -137,7 +137,7 @@
                                 <p:outputLabel value="#{posRepBundle['Sede']}:" />                        
                             </ui:define>
                             <ui:define name="ups-search-param-content">                       
-                                <p:selectOneMenu id="evaRepFiltrarEstructuraSede" 
+                                <p:selectOneMenu id="posRepFiltrarEstructuraSede" 
                                                  value="#{posRepResultadoController.orgEstructuraSede}"                                         
                                                  filter="true" filterMatchMode="contains" var="filtro">                                                        
                                     <f:selectItem itemLabel="#{posRepBundle['Todos']}" itemValue="" itemDisabled="#{posRepResultadoController.validaSeleccionEstructuraSeguridadSede}"/>
@@ -150,7 +150,7 @@
                                         <h:outputText value="#{filtro.orgDescripcionEstructura.deeDescripcion}" />  
                                     </p:column>
                                     <p:ajax listener="#{posRepResultadoController.updateCampusList()}" 
-                                            update="posRepFiltrarEstructuraCampus, posRepFiltrarEstructuraCarrera, posRepFiltrarPeriodoInicial, posRepFiltrarAsignatura, posRepFiltrarGrupo, posRepFiltrarDocente"/>
+                                            update="posRepFiltrarEstructuraCampus, posRepFiltrarEstructuraCarrera, posRepFiltrarPeriodoInicial, posRepFiltrarNivel, posRepFiltrarAsignatura, posRepFiltrarGrupo, posRepFiltrarDocente"/>
                                 </p:selectOneMenu>
                             </ui:define>
                         </ui:decorate>
@@ -178,7 +178,7 @@
                                     <p:column>
                                         <h:outputText value="#{filtro.orgDescripcionEstructura.deeDescripcion}" />  
                                     </p:column>   
-                                    <p:ajax update="posRepFiltrarEstructuraCarrera, posRepFiltrarPeriodoInicial, posRepFiltrarAsignatura, posRepFiltrarGrupo, posRepFiltrarDocente"                                    
+                                    <p:ajax update="posRepFiltrarEstructuraCarrera, posRepFiltrarPeriodoInicial, posRepFiltrarNivel, posRepFiltrarAsignatura, posRepFiltrarGrupo, posRepFiltrarDocente"                                    
                                             listener="#{posRepResultadoController.updateCarreraList()}" 
                                             
                                             
@@ -211,7 +211,7 @@
                                     <p:column>
                                         <h:outputText value="#{filtro.orgDescripcionEstructura.deeDescripcion}" />  
                                     </p:column>    
-                                    <p:ajax update="posRepFiltrarAsignatura,posRepFiltrarPeriodoInicial, posRepFiltrarGrupo, posRepFiltrarDocente,posRepFiltrarNivel"                                    
+                                    <p:ajax update=" posRepFiltrarPeriodoInicial, posRepFiltrarNivel,posRepFiltrarAsignatura, posRepFiltrarGrupo, posRepFiltrarDocente"                                    
                                             listener="#{posRepResultadoController.updateCarreraList()}" 
                                             />
                                 </p:selectOneMenu>
@@ -241,28 +241,28 @@
                                                    />
                                     <p:column>
                                         <h:outputText value="#{filtro.pelDescripcion} (#{posRepResultadoController.obtenerAnioPosgrado(filtro.pelFechaInicio,filtro.pelFechaFin)})" />  
-                                    </p:column>    
+                                    </p:column>                 
                                     <p:ajax update="posRepFiltrarNivel,posRepFiltrarGrupo,posRepFiltrarDocente,"                                    
                                             listener="#{posRepResultadoController.updateNivelMallaList()}" 
                                              
-                                            />
+                                    />
                                 </p:selectOneMenu>                        
                             </ui:define>
                         </ui:decorate>
                     </ui:fragment>
                 </h:panelGroup>
-                   
-                 <h:panelGroup id="modalidad">
+                            
+<!--                 <h:panelGroup id="modalidad">
                     <ui:fragment rendered="#{repReportesSistemaController.selected ne null 
                                              and posRepResultadoController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_MODALIDAD)}">
-                      <!--Filtro Modalidad--> 
+                      Filtro Modalidad 
                         <ui:decorate template="/WEB-INF/templates/decorators/search/ups-search-param.xhtml">
                             <ui:define name="ups-search-param-title">  
                                 <p:outputLabel value="#{posRepBundle['PosRepModalidad']}:" />                        
                             </ui:define>
 
                             <ui:define name="ups-search-param-content">
-                                <p:selectOneMenu id="evaRepFiltrarModalidad" value="#{posRepResultadoController.pedModalidad}"                                         
+                                <p:selectOneMenu id="posRepFiltrarModalidad" value="#{posRepResultadoController.pedModalidad}"                                         
                                                  filter="true" filterMatchMode="contains" var="filtro" 
                                                  >                            
                                    <f:selectItem itemLabel="#{posRepBundle['Todos']}" itemValue="" />
@@ -281,7 +281,7 @@
                             </ui:define>
                         </ui:decorate>
                     </ui:fragment>
-                </h:panelGroup>                  
+                </h:panelGroup>                  -->
                                 
                  <h:panelGroup id="nivel">
                     <ui:fragment rendered="#{repReportesSistemaController.selected ne null 
@@ -424,11 +424,33 @@
                         </ui:decorate>
                     </ui:fragment>
                 </h:panelGroup>
-                
-            </p:panel>  
-            
-                                       
+               
+     <h:panelGroup id="pagado">
+                    <ui:fragment rendered="#{repReportesSistemaController.selected ne null 
+                                             and posRepResultadoController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_PAGADO)}">
+                        <!--Filtro Pagado-->
+                        <ui:decorate template="/WEB-INF/templates/decorators/search/ups-search-param.xhtml">
+                            <ui:define name="ups-search-param-title">    
+                                <p:outputLabel value="#{posRepBundle['PosRepPagado']}:" />                        
+                            </ui:define>
+
+                            <ui:define name="ups-search-param-content">
+                                <p:selectOneMenu id="posRepFiltrarPagado" value="#{posRepResultadoController.pafPagado}"                                         
+                                                 filter="true" filterMatchMode="contains" 
+                                                 >                            
+                                    <f:selectItem itemLabel="#{posRepBundle['Todos']}" itemValue="%"/>                  
+                                    <f:selectItem itemLabel="SI" itemValue="S" />
+                                    <f:selectItem itemLabel="NO" itemValue="N" />
+                                    
+                               </p:selectOneMenu>                        
+                            </ui:define>
+                        </ui:decorate>
+                    </ui:fragment>
+              </h:panelGroup>             
+            </p:panel>                           
         </p:panel>
+        
+        
         <p:toolbar id="PosRepExportToolbar">  
             <us:auth permissions="{'operations':['GENERAR']}">
 

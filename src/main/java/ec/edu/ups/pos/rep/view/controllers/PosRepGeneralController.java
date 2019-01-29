@@ -108,11 +108,12 @@ public class PosRepGeneralController implements Serializable{
                 codigoPeriodoFin=Integer.valueOf(String.valueOf(orgPeriodoFinal.getPelCodigo()));
             }            
             //Parámetro Modalidad
-            PedModalidad pedModalidad=posRepResultadoController.getPedModalidad();
+        /*    PedModalidad pedModalidad=posRepResultadoController.getPedModalidad();
             String codigoModalidad="%";
             if(pedModalidad!=null){
                 codigoModalidad=String.valueOf(String.valueOf(pedModalidad.getModCodigo()));
-            }
+            }*/
+         
         
            //Parámetro Nivel
             Integer pedNivelMalla=posRepResultadoController.getPedNivelMalla();
@@ -141,13 +142,19 @@ public class PosRepGeneralController implements Serializable{
             String gruCodigo="%";
             if(ofeGrupo!=null){
                 gruCodigo=String.valueOf(ofeGrupo.getGruCodigo());
-            }                               
-           /* System.out.println("codigoEstructura"+codigoEstructura);
+            }    
+            String pagado= posRepResultadoController.getPafPagado();
+              
+            
+            
+            System.out.println("codigoEstructura"+codigoEstructura);
             System.out.println("pn_pel_codigo"+codigoPeriodo);
             System.out.println("pv_per_codigo"+codigoPersona);
             System.out.println("pv_mal_codigo"+malCodigo);
             System.out.println("pv_mal_nivel"+codigoNivel);
-            System.out.println("pv_gru_codigo"+gruCodigo);*/
+            System.out.println("pv_gru_codigo"+gruCodigo);
+             System.out.println("pv_pee_nivel"+codigoNivel);
+               System.out.println("pagado"+pagado);
             
             
             //Definición de Parámetros
@@ -157,11 +164,13 @@ public class PosRepGeneralController implements Serializable{
             rpb.add("pn_est_codigo", codigoEstructura);            
             rpb.add("pn_pel_codigo", codigoPeriodo);
             rpb.add("pn_pel_codigo_fin", codigoPeriodoFin);
-            rpb.add("pv_mod_codigo", codigoModalidad);   
+          //  rpb.add("pv_mod_codigo", codigoModalidad);   
             rpb.add("pv_per_codigo", codigoPersona);  
             rpb.add("pv_mal_codigo", malCodigo);
             rpb.add("pv_gru_codigo", gruCodigo);
             rpb.add("pv_mal_nivel", codigoNivel);
+            rpb.add("pv_pee_nivel", codigoNivel);
+            rpb.add("pv_paf_pagado", pagado);
 
             //Definición de Formato de Archivo
             switch(formato){

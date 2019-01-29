@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-OFE-0001" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
-	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="115"/>
+	<property name="ireport.y" value="336"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_pel_codigo" class="java.lang.Integer">
@@ -81,7 +81,7 @@ AND     pee.pee_nivel     =   mal.mal_nivel
 AND     gru.gru_codigo    = dis.gru_codigo
 AND     dis.per_codigo    = per.per_codigo(+)
 AND     empe.emp_codigo    = gru.emp_codigo
-ORDER   BY sede,campus,programa,nivel,modulo,grupo,docente]]>
+ORDER   BY sede,campus,cohorte,programa,nivel,modulo,grupo,docente]]>
 	</queryString>
 	<field name="PROGRAMA" class="java.lang.String"/>
 	<field name="SEDE" class="java.lang.String"/>
@@ -101,7 +101,7 @@ ORDER   BY sede,campus,programa,nivel,modulo,grupo,docente]]>
 	<group name="FORMULARIO_GROUP" isReprintHeaderOnEachPage="true">
 		<groupExpression><![CDATA[]]></groupExpression>
 	</group>
-	<group name="sede_grup" isStartNewPage="true">
+	<group name="sede_grup" isStartNewPage="true" isReprintHeaderOnEachPage="true">
 		<groupExpression><![CDATA[$F{SEDE}]]></groupExpression>
 		<groupHeader>
 			<band height="16">
@@ -112,7 +112,7 @@ ORDER   BY sede,campus,programa,nivel,modulo,grupo,docente]]>
 					</graphicElement>
 				</rectangle>
 				<staticText>
-					<reportElement style="Estilo_titulo" x="2" y="0" width="84" height="16" uuid="4b65ae6d-cd5d-4630-905e-318fb9ecd1b7"/>
+					<reportElement style="Estilo_titulo" x="2" y="0" width="85" height="16" uuid="4b65ae6d-cd5d-4630-905e-318fb9ecd1b7"/>
 					<box>
 						<topPen lineWidth="0.0"/>
 						<leftPen lineWidth="0.0"/>
@@ -125,16 +125,16 @@ ORDER   BY sede,campus,programa,nivel,modulo,grupo,docente]]>
 					<text><![CDATA[SEDE:]]></text>
 				</staticText>
 				<textField>
-					<reportElement style="Estilo_contenido" x="87" y="0" width="438" height="16" uuid="aa839aef-8301-4282-bc62-c4c22a0e969a"/>
+					<reportElement style="Estilo_contenido7" x="87" y="0" width="438" height="16" uuid="aa839aef-8301-4282-bc62-c4c22a0e969a"/>
 					<textElement verticalAlignment="Middle">
-						<font size="8"/>
+						<font size="7"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{SEDE}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
 	</group>
-	<group name="camp_grup" isStartNewPage="true">
+	<group name="camp_grup" isStartNewPage="true" isReprintHeaderOnEachPage="true">
 		<groupExpression><![CDATA[$F{CAMPUS}]]></groupExpression>
 		<groupHeader>
 			<band height="16">
@@ -145,14 +145,14 @@ ORDER   BY sede,campus,programa,nivel,modulo,grupo,docente]]>
 					</graphicElement>
 				</rectangle>
 				<textField>
-					<reportElement style="Estilo_contenido" x="87" y="0" width="438" height="16" uuid="26986cdb-8280-45ea-83c9-d636e3a05ca8"/>
+					<reportElement style="Estilo_contenido7" x="87" y="0" width="438" height="16" uuid="26986cdb-8280-45ea-83c9-d636e3a05ca8"/>
 					<textElement verticalAlignment="Middle">
-						<font size="8"/>
+						<font size="7"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{CAMPUS}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement style="Estilo_titulo" x="2" y="0" width="84" height="16" uuid="b2429953-fd20-4c84-80cb-558065658706"/>
+					<reportElement style="Estilo_titulo" x="2" y="0" width="85" height="16" uuid="b2429953-fd20-4c84-80cb-558065658706"/>
 					<textElement verticalAlignment="Middle">
 						<font size="8" isBold="true"/>
 					</textElement>
@@ -161,7 +161,7 @@ ORDER   BY sede,campus,programa,nivel,modulo,grupo,docente]]>
 			</band>
 		</groupHeader>
 	</group>
-	<group name="prog_grup" isStartNewPage="true">
+	<group name="prog_grup" isStartNewPage="true" isReprintHeaderOnEachPage="true">
 		<groupExpression><![CDATA[]]></groupExpression>
 		<groupHeader>
 			<band height="16">
@@ -179,37 +179,19 @@ ORDER   BY sede,campus,programa,nivel,modulo,grupo,docente]]>
 					<text><![CDATA[PROGRAMA:]]></text>
 				</staticText>
 				<textField>
-					<reportElement style="Estilo_contenido" x="88" y="0" width="437" height="16" uuid="dd3dd73c-c7b5-420c-8370-cb04b37a8f29"/>
+					<reportElement style="Estilo_contenido7" x="87" y="0" width="437" height="16" uuid="dd3dd73c-c7b5-420c-8370-cb04b37a8f29"/>
 					<textElement verticalAlignment="Middle">
-						<font size="8"/>
+						<font size="7"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{PROGRAMA}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
 	</group>
-	<group name="nivel_grup" isStartNewPage="true">
+	<group name="nivel_grup" isStartNewPage="true" isReprintHeaderOnEachPage="true">
 		<groupExpression><![CDATA[$F{NIVEL}]]></groupExpression>
 		<groupHeader>
-			<band height="74">
-				<rectangle>
-					<reportElement style="Estilo_titulo" stretchType="RelativeToBandHeight" x="1" y="47" width="554" height="27" isPrintWhenDetailOverflows="true" uuid="bb701f5f-6628-45ec-9557-d1813a61dfbf"/>
-					<graphicElement>
-						<pen lineWidth="0.25"/>
-					</graphicElement>
-				</rectangle>
-				<rectangle>
-					<reportElement x="1" y="16" width="554" height="16" uuid="4cd86392-6d6b-4650-8401-844d76d6b2f5"/>
-					<graphicElement>
-						<pen lineWidth="0.25"/>
-					</graphicElement>
-				</rectangle>
-				<rectangle>
-					<reportElement x="1" y="32" width="554" height="16" uuid="2d89a492-4cd5-4b50-b1dd-ca2ffb0dc89f"/>
-					<graphicElement>
-						<pen lineWidth="0.25"/>
-					</graphicElement>
-				</rectangle>
+			<band height="16">
 				<rectangle>
 					<reportElement style="Estilo_titulo" stretchType="RelativeToBandHeight" x="1" y="0" width="554" height="16" isPrintWhenDetailOverflows="true" uuid="d6e28bea-2c46-4b9d-96eb-0955c1064ab9"/>
 					<graphicElement>
@@ -217,7 +199,7 @@ ORDER   BY sede,campus,programa,nivel,modulo,grupo,docente]]>
 					</graphicElement>
 				</rectangle>
 				<staticText>
-					<reportElement style="Estilo_titulo" x="2" y="0" width="84" height="16" uuid="614c16fe-ce8d-45e7-a84e-2e0886550630"/>
+					<reportElement style="Estilo_titulo" x="2" y="0" width="85" height="16" isPrintWhenDetailOverflows="true" uuid="614c16fe-ce8d-45e7-a84e-2e0886550630"/>
 					<box>
 						<topPen lineWidth="0.0"/>
 						<leftPen lineWidth="0.0"/>
@@ -229,14 +211,93 @@ ORDER   BY sede,campus,programa,nivel,modulo,grupo,docente]]>
 					<text><![CDATA[NIVEL:]]></text>
 				</staticText>
 				<textField>
-					<reportElement style="Estilo_contenido" x="88" y="0" width="437" height="16" uuid="1d76bedc-a14a-4575-9e7b-1d3ef9fc12a9"/>
+					<reportElement style="Estilo_contenido7" x="87" y="0" width="437" height="16" isPrintWhenDetailOverflows="true" uuid="1d76bedc-a14a-4575-9e7b-1d3ef9fc12a9"/>
 					<textElement verticalAlignment="Middle">
-						<font size="8"/>
+						<font size="7"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{NIVEL}]]></textFieldExpression>
 				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="cohorte_grup" isStartNewPage="true" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{COHORTE}]]></groupExpression>
+		<groupHeader>
+			<band height="16">
+				<rectangle>
+					<reportElement x="1" y="0" width="554" height="16" uuid="4cd86392-6d6b-4650-8401-844d76d6b2f5"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</rectangle>
 				<staticText>
-					<reportElement style="Estilo_titulo" x="2" y="32" width="83" height="16" uuid="197ae8fd-646a-467e-a831-1a2ede26655c"/>
+					<reportElement style="Estilo_titulo" x="2" y="0" width="85" height="16" isPrintWhenDetailOverflows="true" uuid="0058002a-9dce-42c8-a9e6-83ae3bd1946b"/>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[COHORTE:]]></text>
+				</staticText>
+				<textField>
+					<reportElement style="Estilo_contenido7" x="87" y="0" width="437" height="16" isPrintWhenDetailOverflows="true" uuid="60e30567-dbab-47df-84c7-6a580a1a9656"/>
+					<textElement verticalAlignment="Middle">
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{COHORTE}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="semestre_grup" isStartNewPage="true" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{FECHA_SEMESTRE}]]></groupExpression>
+		<groupHeader>
+			<band height="43">
+				<rectangle>
+					<reportElement x="1" y="0" width="554" height="16" uuid="2d89a492-4cd5-4b50-b1dd-ca2ffb0dc89f"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</rectangle>
+				<rectangle>
+					<reportElement style="Estilo_titulo" stretchType="RelativeToBandHeight" x="1" y="16" width="554" height="27" isPrintWhenDetailOverflows="true" uuid="bb701f5f-6628-45ec-9557-d1813a61dfbf"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</rectangle>
+				<staticText>
+					<reportElement style="Estilo_titulo" x="2" y="26" width="217" height="16" isPrintWhenDetailOverflows="true" uuid="2198de5e-d833-4b10-8fe1-10d0e637ba9b"/>
+					<textElement verticalAlignment="Top">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[DOCENTE]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Estilo_titulo" x="219" y="22" width="90" height="20" isPrintWhenDetailOverflows="true" uuid="162b9438-5af1-41da-a502-d663c427a89e"/>
+					<textElement>
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[SEDE A LA QUE PERTENECE]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Estilo_titulo" x="312" y="26" width="191" height="16" uuid="0a7e5ddf-e6a1-4a8a-a24d-083cb5fc5221"/>
+					<textElement>
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[MÓDULO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Estilo_titulo" x="504" y="26" width="51" height="16" uuid="8a47f66f-b2f5-4775-9fea-6d19a7b16fae"/>
+					<textElement>
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[GRUPO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Estilo_titulo" x="2" y="0" width="85" height="16" isPrintWhenDetailOverflows="true" uuid="197ae8fd-646a-467e-a831-1a2ede26655c"/>
 					<box>
 						<topPen lineWidth="0.0"/>
 						<leftPen lineWidth="0.0"/>
@@ -248,59 +309,12 @@ ORDER   BY sede,campus,programa,nivel,modulo,grupo,docente]]>
 					<text><![CDATA[SEMESTRE:]]></text>
 				</staticText>
 				<textField>
-					<reportElement style="Estilo_contenido" x="88" y="32" width="437" height="16" uuid="8059e1de-c21c-4650-9d5a-c99bd792733d"/>
+					<reportElement style="Estilo_contenido7" x="87" y="0" width="437" height="16" isPrintWhenDetailOverflows="true" uuid="8059e1de-c21c-4650-9d5a-c99bd792733d"/>
 					<textElement verticalAlignment="Middle">
-						<font size="8"/>
+						<font size="7"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{FECHA_SEMESTRE}]]></textFieldExpression>
 				</textField>
-				<staticText>
-					<reportElement style="Estilo_titulo" x="3" y="58" width="219" height="16" isPrintWhenDetailOverflows="true" uuid="2198de5e-d833-4b10-8fe1-10d0e637ba9b"/>
-					<textElement verticalAlignment="Top">
-						<font size="7" isBold="true"/>
-					</textElement>
-					<text><![CDATA[DOCENTE]]></text>
-				</staticText>
-				<staticText>
-					<reportElement style="Estilo_titulo" x="222" y="58" width="107" height="16" isPrintWhenDetailOverflows="true" uuid="162b9438-5af1-41da-a502-d663c427a89e"/>
-					<textElement>
-						<font size="7" isBold="true"/>
-					</textElement>
-					<text><![CDATA[SEDE A LA QUE PERTENECE]]></text>
-				</staticText>
-				<staticText>
-					<reportElement style="Estilo_titulo" x="329" y="58" width="179" height="16" uuid="0a7e5ddf-e6a1-4a8a-a24d-083cb5fc5221"/>
-					<textElement>
-						<font size="7" isBold="true"/>
-					</textElement>
-					<text><![CDATA[MÓDULO]]></text>
-				</staticText>
-				<staticText>
-					<reportElement style="Estilo_titulo" x="510" y="58" width="45" height="16" uuid="8a47f66f-b2f5-4775-9fea-6d19a7b16fae"/>
-					<textElement>
-						<font size="7" isBold="true"/>
-					</textElement>
-					<text><![CDATA[GRUPO]]></text>
-				</staticText>
-				<textField>
-					<reportElement x="88" y="16" width="437" height="16" uuid="60e30567-dbab-47df-84c7-6a580a1a9656"/>
-					<textElement verticalAlignment="Middle">
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{COHORTE}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement style="Estilo_titulo" x="2" y="16" width="84" height="16" uuid="0058002a-9dce-42c8-a9e6-83ae3bd1946b"/>
-					<box>
-						<topPen lineWidth="0.0"/>
-						<leftPen lineWidth="0.0"/>
-						<bottomPen lineWidth="0.0"/>
-					</box>
-					<textElement verticalAlignment="Middle">
-						<font size="8" isBold="true"/>
-					</textElement>
-					<text><![CDATA[COHORTE:]]></text>
-				</staticText>
 			</band>
 		</groupHeader>
 	</group>
@@ -356,52 +370,52 @@ ORDER   BY sede,campus,programa,nivel,modulo,grupo,docente]]>
 	<detail>
 		<band height="16">
 			<rectangle>
-				<reportElement style="Estilo_titulo" stretchType="RelativeToBandHeight" x="1" y="0" width="554" height="16" isPrintWhenDetailOverflows="true" uuid="a117000b-8b01-4323-8b90-bf11ad2e4b84"/>
+				<reportElement style="Estilo_titulo" stretchType="RelativeToBandHeight" x="1" y="-1" width="554" height="16" isPrintWhenDetailOverflows="true" uuid="a117000b-8b01-4323-8b90-bf11ad2e4b84"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
 			</rectangle>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido" x="3" y="0" width="46" height="16" isPrintWhenDetailOverflows="true" uuid="99705392-ebdd-4c36-a146-8f10a17c16ba"/>
+				<reportElement style="Estilo_contenido6" x="2" y="0" width="45" height="16" isPrintWhenDetailOverflows="true" uuid="99705392-ebdd-4c36-a146-8f10a17c16ba"/>
 				<textElement>
-					<font size="7"/>
+					<font size="6"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{NRO_IDENTIFICACION}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="49" y="0" width="172" height="16" isPrintWhenDetailOverflows="true" uuid="1f542637-1f0d-4ef5-bdea-18d64ed8f031"/>
+				<reportElement style="Estilo_contenido6" x="47" y="0" width="173" height="16" isPrintWhenDetailOverflows="true" uuid="1f542637-1f0d-4ef5-bdea-18d64ed8f031"/>
 				<textElement>
-					<font size="7"/>
+					<font size="6"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{DOCENTE}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="222" y="0" width="107" height="16" isPrintWhenDetailOverflows="true" uuid="edf6a7c4-6703-4d7d-ab52-0b26ac046fc0"/>
+				<reportElement style="Estilo_contenido6" mode="Opaque" x="221" y="0" width="88" height="14" isPrintWhenDetailOverflows="true" uuid="edf6a7c4-6703-4d7d-ab52-0b26ac046fc0"/>
 				<textElement>
-					<font size="7"/>
+					<font size="6"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{SEDE_PERTENECE}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="358" y="0" width="149" height="16" isPrintWhenDetailOverflows="true" uuid="4b0b9527-4252-4187-94c1-66398d0099cd"/>
+				<reportElement style="Estilo_contenido6" x="340" y="0" width="162" height="16" isPrintWhenDetailOverflows="true" uuid="4b0b9527-4252-4187-94c1-66398d0099cd"/>
 				<textElement>
-					<font size="7"/>
+					<font size="6"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{MODULO}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="510" y="0" width="45" height="16" isPrintWhenDetailOverflows="true" uuid="3949c687-359a-4c91-983d-c7d0653167ff"/>
+				<reportElement style="Estilo_contenido6" x="312" y="0" width="28" height="16" isPrintWhenDetailOverflows="true" uuid="9cbc7cbf-6619-4d1b-8b5a-4cdb374dea06"/>
 				<textElement>
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{GRUPO}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="329" y="0" width="29" height="16" isPrintWhenDetailOverflows="true" uuid="9cbc7cbf-6619-4d1b-8b5a-4cdb374dea06"/>
-				<textElement>
-					<font size="7"/>
+					<font size="6"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{MAT_CODIGO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Estilo_contenido6" x="504" y="0" width="51" height="16" uuid="91348025-b33c-4546-b84f-a4444cda0483"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{GRUPO}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
