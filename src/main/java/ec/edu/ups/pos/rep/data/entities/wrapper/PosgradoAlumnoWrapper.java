@@ -29,6 +29,10 @@ public class PosgradoAlumnoWrapper implements Serializable {
     private String modalidad;
     private String periodo;
     private Long   codPeriodo;
+    private String cohorte;
+    private String tieneMencion;
+    private String tieneMencionEst;
+    private Long   totalMenciones;
     private String titulo;
     
     
@@ -42,7 +46,7 @@ public class PosgradoAlumnoWrapper implements Serializable {
         this.aluCodigo = aluCodigo;
     }
 
-    public PosgradoAlumnoWrapper(String identificador, Long aluCodigo, String sede, String campus, String posgrado, String estSede, String estCampus, String estPosgrado, String modalidad, String periodo, Long codPeriodo, String titulo) {
+    public PosgradoAlumnoWrapper(String identificador, Long aluCodigo, String sede, String campus, String posgrado, String estSede, String estCampus, String estPosgrado, String modalidad, String periodo, Long codPeriodo, String cohorte, String tieneMencion, String tieneMencionEst, Long totalMenciones, String titulo) {
         this.identificador = identificador;
         this.aluCodigo = aluCodigo;
         this.sede = sede;
@@ -54,9 +58,14 @@ public class PosgradoAlumnoWrapper implements Serializable {
         this.modalidad = modalidad;
         this.periodo = periodo;
         this.codPeriodo = codPeriodo;
+        this.cohorte = cohorte;
+        this.tieneMencion = tieneMencion;
+        this.tieneMencionEst = tieneMencionEst;
+        this.totalMenciones = totalMenciones;
         this.titulo = titulo;
     }
 
+  
      
      
 
@@ -157,6 +166,39 @@ public class PosgradoAlumnoWrapper implements Serializable {
         this.estPosgrado = estPosgrado;
     }
 
+    public String getCohorte() {
+        return cohorte;
+    }
+
+    public void setCohorte(String cohorte) {
+        this.cohorte = cohorte;
+    }
+
+    public String getTieneMencion() {
+        return tieneMencion;
+    }
+
+    public void setTieneMencion(String tieneMencion) {
+        this.tieneMencion = tieneMencion;
+    }
+
+    public String getTieneMencionEst() {
+        return tieneMencionEst;
+    }
+
+    public void setTieneMencionEst(String tieneMencionEst) {
+        this.tieneMencionEst = tieneMencionEst;
+    }
+
+    public Long getTotalMenciones() {
+        return totalMenciones;
+    }
+
+    public void setTotalMenciones(Long totalMenciones) {
+        this.totalMenciones = totalMenciones;
+    }
+
+  
    
     
     @Override

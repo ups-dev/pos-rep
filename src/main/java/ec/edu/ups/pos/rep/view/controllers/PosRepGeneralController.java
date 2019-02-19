@@ -240,15 +240,28 @@ public class PosRepGeneralController implements Serializable{
             Integer estPosgrado = null;
             Long estSede = null;
             String tituloPosgrado = null;
+            String mencionEstudiante = null;
+            Integer totalMenciones  = null;
+            Integer imprimeTitulo   = 0;
             
             if(posAlumnoWrapper!=null){
                 codigoPeriodo=Integer.valueOf(String.valueOf(posAlumnoWrapper.getCodPeriodo()));
                 estCampus = Integer.valueOf(String.valueOf(posAlumnoWrapper.getEstCampus()));
-                estPosgrado=Integer.valueOf(String.valueOf(posAlumnoWrapper.getEstPosgrado())); 
-                estSede =Long.valueOf(posAlumnoWrapper.getEstSede());
-                tituloPosgrado=String.valueOf(posAlumnoWrapper.getTitulo());
+                estPosgrado = Integer.valueOf(String.valueOf(posAlumnoWrapper.getEstPosgrado())); 
+                estSede = Long.valueOf(posAlumnoWrapper.getEstSede());
+                tituloPosgrado = String.valueOf(posAlumnoWrapper.getTitulo());
+                mencionEstudiante =  String.valueOf(posAlumnoWrapper.getTieneMencionEst());
+                totalMenciones = Integer.valueOf(String.valueOf(posAlumnoWrapper.getTotalMenciones()));
+                
+                if (mencionEstudiante.equals("S") || (totalMenciones == 1) )
+                { 
+                    imprimeTitulo = 1;
+                }else {
+                    imprimeTitulo = 0;
+                }
+
+                   
             }    
-            
             
             //Parámetro Sede Factura
             String sedeFactura=posRepPosgradosController.getSedeFactura();
@@ -293,6 +306,8 @@ public class PosRepGeneralController implements Serializable{
               numSecuenciaCertificado = repNumeroCertificadoController.obtieneSecuenciaCertificado(estSede, posAlumnoWrapper.getCodPeriodo(), repTipCerRepSis.getTicCodigo());
           
             }
+            
+            
             System.out.println("pn_alu_codigo"+codigoAlumno);
             System.out.println("pv_nivel_matricula"+codigoNivel);
             System.out.println("numSedeFactura"+numSedeFactura);
@@ -305,6 +320,9 @@ public class PosRepGeneralController implements Serializable{
             System.out.println("numSecuenciaCertificado"+numSecuenciaCertificado);
             System.out.println("opcionCert"+opcionCert);
             System.out.println("posAlumnoWrapper.getEstPosgrado()"+posAlumnoWrapper.getEstPosgrado());
+            System.out.println("mencionEstudiante "+mencionEstudiante);
+            System.out.println("totalMenciones "+totalMenciones);
+            System.out.println("imprimeTitulo "+imprimeTitulo);
  
  
             //Definición de Parámetros
@@ -323,6 +341,8 @@ public class PosRepGeneralController implements Serializable{
             rpb.add("pn_numFactura", numFactura);
             rpb.add("pn_secuencia", numSecuenciaCertificado);
             rpb.add("pv_tituloPosgrado", tituloPosgrado);
+            rpb.add("pn_imprimeTitulo", imprimeTitulo);
+            
             
            if ((estSede != null) && (certificacion == true)){     
              repEmisionCertificadoController.registraEmisionCertificado(Long.valueOf(numSecuenciaCertificado), Long.valueOf(codigoAlumno), Long.valueOf(posAlumnoWrapper.getEstPosgrado()), posAlumnoWrapper.getCodPeriodo(), repTipCerRepSis.getTicCodigo());

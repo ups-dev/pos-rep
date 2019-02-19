@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-MAT-0002" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
 	<property name="ireport.zoom" value="3.0"/>
-	<property name="ireport.x" value="421"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
@@ -69,6 +69,7 @@ AND     pos.est_codigo  IN (SELECT est_codigo e
                             START WITH e.est_codigo = $P{pn_est_codigo}
                             CONNECT BY PRIOR e.est_codigo = e.est_codigo_padre)
 AND     mat.aud_eliminado = 'N'
+AND     mat.mat_anulado = 'N'
 AND     paf.paf_pagado like $P{pv_paf_pagado}
 ORDER BY sede,campus,posgrado,pee.pee_nivel,estudiante]]>
 	</queryString>

@@ -20,6 +20,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.omnifaces.util.Utils;
+import org.primefaces.PrimeFaces;
 import org.primefaces.context.RequestContext;
 
 /**
@@ -75,10 +76,15 @@ public class PosRepPosgradosController implements Serializable{
     
     
     public void callEventAjaxOrgEstructura() {
+        
+          PrimeFaces.current().ajax().update("PosReportesCerForm:PosReportesCerSistemaDataTable");
+        PrimeFaces.current().ajax().update("PosReportesCerForm:PosRepCerExportToolbar");
+        PrimeFaces.current().ajax().update("PosReportesCerForm:PosRepCerFiltroPanel"); 
        
-        getRequestContext().update("PosReportesCerForm:PosReportesCerSistemaDataTable");
+       /* getRequestContext().update("PosReportesCerForm:PosReportesCerSistemaDataTable");
         getRequestContext().update("PosReportesCerForm:PosRepCerExportToolbar");
-        getRequestContext().update("PosReportesCerForm:PosRepCerFiltroPanel");
+        getRequestContext().update("PosReportesCerForm:PosRepCerFiltroPanel");*/
+       
       //  getRequestContext().update("PosReportesForm:SbeRepFiltroPanel");
 //        updateSedeList();        
     }
@@ -101,7 +107,7 @@ public class PosRepPosgradosController implements Serializable{
 
         setListadoAlumnos(suggestions);
 
-        return suggestions;
+       return suggestions;
     }
     
    

@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-CER-0001" pageWidth="595" pageHeight="842" columnWidth="551" leftMargin="22" rightMargin="22" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="309"/>
+	<property name="ireport.y" value="118"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_pel_codigo" class="java.lang.Integer">
@@ -32,19 +32,46 @@
 	<parameter name="pn_puntoFacturacion" class="java.lang.Integer"/>
 	<parameter name="pn_numFactura" class="java.lang.Integer"/>
 	<parameter name="pn_secuencia" class="java.lang.Integer"/>
-	<parameter name="pn_tituloMencion" class="java.lang.Integer"/>
-	<parameter name="pv_tituloPosgrado" class="java.lang.String"/>
+	<parameter name="pn_imprimeTitulo" class="java.lang.Integer">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[SELECT  distinct dsed.dee_descripcion        sede,
-        dcam.dee_descripcion        campus,
+		<![CDATA[select distinct sede, campus,est_codigo,posgrado,
+       modalidad,
+       pel_codigo,
+       pel_descripcion,
+       cohorte,
+       fecha_semestre,
+       cllc_cdg,
+       cedula,
+       estudiante,
+       mat_codigo,
+       modulo,
+       nivel,
+       mal_nro_horas,
+       nota_final,
+       numero_veces,estado,
+       fecha_actual,
+       observaciones,
+       total_horas,
+       tap_codigo,
+       tipo_aprobacion,
+       tiene_mencion,
+       NVL(tiene_mencion_est,'N') tiene_mencion_est,
+       total_menciones,
+       decode( tiene_mencion,'N',titulo,'S',(decode(total_menciones,1,mencion_proyecto,decode(mencion_estudiante,null,null,mencion_estudiante)))) titulo
+
+from
+
+(select distinct dse.dee_descripcion        sede,
+        dcm.dee_descripcion        campus,
+        pos.est_codigo,
         dpos.dee_descripcion        posgrado,
         mod.mod_descripcion         modalidad,
-        cac.cac_descripcion ||' '||cac1.cac_descripcion titulo,
-        ppe.ppe_descripcion_numero total_horas,
         pel.pel_descripcion,        pel.pel_codigo,
         pel.pel_descripcion ||' ('||extract (year from pel.pel_fecha_inicio)||' - '||extract (year from pel.pel_fecha_fin)||') ' cohorte,
         TRIM(TO_CHAR(pee.pee_fecha_inicial,'MONTH'))||' '||extract (year from pee.pee_fecha_inicial)||' - '||TRIM(TO_CHAR(pee.pee_fecha_final,'MONTH'))||' '||extract (year from pee.pee_fecha_final) fecha_semestre,
-
         cli.cllc_cdg,
         cli.cllc_ruc                cedula,
         cli.cllc_nmb                estudiante,
@@ -55,100 +82,138 @@
         cal.cal_nota_final          nota_final,
         TO_CHAR(cal.cal_numero_veces, 'FMRN')numero_veces,
         cal.tap_codigo,
-        --tap.tap_descripcion         tipo_aprobacion,
         decode(tap.tap_codigo,1,'N',5,'H.A.C',6,'H.V.C',NULL) tipo_aprobacion,
-        mat.mat_observaciones       observaciones_matricula,
-decode(cal.cal_aprobado,'S','APROBADO',DECODE(pee.pee_vigente,'S','CURSANDO',DECODE(cal.cal_aprobado,'S','APROBADO','REPROBADO')) ) estado,
-decode(dsed.dee_descripcion,'MATRIZ CUENCA','Cuenca',INITCAP(dsed.dee_descripcion))||', '||TO_CHAR(sysdate, 'DD')|| ' de '||DECODE(TO_CHAR(sysdate, 'MM'), '01', 'Enero', '02', 'Febrero', '03', 'Marzo', '04', 'Abril', '05', 'Mayo', '06', 'Junio',
+        mta.mat_observaciones       observaciones_matricula,
+        decode(cal.cal_aprobado,'S','APROBADO',DECODE(pee.pee_vigente,'S','CURSANDO',DECODE(cal.cal_aprobado,'S','APROBADO','REPROBADO')) ) estado,
+        decode(dse.dee_descripcion,'MATRIZ CUENCA','Cuenca',INITCAP(dse.dee_descripcion))||', '||TO_CHAR(sysdate, 'DD')|| ' de '||DECODE(TO_CHAR(sysdate, 'MM'), '01', 'Enero', '02', 'Febrero', '03', 'Marzo', '04', 'Abril', '05', 'Mayo', '06', 'Junio',
                                        '07', 'Julio', '08', 'Agosto', '09', 'Septiembre', '10', 'Octubre', '11', 'Noviembre',
                                        '12', 'Diciembre')||' de '||
                  TO_CHAR(sysdate, 'YYYY')||'.' fecha_actual,
-        cal.caa_observaciones_leg observaciones
 
-FROM    mat.mat_matricula           mat,
-        cal.cal_calificacion        cal,
-        cal.cal_tipo_aprobacion     tap,
-        fac.fac_pago_factura        paf,
-        sigac.cliente_local         cli,
-        ped.ped_malla               mal,
-        ped.ped_materia             mtr,
-        ped.ped_proyecto_educacion  pre,
-        ped.ped_des_est_pro_edu     dep,
-        ped.ped_mod_pro_edu         mpe,
-        ped.ped_modalidad           mod,
-        org.org_descripcion_estructura dpos,
-        org.org_descripcion_estructura dcam,
-        org.org_descripcion_estructura dsed,
-        org.org_estructura          pos,
-        org.org_estructura          cam,
-        org.org_estructura          sed,
-        org.org_periodo_estructura  pee,
-        org.org_periodo_lectivo     pel,
-        ins.ins_alumno              alu,
-        ped.ped_cde_dep             cdd,
-        ped.ped_cam_des_est         cde,
-        ped.ped_cam_con_tip_tit     ctt,
-        ped.ped_campo_conocimiento  cac,
-        ped.ped_campo_conocimiento  cac1,
-        ped.ped_par_pro_edu         ppe,
-        ped.ped_tip_par_tip_pro_edu tpt,
-        ped.ped_tip_par_pro_edu     tpp
-WHERE   mat.mat_codigo  = cal.mat_codigo
-AND     mat.mat_codigo  = paf.ins_codigo
-AND     mat.cllc_cdg    = cli.cllc_cdg
-AND     tap.tap_codigo  = cal.tap_codigo
-AND     cal.mal_codigo  = mal.mal_codigo
-AND     mal.mat_codigo  = mtr.mat_codigo
-AND     mal.pre_numero  = pre.pre_numero
-AND     mat.pee_codigo  = pee.pee_codigo
-AND     dep.pre_numero  = pre.pre_numero
-AND     pre.pre_numero  = mpe.pre_numero
-AND     mod.mod_codigo  = mpe.mod_codigo
-AND     dep.dee_codigo  = dpos.dee_codigo
-AND     pee.est_codigo  = pos.est_codigo
-AND     pos.dee_codigo  = dpos.dee_codigo
-AND     cam.est_codigo  = pos.est_codigo_padre
-AND     cam.dee_codigo  = dcam.dee_codigo
-AND     sed.est_codigo  = cam.est_codigo_padre
-AND     sed.dee_codigo  = dsed.dee_codigo
-AND     alu.cllc_cdg    = mat.cllc_cdg
-AND     mat.mat_tipo_proceso = 'M'
-AND     paf.tip_codigo  = 4
-AND     pel.pel_codigo  = pee.pel_codigo
-AND     pee.pel_codigo  = $P{pn_pel_codigo}
-AND     pos.est_codigo  IN (SELECT est_codigo e
+        cal.caa_observaciones_leg observaciones,
+        ( select ppe.PPE_DESCRIPCION_NUMERO
+          from PED.PED_PAR_PRO_EDU ppe,
+               PED.PED_TIP_PAR_TIP_PRO_EDU tpt
+          where ppe.TPT_CODIGO=tpt.TPT_CODIGO
+          and ppe.PRE_NUMERO = pre.pre_numero
+          and tpt.TPP_CODIGO = 117) total_horas,
+          ( select ppe.PPE_DESCRIPCION_TEXTO
+          from PED.PED_PAR_PRO_EDU ppe,
+               PED.PED_TIP_PAR_TIP_PRO_EDU tpt
+          where ppe.TPT_CODIGO=tpt.TPT_CODIGO
+          and ppe.PRE_NUMERO = pre.pre_numero
+          and tpt.TPP_CODIGO = 114) tiene_mencion,
+         (select 'S'
+          from    ped.ped_cde_dep cdd,
+                  ins.ins_ipa_cdd iic,
+                  ins.ins_ins_pro_aca ipa
+           where  cdd.cdd_codigo = iic.cdd_codigo
+           and    ipa.ipa_codigo = iic.ipa_codigo
+           and    ipa.ins_codigo = inc.ins_codigo
+           and    cdd.dep_codigo = dep.dep_codigo
+                  ) tiene_mencion_est,
+          (select cac2.cac_descripcion||', '||'MENCIÓN '||cdd.cdd_mencion
+          from    ped.ped_cde_dep cdd,
+                  ins.ins_ipa_cdd iic,
+                  ins.ins_ins_pro_aca ipa
+           where  cdd.cdd_codigo = iic.cdd_codigo
+           and    ipa.ipa_codigo = iic.ipa_codigo
+           and    ipa.ins_codigo = inc.ins_codigo
+           and    cdd.dep_codigo = dep.dep_codigo
+                  ) mencion_estudiante,
+           (select count(cdd1.cdd_mencion)
+           from ped.ped_cde_dep  cdd1
+           where cdd1.dep_codigo = dep.dep_codigo
+           )total_menciones,
+           cac2.cac_descripcion titulo,
+           cac2.cac_descripcion||', '||'MENCIÓN '||cdd.cdd_mencion  mencion_proyecto
+
+from mat.mat_matricula mta,
+     fac.fac_pago_factura paf,
+     ins.ins_inscripcion inc,
+     sigac.cliente_local         cli,
+     cal.cal_calificacion        cal,
+     cal.cal_tipo_aprobacion     tap,
+     ped.ped_proyecto_educacion  pre,
+     ped.ped_malla               mal,
+     ped.ped_materia             mtr,
+     ped.ped_des_est_pro_edu     dep,
+     ped.ped_mod_pro_edu         mpe,
+     ped.ped_est_mod_pro_edu     emp,
+     ped.ped_modalidad           mod,
+     org.org_descripcion_estructura dpos,
+     org.org_estructura             pos,
+     org.org_descripcion_estructura dcm,
+     org.org_estructura             cam,
+     org.org_descripcion_estructura dse,
+     org.org_estructura             sed,
+     org.org_periodo_estructura     pee,
+     org.org_periodo_lectivo        pel,
+     ped.ped_cam_des_est            cde,
+     ped.ped_cde_dep                cdd,
+     ped.ped_cam_con_tip_tit        ctt,
+     ped.ped_campo_conocimiento     cac,
+     ped.ped_campo_conocimiento     cac2,
+     ped.ped_tipo_titulacion        tit
+
+where mta.mat_codigo = paf.ins_codigo
+and   mta.ins_codigo = inc.ins_codigo
+and   mta.cllc_cdg   = cli.cllc_cdg
+and   mta.mat_tipo_proceso = 'M'
+and   mta.mat_anulado      = 'N'
+and   mta.aud_eliminado    = 'N'
+and   paf.tip_codigo  = 4
+and   paf.paf_pagado  = 'S'
+and   mta.mat_codigo  = cal.mat_codigo
+and   tap.tap_codigo  = cal.tap_codigo
+and   cal.aud_eliminado = 'N'
+and   cal.cal_retirado  = 'N'
+and   cal.mal_codigo    = mal.mal_codigo
+and   pre.pre_numero    = mal.pre_numero
+and   mtr.mat_codigo    = mal.mat_codigo
+and   pre.pre_numero    = dep.pre_numero
+and   dep.dep_codigo    = mta.dep_codigo
+and   pre.pre_numero    = mpe.pre_numero
+and   mod.mod_codigo    = mpe.mod_codigo
+
+and   mpe.mpe_codigo    = emp.mpe_codigo
+
+and   dpos.dee_codigo   = dep.dee_codigo
+and   pos.dee_codigo    = dpos.dee_codigo
+and   pos.est_codigo_padre = cam.est_codigo
+and   cam.dee_codigo       = dcm.dee_codigo
+and   cam.est_codigo_padre = sed.est_codigo
+and   sed.dee_codigo       = dse.dee_codigo
+and   pos.est_codigo_padre = emp.est_codigo
+and   emp.emp_codigo       = mta.emp_codigo
+and   mta.pee_codigo       = pee.pee_codigo
+and   pee.pel_codigo       = pel.pel_codigo
+
+and   dep.dep_codigo  = cdd.dep_codigo
+and   cde.cde_codigo  = cdd.cde_codigo
+and   ctt.cct_codigo  = cde.cct_codigo
+and   cac.cac_codigo  = ctt.cac_codigo
+and   cac.cac_codigo_padre = cac2.cac_codigo
+and   tit.tit_codigo       = ctt.tit_codigo
+and   tit.ned_codigo       = 2
+and   pee.pel_codigo  = $P{pn_pel_codigo}
+and   pos.est_codigo  IN (SELECT est_codigo e
                             FROM   org.org_estructura e
                             WHERE  e.est_nivel  = 4
                             START WITH e.est_codigo = $P{pn_est_codigo}
                             CONNECT BY PRIOR e.est_codigo = e.est_codigo_padre)
-AND     mal.mal_nivel   = $P{pv_nivel}
-AND     cal.aud_eliminado = 'N'
-AND     cal.cal_retirado  = 'N'
-AND     mat.aud_eliminado = 'N'
-AND     paf.paf_pagado    = 'S'
-AND     alu.alu_codigo    = $P{pn_alu_codigo}
-AND     dep.dep_codigo  = cdd.dep_codigo
-AND     cde.cde_codigo  = cdd.cde_codigo
-AND     ctt.cct_codigo  = cde.cct_codigo
-AND     cac.cac_codigo  = ctt.cac_codigo
-AND     cac.cac_codigo_padre = cac1.cac_codigo
-AND     ctt.tit_codigo  = 9
-
-and ppe.tpt_codigo=tpt.tpt_codigo
-and tpp.tpp_codigo=tpt.tpp_codigo
-and pre.pre_numero=ppe.pre_numero
-and tpt.tpe_codigo = pre.tpe_codigo
-and tpp.tpp_codigo=117 --Parametro Total de Horas
+and   mal.mal_nivel  = $P{pv_nivel}
+and  inc.alu_codigo  = $P{pn_alu_codigo}
+) p
 ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 	</queryString>
 	<field name="SEDE" class="java.lang.String"/>
 	<field name="CAMPUS" class="java.lang.String"/>
+	<field name="EST_CODIGO" class="java.math.BigDecimal"/>
 	<field name="POSGRADO" class="java.lang.String"/>
 	<field name="MODALIDAD" class="java.lang.String"/>
-	<field name="TITULO" class="java.lang.String"/>
-	<field name="TOTAL_HORAS" class="java.math.BigDecimal"/>
-	<field name="PEL_DESCRIPCION" class="java.lang.String"/>
 	<field name="PEL_CODIGO" class="java.math.BigDecimal"/>
+	<field name="PEL_DESCRIPCION" class="java.lang.String"/>
 	<field name="COHORTE" class="java.lang.String"/>
 	<field name="FECHA_SEMESTRE" class="java.lang.String"/>
 	<field name="CLLC_CDG" class="java.math.BigDecimal"/>
@@ -160,12 +225,16 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 	<field name="MAL_NRO_HORAS" class="java.math.BigDecimal"/>
 	<field name="NOTA_FINAL" class="java.math.BigDecimal"/>
 	<field name="NUMERO_VECES" class="java.lang.String"/>
-	<field name="TAP_CODIGO" class="java.math.BigDecimal"/>
-	<field name="TIPO_APROBACION" class="java.lang.String"/>
-	<field name="OBSERVACIONES_MATRICULA" class="java.lang.String"/>
 	<field name="ESTADO" class="java.lang.String"/>
 	<field name="FECHA_ACTUAL" class="java.lang.String"/>
 	<field name="OBSERVACIONES" class="java.lang.String"/>
+	<field name="TOTAL_HORAS" class="java.math.BigDecimal"/>
+	<field name="TAP_CODIGO" class="java.math.BigDecimal"/>
+	<field name="TIPO_APROBACION" class="java.lang.String"/>
+	<field name="TIENE_MENCION" class="java.lang.String"/>
+	<field name="TIENE_MENCION_EST" class="java.lang.String"/>
+	<field name="TOTAL_MENCIONES" class="java.math.BigDecimal"/>
+	<field name="TITULO" class="java.lang.String"/>
 	<variable name="variable1" class="java.lang.String" calculation="Count"/>
 	<variable name="MODULO_1" class="java.lang.Integer" resetType="Group" resetGroup="pea_grup" calculation="Count">
 		<variableExpression><![CDATA[$F{MODULO}]]></variableExpression>
@@ -188,12 +257,12 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 		<groupHeader>
 			<band height="27">
 				<textField>
-					<reportElement style="Estilo_contenido7" x="129" y="0" width="419" height="14" uuid="2db27eb1-0636-47d8-88d4-a9aeb95bff83"/>
+					<reportElement style="Estilo_contenido7" x="133" y="0" width="418" height="14" uuid="2db27eb1-0636-47d8-88d4-a9aeb95bff83"/>
 					<textElement verticalAlignment="Top"/>
 					<textFieldExpression><![CDATA[$F{ESTUDIANTE}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="Estilo_contenido7" x="129" y="13" width="419" height="14" uuid="e5d868f9-5702-4b61-a5b5-60d57ae07125"/>
+					<reportElement style="Estilo_contenido7" x="133" y="13" width="418" height="14" uuid="e5d868f9-5702-4b61-a5b5-60d57ae07125"/>
 					<textElement verticalAlignment="Top"/>
 					<textFieldExpression><![CDATA[$F{CEDULA}]]></textFieldExpression>
 				</textField>
@@ -226,7 +295,7 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 					<text><![CDATA[PROGRAMA DE POSGRADO:]]></text>
 				</staticText>
 				<textField>
-					<reportElement style="Estilo_contenido7" x="129" y="0" width="405" height="14" uuid="f5de055a-3fdc-4dc7-88ad-ca36f74f06bd"/>
+					<reportElement style="Estilo_contenido7" x="134" y="0" width="405" height="14" uuid="f5de055a-3fdc-4dc7-88ad-ca36f74f06bd"/>
 					<textElement verticalAlignment="Top"/>
 					<textFieldExpression><![CDATA[$F{POSGRADO}]]></textFieldExpression>
 				</textField>
@@ -238,7 +307,7 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 		<groupHeader>
 			<band height="14">
 				<textField>
-					<reportElement style="Estilo_contenido7" x="129" y="0" width="420" height="14" uuid="4dbc38fb-e897-41e7-9a53-d729979ac632"/>
+					<reportElement style="Estilo_contenido7" x="134" y="0" width="417" height="14" uuid="4dbc38fb-e897-41e7-9a53-d729979ac632"/>
 					<textElement verticalAlignment="Top"/>
 					<textFieldExpression><![CDATA[$F{MODALIDAD}]]></textFieldExpression>
 				</textField>
@@ -257,11 +326,11 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 		<groupHeader>
 			<band height="14">
 				<staticText>
-					<reportElement style="Estilo_titulo" x="1" y="0" width="128" height="14" uuid="da62874e-b7cb-4ec3-83ef-734e335092d8"/>
-					<text><![CDATA[TOTAL HORAS DEL POGRAMA:]]></text>
+					<reportElement style="Estilo_titulo" x="1" y="0" width="133" height="14" uuid="da62874e-b7cb-4ec3-83ef-734e335092d8"/>
+					<text><![CDATA[TOTAL HORAS DEL PROGRAMA:]]></text>
 				</staticText>
 				<textField>
-					<reportElement style="Estilo_contenido7" x="130" y="0" width="120" height="14" uuid="0e645d84-db28-4dbc-b08e-4ca185925b28"/>
+					<reportElement style="Estilo_contenido7" x="134" y="0" width="120" height="14" uuid="0e645d84-db28-4dbc-b08e-4ca185925b28"/>
 					<textFieldExpression><![CDATA[$F{TOTAL_HORAS}]]></textFieldExpression>
 				</textField>
 			</band>
@@ -272,12 +341,12 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 		<groupHeader>
 			<band height="14">
 				<textField>
-					<reportElement style="Estilo_contenido7" x="130" y="0" width="419" height="14" uuid="de5b4caa-04bc-49eb-addf-9c5bf8e6d2db"/>
+					<reportElement style="Estilo_contenido7" x="134" y="0" width="416" height="14" uuid="de5b4caa-04bc-49eb-addf-9c5bf8e6d2db"/>
 					<textFieldExpression><![CDATA[$F{COHORTE}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement style="Estilo_titulo" x="1" y="0" width="128" height="14" uuid="cd591e87-530b-467c-8fcb-f5bc750bdece"/>
-					<text><![CDATA[COHORTE]]></text>
+					<text><![CDATA[COHORTE:]]></text>
 				</staticText>
 			</band>
 		</groupHeader>
@@ -286,15 +355,15 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 		<groupExpression><![CDATA[$F{TITULO}]]></groupExpression>
 		<groupHeader>
 			<band height="14">
-				<printWhenExpression><![CDATA[$P{pn_tituloMencion}.equals(1)]]></printWhenExpression>
-				<textField isBlankWhenNull="true">
-					<reportElement style="Estilo_contenido7" x="130" y="0" width="417" height="14" uuid="f092b063-47c3-4e4e-811d-652ff98e35dc"/>
-					<textFieldExpression><![CDATA[$P{pv_tituloPosgrado}]]></textFieldExpression>
-				</textField>
+				<printWhenExpression><![CDATA[$P{pn_imprimeTitulo}.equals( 1 )]]></printWhenExpression>
 				<staticText>
 					<reportElement style="Estilo_titulo" x="1" y="0" width="128" height="14" uuid="e933cef8-40c5-4bff-baa6-a3b5256bd7a7"/>
 					<text><![CDATA[TÍTULO A OBTENER:]]></text>
 				</staticText>
+				<textField>
+					<reportElement style="Estilo_contenido7" x="133" y="0" width="417" height="14" uuid="bf654eae-a172-4d18-aeb1-86d5abef62e3"/>
+					<textFieldExpression><![CDATA[$F{TITULO}]]></textFieldExpression>
+				</textField>
 			</band>
 		</groupHeader>
 	</group>
@@ -310,7 +379,7 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 					<text><![CDATA[PERÍODO ACADÉMICO:]]></text>
 				</staticText>
 				<textField>
-					<reportElement style="Estilo_contenido7" x="129" y="0" width="418" height="14" uuid="f29872cb-3edb-44b6-a5ac-90d28a49f3c7"/>
+					<reportElement style="Estilo_contenido7" x="134" y="0" width="416" height="14" uuid="f29872cb-3edb-44b6-a5ac-90d28a49f3c7"/>
 					<textElement verticalAlignment="Top"/>
 					<textFieldExpression><![CDATA[$F{FECHA_SEMESTRE}]]></textFieldExpression>
 				</textField>

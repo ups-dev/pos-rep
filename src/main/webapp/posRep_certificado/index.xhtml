@@ -1,6 +1,4 @@
-<ui:composition 
-    xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:o="http://omnifaces.org/ui"
@@ -17,9 +15,13 @@
         <h:outputText value="#{posRepBundle['PosResultadosTitle']}"/>
     </ui:define>
 
+    <ui:define name="ups-breadcrumb-contenido">
+        #{posRepBundle['PosResultadosTitle']}
+    </ui:define>
+
     <ui:define name="ups-content-estructura">
-        <uorg:estructura id="exap" value="#{orgEstructuraController.selected}" style="width: 20em;"   >
-            <p:ajax update=":PosReportesCerForm" listener="#{posRepResultadoController.callEventAjaxOrgEstructura()}"
+        <uorg:estructura id="exap" >
+            <p:ajax update=":PosReportesCerForm" listener="#{posRepResultadoController.callEventAjaxOrgEstructura()}" 
                     event="change" process="@this"/>
         </uorg:estructura>         
     </ui:define>
@@ -28,5 +30,4 @@
         <ui:include src="/posRep_certificado/List.xhtml"/>        
 <!--        <ui:include src="/WEB-INF/templates/include/HotKey.xhtml">-->
     </ui:define>
-    
 </ui:composition>

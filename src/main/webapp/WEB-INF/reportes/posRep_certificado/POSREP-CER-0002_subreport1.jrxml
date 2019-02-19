@@ -44,9 +44,17 @@ AND    rownum             = 1]]>
 		<band splitType="Stretch"/>
 	</background>
 	<detail>
-		<band height="105" splitType="Stretch">
+		<band height="105">
+			<rectangle>
+				<reportElement isPrintRepeatedValues="false" x="0" y="0" width="555" height="105" isRemoveLineWhenBlank="true" uuid="ebc3f9d8-3145-48c0-9379-efce5e4d31a9">
+					<printWhenExpression><![CDATA[]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</rectangle>
 			<textField>
-				<reportElement style="Estilo_titulo" x="131" y="68" width="299" height="12" uuid="94b98201-e934-40c9-88f7-ce92647e8bf9"/>
+				<reportElement style="Estilo_titulo" x="131" y="68" width="299" height="12" isPrintWhenDetailOverflows="true" uuid="94b98201-e934-40c9-88f7-ce92647e8bf9"/>
 				<box>
 					<topPen lineWidth="0.0"/>
 				</box>
@@ -54,12 +62,12 @@ AND    rownum             = 1]]>
 				<textFieldExpression><![CDATA[$F{SECRE_CAMPUS}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="Estilo_titulo" x="131" y="80" width="299" height="12" uuid="02829035-2df4-48fe-856b-9744002b6772"/>
+				<reportElement style="Estilo_titulo" x="131" y="80" width="299" height="12" isPrintWhenDetailOverflows="true" uuid="02829035-2df4-48fe-856b-9744002b6772"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{CAMPUS}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="Estilo_titulo" x="131" y="92" width="299" height="12" uuid="e18d2e1c-4517-4167-9183-a30fde71da65"/>
+				<reportElement style="Estilo_titulo" x="131" y="92" width="299" height="12" isPrintWhenDetailOverflows="true" uuid="e18d2e1c-4517-4167-9183-a30fde71da65"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{SEDE}]]></textFieldExpression>
 			</textField>
@@ -67,7 +75,7 @@ AND    rownum             = 1]]>
 				<reportElement x="187" y="67" width="200" height="1" uuid="7b2ddae5-e85c-4fe5-9ca5-9925229f885f"/>
 			</line>
 			<staticText>
-				<reportElement style="Estilo_contenido" x="0" y="0" width="555" height="20" uuid="513e5ac2-61d8-450e-b113-28ea1bdc2a89"/>
+				<reportElement style="Estilo_contenido" x="0" y="0" width="555" height="20" isPrintWhenDetailOverflows="true" uuid="513e5ac2-61d8-450e-b113-28ea1bdc2a89"/>
 				<text><![CDATA[Es cuanto certifico, de acuerdo a a los archivos que reposan en la Secretaría de Campus a mi cargo.]]></text>
 			</staticText>
 		</band>

@@ -60,7 +60,7 @@ AND    rownum             = 1]]>
 		<band height="125" splitType="Stretch">
 			<printWhenExpression><![CDATA[$P{pn_certificacion}.equals(1)]]></printWhenExpression>
 			<rectangle>
-				<reportElement isPrintRepeatedValues="false" x="0" y="0" width="555" height="125" isRemoveLineWhenBlank="true" uuid="cfdf95ce-9c35-4843-9aea-37a929894382">
+				<reportElement isPrintRepeatedValues="false" x="0" y="0" width="555" height="125" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="cfdf95ce-9c35-4843-9aea-37a929894382">
 					<printWhenExpression><![CDATA[$P{pn_certificacion}.equals(1)]]></printWhenExpression>
 				</reportElement>
 				<graphicElement>
