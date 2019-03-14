@@ -446,7 +446,7 @@ ORDER BY semestre,materia_mencion nulls first,modulo]]>
 					<textElement verticalAlignment="Top">
 						<font fontName="SansSerif" size="10" isBold="false"/>
 					</textElement>
-					<text><![CDATA[La Secretaria General de la Universidad Politécnica Salesiana, certifica que el RECORD ACADÉMICO corresponde a:]]></text>
+					<text><![CDATA[La Secretaria General de la Universidad Politécnica Salesiana, certifica que el RÉCORD ACADÉMICO corresponde a:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement isPrintRepeatedValues="false" x="2" y="0" width="549" height="18" isPrintInFirstWholeBand="true" uuid="8ea67fb7-87ca-4929-97fd-e721c62bc85f"/>

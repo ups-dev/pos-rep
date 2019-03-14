@@ -695,7 +695,7 @@ ORDER BY semestre,materia_mencion nulls first,modulo]]>
 				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[RECORD ACADÉMICO]]></text>
+				<text><![CDATA[RÉCORD ACADÉMICO]]></text>
 			</staticText>
 		</band>
 	</pageHeader>
