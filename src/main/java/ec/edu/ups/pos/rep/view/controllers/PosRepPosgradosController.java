@@ -126,6 +126,7 @@ public class PosRepPosgradosController implements Serializable{
         
     }
      public void limpiarFiltros(){
+         
         setInsAlumnoWrapper(null);
         setAluCodigo(null);
         setPosgradoAlumnoWrapper(null);       
@@ -151,7 +152,7 @@ public class PosRepPosgradosController implements Serializable{
         setSedeFactura(null);
        
     }  
-
+ 
     
     
      public void actualizaCamposFac(){

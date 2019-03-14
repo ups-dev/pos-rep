@@ -76,7 +76,7 @@ AND    rownum             = 1]]>
 			</line>
 			<staticText>
 				<reportElement style="Estilo_contenido" x="0" y="0" width="555" height="20" isPrintWhenDetailOverflows="true" uuid="513e5ac2-61d8-450e-b113-28ea1bdc2a89"/>
-				<text><![CDATA[Es cuanto certifico, de acuerdo a a los archivos que reposan en la Secretaría de Campus a mi cargo.]]></text>
+				<text><![CDATA[Es cuanto certifico, de acuerdo a los archivos que reposan en la Secretaría de Campus a mi cargo.]]></text>
 			</staticText>
 		</band>
 	</detail>

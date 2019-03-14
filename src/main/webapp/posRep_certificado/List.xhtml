@@ -21,7 +21,7 @@
                         <f:param name="times" value="1" />
                     </p:effect>
                 </p:messages>
-            </h:panelGroup>           
+            </h:panelGroup>                   
             
                  <p:dataTable id="PosReportesCerSistemaDataTable"
                          widgetVar="PosReportesCerSistemaDataTableVar"
@@ -39,13 +39,17 @@
                          selection="#{repReportesSistemaController.selected}"
                          filteredValue="#{repReportesSistemaController.itemsFilter}">
                 <p:ajax event="rowSelect" update=":PosReportesCerForm:PosRepCerExportToolbar, 
-                                                  :PosReportesCerForm:alumno,
+                                                  :PosReportesCerForm:PosRepFiltroPanel,
+                                                  :PosReportesCerForm:messagePanel,
+                                                  :PosReportesCerForm:alumno,                                                  
                                                   :PosReportesCerForm:semestre
                                                   :PosReportesCerForm:panelDataTable,
                                                   :PosReportesCerForm:PosRepFiltroPanel2"
                                                   listener="#{posRepPosgradosController.limpiarFiltros()}"/>
                 
                 <p:ajax event="filter" update=":PosReportesCerForm:PosRepCerExportToolbar,
+                                                :PosReportesCerForm:PosRepFiltroPanel,
+                                                :PosReportesCerForm:messagePanel,
                                                   :PosReportesCerForm:alumno,
                                                   :PosReportesCerForm:semestre,
                                                   :PosReportesCerForm:panelDataTable,
@@ -98,9 +102,9 @@
                                                <h:outputText value="#{p.aluNombres}"/>
                                            </p:column>                                                     
                                         <!--p:ajax event="itemSelect" update="posRepFiltrarAsignatura, posRepFiltrarGrupo, posRepFiltrarDocente" listener="#{posRepResultadoController.updateAsignaturaList()}"></p:ajax-->
-                                         <p:ajax event=  "itemSelect" update="panelDataTable,semestre,PosRepFiltroPanel2"  
+                                         <p:ajax event=  "itemSelect" update="panelDataTable,semestre,PosRepFiltroPanel2, messagePanel"  
                                                  listener="#{posRepPosgradosController.cargarLista()}"/>
-                                        <p:ajax event=  "change" update="panelDataTable,semestre,PosRepFiltroPanel2"  
+                                        <p:ajax event=  "change" update="panelDataTable,semestre,PosRepFiltroPanel2, messagePanel"  
                                                  listener="#{posRepPosgradosController.cargarLista()}"/>
                                          
                                     </p:autoComplete>   
@@ -119,11 +123,12 @@
                        
                         <ui:decorate template="/WEB-INF/templates/decorators/search/ups-search-param.xhtml">
                             <ui:define name="ups-search-param-title">  
-                                <p:outputLabel value="#{posRepBundle['PosRepSemestre']}:" />                        
+                                <p:outputLabel value="#{posRepBundle['PosRepSemestre']}:" for="posRepFiltrarNivel" />                        
                             </ui:define>
 
                             <ui:define name="ups-search-param-content">
-                                <p:selectOneMenu id="posRepFiltrarNivel" value="#{posRepPosgradosController.matNivelPeriodoEstructura}" required="true" requiredMessage="Seleccione el Semestre."                                     
+                                <p:selectOneMenu id="posRepFiltrarNivel" value="#{posRepPosgradosController.matNivelPeriodoEstructura}" 
+                                                 required="true" requiredMessage="Seleccione el Semestre."                                     
                                                       filter="true" filterMatchMode="contains" var="filtro" 
                                                       >                            
                                          <!--<f:selectItem itemLabel="#{posRepBundle['Todos']}" itemValue=""/>-->
@@ -136,7 +141,7 @@
                                          <p:column>
                                              <h:outputText value="#{filtro}" />  
                                          </p:column>
-                                         <p:ajax update="PosRepFiltroPanel2" listener="#{posRepPosgradosController.actualizaCamposFac()}" />
+                                         <p:ajax update="PosRepFiltroPanel2, messagePanel" listener="#{posRepPosgradosController.actualizaCamposFac()}" />
                                        <!--  <p:ajax update="posRepFiltrarGrupo"                                    
                                                  listener="#{posRepPosgradosController.updateGrupoList()}" 
                                                  />-->
@@ -250,13 +255,13 @@
 <!--CERTIFICACIÓN -->    
 <p:panel id="PosRepFiltroPanel2" header="Certificación de Rúbricas" >    
          <h:panelGrid id="datosfactura" columns="3" cellpadding="15" rendered="#{not empty posRepPosgradosController.insAlumnoWrapper and not empty posRepPosgradosController.posgradoAlumnoWrapper and posRepPosgradosController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_CERTIFICACION)}" >  
-             <p:outputLabel value="#{posRepBundle['PosRepSede']}:" /> 
-             <p:outputLabel value="#{posRepBundle['PosRepPuntoFac']}:" />
-             <p:outputLabel value="#{posRepBundle['PosRepNumFac']}:" />
+             <p:outputLabel value="#{posRepBundle['PosRepSede']}:"  for="sedeFacturacion"/> 
+             <p:outputLabel value="#{posRepBundle['PosRepPuntoFac']}:" for="puntoFacturacion"/>
+             <p:outputLabel value="#{posRepBundle['PosRepNumFac']}:" for="numFactura"/>
              
-             <p:inputText   value="#{posRepPosgradosController.sedeFactura}" required="true" requiredMessage="Ingrese la sede de Facturación."/>
-             <p:inputText   value="#{posRepPosgradosController.puntoFacturacion}" required="true" requiredMessage="Ingrese el punto de Facturación."/>
-             <p:inputText   value="#{posRepPosgradosController.numFactura}" required="true" requiredMessage="Ingrese el número de Factura."/>
+             <p:inputText id="sedeFacturacion" value="#{posRepPosgradosController.sedeFactura}" required="true" requiredMessage="Ingrese la sede de Facturación."/>
+             <p:inputText id="puntoFacturacion" value="#{posRepPosgradosController.puntoFacturacion}" required="true" requiredMessage="Ingrese el punto de Facturación."/>
+             <p:inputText id="numFactura" value="#{posRepPosgradosController.numFactura}" required="true" requiredMessage="Ingrese el número de Factura."/>
         </h:panelGrid> 
          <br/> 
         <h:panelGrid id="certificacionPanel" columns="2" rendered="#{not empty posRepPosgradosController.insAlumnoWrapper and not empty posRepPosgradosController.posgradoAlumnoWrapper and posRepPosgradosController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_CERTIFICACION)}" >   
@@ -267,7 +272,7 @@
    
         </h:panelGrid>        
     
-             <!--Filtro SECETRARIA GENERAL-->
+             <!--Filtro SECRETARIA GENERAL-->
           <h:panelGrid columns="2" id="PosCertificar" >
                                  
                       <ui:fragment rendered="#{posRepPosgradosController.certificacion eq true}">
@@ -307,8 +312,9 @@
 
                 <p:toolbarGroup align="center">                
                     <p:commandLink id="nonAjaxExcel"                                    
-                                   ajax="false"
-                                   update="messagePanel"                                   
+                                   ajax="false" 
+                                   validateClient="true"
+                                   update="messagePanel"                             
                                    actionListener="#{posRepGeneralController.generar_reporte_certificado('xlsx',posRepPosgradosController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_CERTIFICACION))}"
                                    disabled="#{(repReportesSistemaController.selected.resFormato eq null or (repReportesSistemaController.selected.resFormato ne 'EXCEL' and repReportesSistemaController.selected.resFormato ne 'PDF - EXCEL')) or posRepPosgradosController.posgradoAlumnoWrapper eq null}">  
                         <p:graphicImage library="ups-template" 
@@ -317,7 +323,8 @@
                                         title="#{posRepBundle['ExportXls']}"/>  
                     </p:commandLink>
                     <p:commandLink id="nonAjaxPdf"                                    
-                                   ajax="false"
+                                   ajax="false" 
+                                   validateClient="true"
                                    update="messagePanel"
                                    actionListener="#{posRepGeneralController.generar_reporte_certificado('pdf',posRepPosgradosController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_CERTIFICACION))}"
                                    disabled="#{(repReportesSistemaController.selected.resFormato eq null or (repReportesSistemaController.selected.resFormato ne 'PDF' and repReportesSistemaController.selected.resFormato ne 'PDF - EXCEL'))or posRepPosgradosController.posgradoAlumnoWrapper eq null }">

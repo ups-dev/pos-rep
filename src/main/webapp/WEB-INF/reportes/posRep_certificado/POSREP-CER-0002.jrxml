@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-CER-0002" pageWidth="595" pageHeight="842" columnWidth="551" leftMargin="22" rightMargin="22" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="288"/>
+	<property name="ireport.y" value="0"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_alu_codigo" class="java.lang.Integer">
@@ -50,7 +50,7 @@
        ca.numero_veces,
        ca.tipo_aprobacion,
        ca.observaciones_matricula,
-       ca.estado,
+       NVL(ca.estado,ma.estado) estado,
        ca.para_contar,
        ca.para_promediar
 from
@@ -94,7 +94,8 @@ from
            total_modulo,
            fecha_inicio_carrera,
            fecha_actual,
-           decode(tiene_mencion_pro,'N',p.titulo,'S',decode(total_menciones,1,p.mencion_proyecto,decode(tiene_mencion_est,'S',titulo||', '||p.mencion_estudiante,null))) titulo
+           decode(tiene_mencion_pro,'N',p.titulo,'S',decode(total_menciones,1,p.mencion_proyecto,decode(tiene_mencion_est,'S',titulo||', '||p.mencion_estudiante,null))) titulo,
+           estado
            from(
                select distinct dcam.dee_descripcion              campus,
                  dpos.dee_descripcion                            programa,
@@ -164,11 +165,9 @@ from
                  (select 'MENCIÓN '||cd.cdd_mencion
                  from ped.ped_cde_dep cd
                  where cd.cdd_codigo = mam.CDD_codigo)          materia_mencion,
-                 /*(select 'COMPONENTE '
-                 from ped.ped_cde_dep cd
-                 where cd.cdd_codigo = mam.CDD_codigo)          componente_mencion,*/
                  decode(mam.cdd_codigo,null,0,1 )               total_modulo_mencion,
-                 decode(mam.cdd_codigo,null,1,0 )               total_modulo
+                 decode(mam.cdd_codigo,null,1,0 )               total_modulo,
+                 'NO CURSADO' estado
           from   ped.ped_proyecto_educacion  pre,
                  ped.ped_malla               mal,
                  ped.ped_materia             mtr,
@@ -476,7 +475,7 @@ ORDER BY semestre,materia_mencion nulls first,modulo]]>
 						<subreportParameterExpression><![CDATA[$P{pn_campus}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "POSREP-CER-0002_subreport2.jasper"]]></subreportExpression>
+					<subreportExpression><![CDATA["POSREP-CER-0002_subreport2.jasper"]]></subreportExpression>
 				</subreport>
 			</band>
 		</groupFooter>

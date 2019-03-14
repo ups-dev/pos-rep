@@ -8,7 +8,6 @@ import ec.edu.ups.pos.rep.view.controller.ins.InsAlumnoController;
 import ec.edu.ups.pos.rep.view.controller.rep.RepReportesSistemaController;
 import ec.edu.ups.org.common.data.entities.OrgPeriodoLectivo;
 import ec.edu.ups.ped.common.data.entities.PedMalla;
-import ec.edu.ups.ped.common.data.entities.PedModalidad;
 import ec.edu.ups.pos.rep.data.entities.rep.RepSecretarioGeneral;
 import ec.edu.ups.pos.rep.data.entities.rep.RepTipCerRepSis;
 import ec.edu.ups.pos.rep.data.entities.wrapper.InsAlumnoWrapper;
