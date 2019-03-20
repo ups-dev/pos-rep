@@ -207,19 +207,7 @@ public class PosgradoAlumnoWrapper implements Serializable {
         hash += (aluCodigo != null ? aluCodigo.hashCode() : 0);
         return hash;
     }
-
-   // @Override
-//    public boolean equals(Object object) {
-//        // TODO: Warning - this method won't work in the case the id fields are not set
-//        if (!(object instanceof PosgradoAlumnoWrapper)) {
-//            return false;
-//        }
-//        PosgradoAlumnoWrapper other = (PosgradoAlumnoWrapper) object;
-//        if ((this.aluCodigo == null && other.aluCodigo != null) || (this.aluCodigo != null && !this.aluCodigo.equals(other.aluCodigo))) {
-//            return false;
-//        }
-//        return true;
-//    }
+    
        @Override
      public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set

@@ -47,8 +47,6 @@ public class PosRepPosgradosController implements Serializable{
     private InsAlumnoWrapper insAlumnoWrapper;
     private List<InsAlumnoWrapper> listadoAlumnos;
     private Long aluCodigo;
-   // private List<Integer> pedMallaNivelList;
-   // private Integer pedNivelMalla;
       
     private boolean certificacion;
     private List<String> listSecretariaGeneral;  
@@ -77,16 +75,10 @@ public class PosRepPosgradosController implements Serializable{
     
     public void callEventAjaxOrgEstructura() {
         
-          PrimeFaces.current().ajax().update("PosReportesCerForm:PosReportesCerSistemaDataTable");
+        PrimeFaces.current().ajax().update("PosReportesCerForm:PosReportesCerSistemaDataTable");
         PrimeFaces.current().ajax().update("PosReportesCerForm:PosRepCerExportToolbar");
         PrimeFaces.current().ajax().update("PosReportesCerForm:PosRepCerFiltroPanel"); 
-       
-       /* getRequestContext().update("PosReportesCerForm:PosReportesCerSistemaDataTable");
-        getRequestContext().update("PosReportesCerForm:PosRepCerExportToolbar");
-        getRequestContext().update("PosReportesCerForm:PosRepCerFiltroPanel");*/
-       
-      //  getRequestContext().update("PosReportesForm:SbeRepFiltroPanel");
-//        updateSedeList();        
+            
     }
     
     public void cargarNiveles(){
@@ -118,10 +110,6 @@ public class PosRepPosgradosController implements Serializable{
        if(insAlumnoWrapper!=null){
             listadoPosgrados=posRepPosgradosFacade.listaPosgrados(insAlumnoWrapper.getAluCodigo());
             
-          /* for (int i = 0; i < listadoPosgrados.size(); i++) { 
-            System.out.println("listadoPosgrados: "+i+listadoPosgrados.get(i).getTitulo());
-            System.out.println("listadoPosgrados: "+i+listadoPosgrados.get(i).getAluCodigo());
-           }*/
        }      
         
     }

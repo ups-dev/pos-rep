@@ -307,7 +307,7 @@ public class PosRepGeneralController implements Serializable{
             }
             
             
-            System.out.println("pn_alu_codigo"+codigoAlumno);
+         /*   System.out.println("pn_alu_codigo"+codigoAlumno);
             System.out.println("pv_nivel_matricula"+codigoNivel);
             System.out.println("numSedeFactura"+numSedeFactura);
             System.out.println("numPuntoFacturacion"+numPuntoFacturacion);
@@ -321,7 +321,7 @@ public class PosRepGeneralController implements Serializable{
             System.out.println("posAlumnoWrapper.getEstPosgrado()"+posAlumnoWrapper.getEstPosgrado());
             System.out.println("mencionEstudiante "+mencionEstudiante);
             System.out.println("totalMenciones "+totalMenciones);
-            System.out.println("imprimeTitulo "+imprimeTitulo);
+            System.out.println("imprimeTitulo "+imprimeTitulo);*/
  
  
             //Definición de Parámetros

@@ -94,7 +94,7 @@ from
            total_modulo,
            fecha_inicio_carrera,
            fecha_actual,
-           decode(tiene_mencion_pro,'N',p.titulo,'S',decode(total_menciones,1,p.mencion_proyecto,decode(tiene_mencion_est,'S',titulo||', '||p.mencion_estudiante,null))) titulo,
+           decode(tiene_mencion_pro,'N',decode(p.titulo,'OTRO',p.cde_des_tit_opcional,p.titulo),'S',decode(total_menciones,1,p.mencion_proyecto,decode(tiene_mencion_est,'S',titulo||', '||p.mencion_estudiante,null))) titulo,
            estado
            from(
                select distinct dcam.dee_descripcion              campus,
@@ -120,7 +120,7 @@ from
                  where cdd1.dep_codigo = dep.dep_codigo
                  )                                              total_menciones,
                 cac2.cac_descripcion                            titulo,
-                cac2.cac_descripcion||', '||'MENCIÓN '||cdd.cdd_mencion  mencion_proyecto,
+                cac2.cac_descripcion||', '||'MENCIÓN '||UPPER(cdd.cdd_mencion)  mencion_proyecto,
                 (select 'S'
                   from    ped.ped_cde_dep cdd,
                           ins.ins_ipa_cdd iic,
@@ -137,7 +137,7 @@ from
                    and    ipa.ipa_codigo = iic.ipa_codigo
                    and    ipa.ins_codigo = mat.ins_codigo
                    and    cdd.dep_codigo = dep.dep_codigo)     cod_mencion_estudiante,
-                  (select 'MENCIÓN '||cdd.cdd_mencion
+                  (select 'MENCIÓN '||UPPER(cdd.cdd_mencion)
                   from    ped.ped_cde_dep cdd,
                           ins.ins_ipa_cdd iic,
                           ins.ins_ins_pro_aca ipa
@@ -167,7 +167,8 @@ from
                  where cd.cdd_codigo = mam.CDD_codigo)          materia_mencion,
                  decode(mam.cdd_codigo,null,0,1 )               total_modulo_mencion,
                  decode(mam.cdd_codigo,null,1,0 )               total_modulo,
-                 'NO CURSADO' estado
+                 'NO CURSADO' estado,
+	       cde.cde_des_tit_opcional
           from   ped.ped_proyecto_educacion  pre,
                  ped.ped_malla               mal,
                  ped.ped_materia             mtr,
@@ -563,7 +564,7 @@ ORDER BY semestre,materia_mencion nulls first,modulo]]>
 					</textElement>
 					<text><![CDATA[TÍTULO A OBTENER:]]></text>
 				</staticText>
-				<textField isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="Estilo_contenido7" isPrintRepeatedValues="false" x="156" y="0" width="394" height="14" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="531a3d88-4544-42bb-86a7-edbf13f25b0a"/>
 					<textFieldExpression><![CDATA[$F{TITULO}]]></textFieldExpression>
 				</textField>
@@ -687,15 +688,15 @@ ORDER BY semestre,materia_mencion nulls first,modulo]]>
 		<band splitType="Stretch"/>
 	</background>
 	<pageHeader>
-		<band height="70">
+		<band height="77">
 			<rectangle>
-				<reportElement x="474" y="56" width="76" height="14" backcolor="#CCCCCC" uuid="7145e16f-bbb1-42db-8b4a-64ad726acd00"/>
+				<reportElement x="459" y="61" width="76" height="14" backcolor="#CCCCCC" uuid="7145e16f-bbb1-42db-8b4a-64ad726acd00"/>
 				<graphicElement>
 					<pen lineWidth="0.0"/>
 				</graphicElement>
 			</rectangle>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="474" y="56" width="73" height="14" forecolor="#000000" uuid="ea76ee89-f2b8-40d3-af14-c986aaca678c"/>
+				<reportElement x="462" y="61" width="73" height="14" forecolor="#000000" uuid="ea76ee89-f2b8-40d3-af14-c986aaca678c"/>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
 					<font size="10" isBold="true"/>
 				</textElement>
@@ -836,7 +837,7 @@ ORDER BY semestre,materia_mencion nulls first,modulo]]>
 		</band>
 	</columnFooter>
 	<pageFooter>
-		<band height="41" splitType="Stretch">
+		<band height="64" splitType="Stretch">
 			<textField>
 				<reportElement x="4" y="-19" width="264" height="9" uuid="561d4da4-7c95-4462-91b0-4b0d2da5ef37"/>
 				<textElement>

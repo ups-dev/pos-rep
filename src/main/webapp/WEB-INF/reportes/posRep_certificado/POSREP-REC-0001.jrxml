@@ -82,7 +82,7 @@ from
            total_modulo,
            fecha_inicio_carrera,
            fecha_actual,
-           decode(tiene_mencion_pro,'N',p.titulo,'S',decode(total_menciones,1,p.mencion_proyecto,decode(tiene_mencion_est,'S',titulo||', '||p.mencion_estudiante,null))) titulo,
+           decode(tiene_mencion_pro,'N',decode(p.titulo,'OTRO',p.cde_des_tit_opcional,p.titulo),'S',decode(total_menciones,1,p.mencion_proyecto,decode(tiene_mencion_est,'S',titulo||', '||p.mencion_estudiante,null))) titulo,
            estado
            from(
                select distinct dcam.dee_descripcion              campus,
@@ -108,7 +108,7 @@ from
                  where cdd1.dep_codigo = dep.dep_codigo
                  )                                              total_menciones,
                 cac2.cac_descripcion                            titulo,
-                cac2.cac_descripcion||', '||'MENCIÓN '||cdd.cdd_mencion  mencion_proyecto,
+                cac2.cac_descripcion||', '||'MENCIÓN '||UPPER(cdd.cdd_mencion) mencion_proyecto,
                 (select 'S'
                   from    ped.ped_cde_dep cdd,
                           ins.ins_ipa_cdd iic,
@@ -125,7 +125,7 @@ from
                    and    ipa.ipa_codigo = iic.ipa_codigo
                    and    ipa.ins_codigo = mat.ins_codigo
                    and    cdd.dep_codigo = dep.dep_codigo)     cod_mencion_estudiante,
-                  (select 'MENCIÓN '||cdd.cdd_mencion
+                  (select 'MENCIÓN '||UPPER(cdd.cdd_mencion)
                   from    ped.ped_cde_dep cdd,
                           ins.ins_ipa_cdd iic,
                           ins.ins_ins_pro_aca ipa
@@ -155,7 +155,8 @@ from
                  where cd.cdd_codigo = mam.CDD_codigo)          materia_mencion,
                  decode(mam.cdd_codigo,null,0,1 )               total_modulo_mencion,
                  decode(mam.cdd_codigo,null,1,0 )               total_modulo,
-                 'NO CURSADO' estado
+                 'NO CURSADO' estado,
+                 cde.cde_des_tit_opcional
           from   ped.ped_proyecto_educacion  pre,
                  ped.ped_malla               mal,
                  ped.ped_materia             mtr,
@@ -520,7 +521,7 @@ ORDER BY semestre,materia_mencion nulls first,modulo]]>
 					</textElement>
 					<text><![CDATA[TÍTULO A OBTENER:]]></text>
 				</staticText>
-				<textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="Estilo_contenido7" x="156" y="0" width="390" height="14" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="3e81f29e-1ac7-48b1-9768-a2df0400623e"/>
 					<textFieldExpression><![CDATA[$F{TITULO}]]></textFieldExpression>
 				</textField>
@@ -654,44 +655,44 @@ ORDER BY semestre,materia_mencion nulls first,modulo]]>
 		<band splitType="Stretch"/>
 	</background>
 	<pageHeader>
-		<band height="115" splitType="Stretch">
+		<band height="121" splitType="Stretch">
 			<staticText>
-				<reportElement x="87" y="56" width="370" height="18" uuid="8ea67fb7-87ca-4929-97fd-e721c62bc85f"/>
+				<reportElement x="87" y="63" width="370" height="18" uuid="8ea67fb7-87ca-4929-97fd-e721c62bc85f"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="13" isBold="true"/>
 				</textElement>
 				<text><![CDATA[UNIVERSIDAD POLITECNICA SALESIANA]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="427" y="78" width="93" height="14" uuid="8e5effba-7258-4e5f-9a29-764a369c2df6"/>
+				<reportElement x="425" y="85" width="93" height="14" uuid="8e5effba-7258-4e5f-9a29-764a369c2df6"/>
 				<textElement textAlignment="Right">
 					<font fontName="SansSerif" size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["PÁGINA "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="520" y="78" width="15" height="14" uuid="43900013-4c86-49bb-9101-1b71cd16fda9"/>
+				<reportElement x="518" y="85" width="15" height="14" uuid="43900013-4c86-49bb-9101-1b71cd16fda9"/>
 				<textElement>
 					<font fontName="SansSerif" size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd-MMM-yyyy HH:mm:ss">
-				<reportElement x="420" y="67" width="115" height="11" uuid="c183fefc-60d4-4297-a72d-3c846e7295f8"/>
+				<reportElement x="418" y="74" width="115" height="11" uuid="c183fefc-60d4-4297-a72d-3c846e7295f8"/>
 				<textElement textAlignment="Right">
 					<font fontName="SansSerif" size="7" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="115" y="73" width="319" height="19" uuid="0cfb947d-fb68-44ca-9ffc-8a4667739b2b"/>
+				<reportElement x="115" y="80" width="319" height="19" uuid="0cfb947d-fb68-44ca-9ffc-8a4667739b2b"/>
 				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font size="9"/>
 				</textElement>
 				<text><![CDATA[SISTEMA DE POSGRADOS]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Estilo_contenido" x="0" y="91" width="546" height="20" uuid="272f37f3-9ece-4da0-a912-bf3aa6c2ebee"/>
+				<reportElement style="Estilo_contenido" x="0" y="98" width="546" height="20" uuid="272f37f3-9ece-4da0-a912-bf3aa6c2ebee"/>
 				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="10" isBold="true"/>
 				</textElement>
@@ -817,6 +818,6 @@ ORDER BY semestre,materia_mencion nulls first,modulo]]>
 		</band>
 	</columnFooter>
 	<pageFooter>
-		<band height="47" splitType="Stretch"/>
+		<band height="59" splitType="Stretch"/>
 	</pageFooter>
 </jasperReport>

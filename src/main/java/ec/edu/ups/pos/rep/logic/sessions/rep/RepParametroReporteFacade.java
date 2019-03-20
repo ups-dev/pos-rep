@@ -44,8 +44,7 @@ public class RepParametroReporteFacade extends AbstractFacade<RepParametroReport
         (new CacheStoreModeParam(CacheStoreMode.REFRESH)).processParam(q);
         
       //  System.out.println("q.getResultList()jkjlj"+q.getResultList().size());
-      //    System.out.println("codigoParametro"+codigoParametro);
-      //      System.out.println("repReportesSistema"+repReportesSistema);
+
         return q.getResultList();
         
     }

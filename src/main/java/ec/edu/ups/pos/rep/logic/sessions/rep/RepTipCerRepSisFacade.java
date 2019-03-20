@@ -39,8 +39,6 @@ public class RepTipCerRepSisFacade extends AbstractFacade<RepTipCerRepSis> {
                                                       + "AND r.aud_eliminado = 'N' ", RepTipCerRepSis.class)
                                                     .setParameter(1, resCodigo);
 
-        //(new CacheStoreModeParam(CacheStoreMode.REFRESH)).processParam(q);
-
         List<RepTipCerRepSis> result = q.getResultList();
 
         return result.isEmpty() ? null : result.get(0);

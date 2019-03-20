@@ -35,11 +35,10 @@ public class RepSecretarioGeneralFacade extends AbstractFacade<RepSecretarioGene
     }
     
      public List<RepSecretarioGeneral> obtieneSecretarioGeneral(){
-       // System.out.println("Obtiene Secretario General ");
         Query q = getEntityManager().createQuery("SELECT seg FROM RepSecretarioGeneral seg WHERE seg.audEliminado = 'N' ORDER BY seg.segCodigo");
              
         (new CacheStoreModeParam(CacheStoreMode.REFRESH)).processParam(q);
-       // System.out.println("Secretario "+q.getResultList().size());
+        
         return q.getResultList();
     }
     
