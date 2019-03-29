@@ -87,7 +87,7 @@ public class PosRepGeneralController implements Serializable{
             //Definición de nombre de: reporte y archivo
             String nombreReporte = "/WEB-INF/reportes/posRep_generico/"+nombre;        
             String nombreArchivo = repReportesSistema.getResReporte();    
-            
+           
             //System.out.println("nombreArchivo   "+nombreArchivo);
             
             //Identificar la estructura seleccionada para el reporte
@@ -146,14 +146,14 @@ public class PosRepGeneralController implements Serializable{
               
             
             
-            System.out.println("codigoEstructura"+codigoEstructura);
+        /*    System.out.println("codigoEstructura"+codigoEstructura);
             System.out.println("pn_pel_codigo"+codigoPeriodo);
             System.out.println("pv_per_codigo"+codigoPersona);
             System.out.println("pv_mal_codigo"+malCodigo);
             System.out.println("pv_mal_nivel"+codigoNivel);
             System.out.println("pv_gru_codigo"+gruCodigo);
-             System.out.println("pv_pee_nivel"+codigoNivel);
-               System.out.println("pagado"+pagado);
+            System.out.println("pv_pee_nivel"+codigoNivel);
+            System.out.println("pagado"+pagado);*/
             
             
             //Definición de Parámetros

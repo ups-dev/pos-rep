@@ -59,14 +59,6 @@ AND    rownum             = 1]]>
 	<detail>
 		<band height="125" splitType="Stretch">
 			<printWhenExpression><![CDATA[$P{pn_certificacion}.equals(1)]]></printWhenExpression>
-			<rectangle>
-				<reportElement isPrintRepeatedValues="false" x="0" y="0" width="555" height="125" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="cfdf95ce-9c35-4843-9aea-37a929894382">
-					<printWhenExpression><![CDATA[$P{pn_certificacion}.equals(1)]]></printWhenExpression>
-				</reportElement>
-				<graphicElement>
-					<pen lineWidth="0.25"/>
-				</graphicElement>
-			</rectangle>
 			<staticText>
 				<reportElement style="Estilo_titulo" x="1" y="2" width="100" height="20" isPrintWhenDetailOverflows="true" uuid="04a148bd-324d-4cec-9c98-7acc12343af7">
 					<printWhenExpression><![CDATA[$P{pn_certificacion}.equals( 1 )]]></printWhenExpression>
@@ -74,7 +66,7 @@ AND    rownum             = 1]]>
 				<text><![CDATA[CERTIFICO:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido" x="1" y="22" width="554" height="20" isPrintWhenDetailOverflows="true" uuid="51bdef29-902c-4cec-a4df-1131bd0d12ca">
+				<reportElement style="Estilo_contenido" x="1" y="22" width="552" height="20" isPrintWhenDetailOverflows="true" uuid="51bdef29-902c-4cec-a4df-1131bd0d12ca">
 					<printWhenExpression><![CDATA[$P{pn_certificacion}.equals( 1 )]]></printWhenExpression>
 				</reportElement>
 				<textFieldExpression><![CDATA[$F{LEYENDA}]]></textFieldExpression>
@@ -87,7 +79,7 @@ AND    rownum             = 1]]>
 				<textFieldExpression><![CDATA[$F{FECHA}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="Estilo_contenido" x="1" y="94" width="554" height="12" isPrintWhenDetailOverflows="true" uuid="d3d4dadb-7863-49a8-8425-2be3921dc164">
+				<reportElement style="Estilo_contenido" x="1" y="94" width="552" height="12" isPrintWhenDetailOverflows="true" uuid="d3d4dadb-7863-49a8-8425-2be3921dc164">
 					<printWhenExpression><![CDATA[$P{pn_certificacion}.equals( 1 )]]></printWhenExpression>
 				</reportElement>
 				<textElement>
@@ -96,7 +88,7 @@ AND    rownum             = 1]]>
 				<textFieldExpression><![CDATA[$F{SECRE_GENERAL}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="Estilo_titulo" x="1" y="106" width="554" height="12" isPrintWhenDetailOverflows="true" uuid="eeece3a7-2f7b-4e94-a0bf-429cb9e5fbaa">
+				<reportElement style="Estilo_titulo" x="1" y="106" width="552" height="12" isPrintWhenDetailOverflows="true" uuid="eeece3a7-2f7b-4e94-a0bf-429cb9e5fbaa">
 					<printWhenExpression><![CDATA[$P{pn_certificacion}.equals( 1 )]]></printWhenExpression>
 				</reportElement>
 				<textElement>

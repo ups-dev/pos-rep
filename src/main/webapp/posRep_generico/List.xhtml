@@ -102,10 +102,6 @@
                                                     queryDelay="0"                                                                       
                                                     > 
                                         <o:converter converterId="omnifaces.ListConverter" list="#{posRepResultadoController.listadoAlumnos}" />
-<!--                                        <p:column>
-                                            <h:outputText value="#{getGthPersona.perCodigo}" />
-                                        </p:column>-->
-
                                            <p:column>
                                            <h:outputText value="#{p.cllcRuc}" />
                                            </p:column>
@@ -334,9 +330,6 @@
                                                     queryDelay="0"                                                                       
                                                     > 
                                         <o:converter converterId="omnifaces.ListConverter" list="#{posRepResultadoController.gthPersonaList}" />
-<!--                                        <p:column>
-                                            <h:outputText value="#{p.perCodigo}" />
-                                        </p:column>-->
 
                                         <p:column>
                                             <h:outputText value="#{p.perNroIdentificacion}" />
@@ -345,7 +338,6 @@
                                         <p:column>
                                             <h:outputText value="#{p.perApellidos} #{p.perNombres}" />
                                         </p:column>                                                        
-                                        <!--p:ajax event="itemSelect" update="posRepFiltrarAsignatura, posRepFiltrarGrupo, posRepFiltrarDocente" listener="#{posRepResultadoController.updateAsignaturaList()}"></p:ajax-->
                                          <p:ajax event=  "itemSelect" update="posRepFiltrarAsignatura, posRepFiltrarGrupo, posRepFiltrarDocente" 
                                                  listener="#{posRepResultadoController.updateAsignaturaList()}"/>
                                          <p:ajax event="change" update="posRepFiltrarAsignatura, posRepFiltrarGrupo" 

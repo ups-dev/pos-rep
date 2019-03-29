@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-CER-0002" pageWidth="595" pageHeight="842" columnWidth="551" leftMargin="22" rightMargin="22" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="330"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_alu_codigo" class="java.lang.Integer">
@@ -20,9 +20,15 @@
 	<parameter name="pn_seg_codigo" class="java.lang.Integer"/>
 	<parameter name="pn_certificacion" class="java.lang.Integer"/>
 	<parameter name="pn_secuencia" class="java.lang.Integer"/>
-	<parameter name="pn_sedeFacturacion" class="java.lang.Integer"/>
-	<parameter name="pn_puntoFacturacion" class="java.lang.Integer"/>
-	<parameter name="pn_numFactura" class="java.lang.Integer"/>
+	<parameter name="pn_sedeFacturacion" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pn_puntoFacturacion" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pn_numFactura" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
 	<parameter name="pn_imprimeTitulo" class="java.lang.Integer"/>
 	<queryString>
 		<![CDATA[select ma.campus,ma.programa,ma.cohorte,
@@ -239,6 +245,8 @@ from
                     decode(cal.cal_aprobado,'S',1,DECODE(pee.pee_vigente,'S',0,DECODE(cal.cal_aprobado,'S',1,0)) ) para_contar,
                     DECODE(cal.cal_aprobado,'S',cal.cal_nota_final) para_promediar
           FROM    mat.mat_matricula           mat,
+                  ins.ins_inscripcion         inc,
+                  ins.ins_oferta_inscripcion_inicial oii,
                   cal.cal_calificacion        cal,
                   cal.cal_tipo_aprobacion     tap,
                   fac.fac_pago_factura        paf,
@@ -259,6 +267,8 @@ from
                   org.org_periodo_lectivo     pel,
                   ins.ins_alumno              alu
           WHERE   mat.mat_codigo  = cal.mat_codigo
+          AND     inc.ins_codigo  = mat.ins_codigo
+          AND     oii.oii_codigo  = inc.oii_codigo
           AND     mat.mat_codigo  = paf.ins_codigo
           AND     mat.cllc_cdg    = cli.cllc_cdg
           AND     tap.tap_codigo  = cal.tap_codigo
@@ -269,8 +279,7 @@ from
           AND     dep.pre_numero  = pre.pre_numero
           AND     pre.pre_numero  = mpe.pre_numero
           AND     mod.mod_codigo  = mpe.mod_codigo
-          AND     dep.dee_codigo  = dpos.dee_codigo
-          AND     pee.est_codigo  = pos.est_codigo
+          AND     oii.est_codigo   = pos.est_codigo
           AND     pos.dee_codigo  = dpos.dee_codigo
           AND     cam.est_codigo  = pos.est_codigo_padre
           AND     cam.dee_codigo  = dcam.dee_codigo
@@ -601,74 +610,74 @@ ORDER BY semestre,materia_mencion nulls first,modulo]]>
 		<groupHeader>
 			<band height="51">
 				<textField>
-					<reportElement style="Estilo_contenido" x="22" y="0" width="100" height="25" uuid="82c062e0-3cab-44e6-8bd0-a4adadccb44f"/>
+					<reportElement style="Estilo_contenido" x="3" y="0" width="100" height="25" uuid="82c062e0-3cab-44e6-8bd0-a4adadccb44f"/>
 					<textElement verticalAlignment="Bottom">
 						<font size="8" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{SEMESTRE}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement style="Estilo_titulo" x="21" y="28" width="41" height="23" uuid="d7969667-1b86-4446-8b43-a637166f2a7c"/>
+					<reportElement style="Estilo_titulo" x="2" y="28" width="41" height="23" uuid="d7969667-1b86-4446-8b43-a637166f2a7c"/>
 					<textElement verticalAlignment="Middle">
 						<font size="7" isBold="true"/>
 					</textElement>
 					<text><![CDATA[CÓDIGO]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_titulo" x="61" y="28" width="183" height="23" uuid="f684f95a-764e-4171-addc-e1723c66b9ba"/>
+					<reportElement style="Estilo_titulo" x="43" y="28" width="183" height="23" uuid="f684f95a-764e-4171-addc-e1723c66b9ba"/>
 					<textElement verticalAlignment="Middle">
 						<font size="7" isBold="true"/>
 					</textElement>
 					<text><![CDATA[COMPONENTE ACADÉMICO]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_titulo" x="245" y="18" width="28" height="33" uuid="b7fb510c-a0d8-4e6c-99b7-95f45a96980a"/>
+					<reportElement style="Estilo_titulo" x="227" y="18" width="28" height="33" uuid="b7fb510c-a0d8-4e6c-99b7-95f45a96980a"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="7" isBold="true"/>
 					</textElement>
 					<text><![CDATA[N° HORAS]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_titulo" x="324" y="18" width="30" height="33" uuid="50004440-b2e2-4206-aeda-566181a7e7a4"/>
+					<reportElement style="Estilo_titulo" x="297" y="18" width="30" height="33" uuid="50004440-b2e2-4206-aeda-566181a7e7a4"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="7" isBold="true"/>
 					</textElement>
 					<text><![CDATA[N° VECES]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_titulo" x="353" y="28" width="33" height="23" uuid="3634e5ad-4bce-42d1-8a67-be4ed27319c0"/>
+					<reportElement style="Estilo_titulo" x="326" y="28" width="33" height="23" uuid="3634e5ad-4bce-42d1-8a67-be4ed27319c0"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="7" isBold="true"/>
 					</textElement>
 					<text><![CDATA[CALIF.]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_titulo" x="385" y="28" width="55" height="23" uuid="4c717dba-d044-4143-862c-807f7a1293db"/>
+					<reportElement style="Estilo_titulo" x="358" y="28" width="44" height="23" uuid="4c717dba-d044-4143-862c-807f7a1293db"/>
 					<textElement verticalAlignment="Middle">
 						<font size="7" isBold="true"/>
 					</textElement>
 					<text><![CDATA[ESTADO]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_titulo" x="440" y="28" width="110" height="23" uuid="5a877f57-463a-4946-a756-634caf5f24c9"/>
+					<reportElement style="Estilo_titulo" x="403" y="28" width="89" height="23" uuid="5a877f57-463a-4946-a756-634caf5f24c9"/>
 					<textElement verticalAlignment="Middle">
 						<font size="7" isBold="true"/>
 					</textElement>
 					<text><![CDATA[TIPO APROBACIÓN]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_titulo" x="2" y="28" width="20" height="23" forecolor="#FFFFFF" uuid="6c36ca31-5c90-4977-8a2d-551cf8dad619"/>
-					<textElement verticalAlignment="Middle">
-						<font size="7" isBold="true"/>
-					</textElement>
-					<text><![CDATA[N°]]></text>
-				</staticText>
-				<staticText>
-					<reportElement style="Estilo_titulo" x="274" y="28" width="50" height="23" uuid="87ca3136-26ee-48e3-a506-2e8a2f02f58b"/>
-					<textElement verticalAlignment="Middle">
+					<reportElement style="Estilo_titulo" x="256" y="28" width="42" height="23" uuid="87ca3136-26ee-48e3-a506-2e8a2f02f58b"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="7" isBold="true"/>
 					</textElement>
 					<text><![CDATA[PERÍODO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="492" y="28" width="60" height="23" uuid="b7980ff4-88f5-4747-ace3-a7eef7ddd934"/>
+					<textElement verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[RESOLUCIÓN]]></text>
 				</staticText>
 			</band>
 		</groupHeader>
@@ -678,7 +687,7 @@ ORDER BY semestre,materia_mencion nulls first,modulo]]>
 		<groupHeader>
 			<band height="16">
 				<textField isBlankWhenNull="true">
-					<reportElement style="Estilo_titulo7" x="22" y="2" width="528" height="14" isRemoveLineWhenBlank="true" uuid="fc706ccc-7c78-4c6d-9293-edd91a1465e7"/>
+					<reportElement style="Estilo_titulo7" x="2" y="2" width="549" height="14" isRemoveLineWhenBlank="true" uuid="fc706ccc-7c78-4c6d-9293-edd91a1465e7"/>
 					<textFieldExpression><![CDATA[$F{MATERIA_MENCION}]]></textFieldExpression>
 				</textField>
 			</band>
@@ -707,71 +716,67 @@ ORDER BY semestre,materia_mencion nulls first,modulo]]>
 	<detail>
 		<band height="16" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido6" x="21" y="0" width="41" height="16" isPrintWhenDetailOverflows="true" uuid="f8def436-b6f6-4152-b959-387de909e768"/>
+				<reportElement style="Estilo_contenido6" x="3" y="0" width="41" height="16" isPrintWhenDetailOverflows="true" uuid="f8def436-b6f6-4152-b959-387de909e768"/>
 				<textElement>
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido6" x="61" y="0" width="181" height="16" isPrintWhenDetailOverflows="true" uuid="2f60d821-a089-43b0-b680-ae221cca79e6"/>
+				<reportElement style="Estilo_contenido6" x="42" y="0" width="183" height="16" isPrintWhenDetailOverflows="true" uuid="2f60d821-a089-43b0-b680-ae221cca79e6"/>
 				<textElement>
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{MODULO}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido6" x="244" y="0" width="32" height="16" isPrintWhenDetailOverflows="true" uuid="76339aae-0f24-41ff-83f7-d72ffc9c590b"/>
+				<reportElement style="Estilo_contenido6" x="226" y="0" width="32" height="16" isPrintWhenDetailOverflows="true" uuid="76339aae-0f24-41ff-83f7-d72ffc9c590b"/>
 				<textElement textAlignment="Center">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression><![CDATA[]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido6" x="324" y="0" width="30" height="16" isPrintWhenDetailOverflows="true" uuid="c2e26674-7dd8-4746-bd67-70a08e834b9d"/>
+				<reportElement style="Estilo_contenido6" x="298" y="0" width="30" height="16" isPrintWhenDetailOverflows="true" uuid="c2e26674-7dd8-4746-bd67-70a08e834b9d"/>
 				<textElement textAlignment="Center">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{NUMERO_VECES}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido6" x="353" y="0" width="33" height="16" isPrintWhenDetailOverflows="true" uuid="453b0179-8507-4c29-a3b4-9f2fd4299c7d"/>
+				<reportElement style="Estilo_contenido6" x="327" y="0" width="33" height="16" isPrintWhenDetailOverflows="true" uuid="453b0179-8507-4c29-a3b4-9f2fd4299c7d"/>
 				<textElement textAlignment="Center">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{NOTA_FINAL}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido6" x="385" y="0" width="55" height="16" isPrintWhenDetailOverflows="true" uuid="dfbd1662-403b-4668-aaac-3b1cf5c8a882"/>
+				<reportElement style="Estilo_contenido6" x="359" y="0" width="44" height="16" isPrintWhenDetailOverflows="true" uuid="dfbd1662-403b-4668-aaac-3b1cf5c8a882"/>
 				<textElement>
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ESTADO}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido6" x="440" y="0" width="110" height="16" isPrintWhenDetailOverflows="true" uuid="d3ddbae6-41b8-4993-bbb6-ea7130d1f998"/>
+				<reportElement style="Estilo_contenido6" x="403" y="0" width="89" height="16" isPrintWhenDetailOverflows="true" uuid="d3ddbae6-41b8-4993-bbb6-ea7130d1f998"/>
 				<textElement>
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{TIPO_APROBACION}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido6" x="275" y="0" width="49" height="16" isPrintWhenDetailOverflows="true" uuid="617e9b77-3844-4d45-b406-16db4ee2ae94"/>
-				<textElement>
+				<reportElement style="Estilo_contenido6" x="257" y="0" width="42" height="16" isPrintWhenDetailOverflows="true" uuid="617e9b77-3844-4d45-b406-16db4ee2ae94"/>
+				<textElement textAlignment="Center">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{FECHA_SEMESTRE}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="Estilo_contenido6" x="22" y="0" width="39" height="16" isPrintWhenDetailOverflows="true" uuid="2ad53e89-b063-4663-9d4d-0ef89e277b8e"/>
+				<reportElement style="Estilo_contenido6" x="2" y="0" width="39" height="16" isPrintWhenDetailOverflows="true" uuid="2ad53e89-b063-4663-9d4d-0ef89e277b8e"/>
 				<textFieldExpression><![CDATA[$F{MAT_CODIGO}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="Estilo_contenido6" x="2" y="0" width="19" height="16" forecolor="#FFFFFF" uuid="335996bb-065d-402e-8a10-7eebd69947d3"/>
-				<textFieldExpression><![CDATA[$V{contador}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement style="Estilo_contenido6" x="244" y="0" width="29" height="16" isPrintWhenDetailOverflows="true" uuid="fe378887-f2ef-46fe-ba5f-709fc7cd8504"/>
+				<reportElement style="Estilo_contenido6" x="226" y="0" width="29" height="16" isPrintWhenDetailOverflows="true" uuid="fe378887-f2ef-46fe-ba5f-709fc7cd8504"/>
 				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{MAL_NRO_HORAS}]]></textFieldExpression>
 			</textField>

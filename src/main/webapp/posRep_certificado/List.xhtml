@@ -101,8 +101,7 @@
                                            <p:column>
                                                <h:outputText value="#{p.aluNombres}"/>
                                            </p:column>                                                     
-                                        <!--p:ajax event="itemSelect" update="posRepFiltrarAsignatura, posRepFiltrarGrupo, posRepFiltrarDocente" listener="#{posRepResultadoController.updateAsignaturaList()}"></p:ajax-->
-                                         <p:ajax event=  "itemSelect" update="panelDataTable,semestre,PosRepFiltroPanel2, messagePanel"  
+                                        <p:ajax event=  "itemSelect" update="panelDataTable,semestre,PosRepFiltroPanel2, messagePanel"  
                                                  listener="#{posRepPosgradosController.cargarLista()}"/>
                                         <p:ajax event=  "change" update="panelDataTable,semestre,PosRepFiltroPanel2, messagePanel"  
                                                  listener="#{posRepPosgradosController.cargarLista()}"/>
@@ -142,9 +141,7 @@
                                              <h:outputText value="#{filtro}" />  
                                          </p:column>
                                          <p:ajax update="PosRepFiltroPanel2, messagePanel" listener="#{posRepPosgradosController.actualizaCamposFac()}" />
-                                       <!--  <p:ajax update="posRepFiltrarGrupo"                                    
-                                                 listener="#{posRepPosgradosController.updateGrupoList()}" 
-                                                 />-->
+                                      
                                      </p:selectOneMenu>                        
                                  </ui:define>
                         </ui:decorate>
@@ -169,10 +166,8 @@
                          rendered="#{posRepPosgradosController.insAlumnoWrapper ne null}"
                     >          
               <p:ajax event="rowSelect" listener="#{posRepPosgradosController.cargarNiveles()}" update=":PosReportesCerForm:semestre,:PosReportesCerForm:PosRepFiltroPanel2,:PosReportesCerForm:PosRepCerExportToolbar" />
-                <!--<p:ajax event="filter" update=":SnaCambioSedeListForm:SnaCambioSedeToolbar" listener="#{posRepPosgradosController.setSelected(null)}"/>-->
-
-
-                <p:column>
+              
+               <p:column>
                     <f:facet name="header">
                         <h:outputText value="Sede"/>
                     </f:facet>
@@ -211,57 +206,21 @@
                 </p:column>
                                         
             </p:dataTable>       
-           <br/>
-            
-<!--            <p:dataTable id="PosgradosTitulosDataTable"
-                         widgetVar="PosgradosTitulosDataTableVar"
-                         value="#{posRepPosgradosController.listadoPosgrados}"
-                         var="item"
-                         rowKey="#{item.identificador}"
-                         sortBy="#{item.aluCodigo}"
-                         sortOrder="ascending"
-                         paginator="true"                         
-                         rows="10" 
-                         rowsPerPageTemplate="10,20,30,40,50"  
-                         selectionMode="single"
-                         paginatorPosition="bottom"                                                  
-                         emptyMessage="#{posRepBundle['TableEmpty']}"
-                         rendered="#{posRepPosgradosController.insAlumnoWrapper ne null}"
-                         >          -->
-
-
-                <!--<p:ajax event="rowSelect" update=":SnaCambioSedeListForm:SnaCambioSedeToolbar" />-->
-                <!--<p:ajax event="filter" update=":SnaCambioSedeListForm:SnaCambioSedeToolbar" listener="#{posRepPosgradosController.setSelected(null)}"/>-->
-
-
-<!--                <p:column>
-                    <f:facet name="header">
-                        <h:outputText value="Título"/>
-                    </f:facet>
-                    <h:outputText value="#{item.titulo}" />
-                </p:column>-->
-<!--                <p:column>
-                    <f:facet name="header">               
-                        <h:outputText value="Periodo"/>
-                    </f:facet>
-                    <h:outputText value="#{item.periodo}" />
-                </p:column>-->
-
-            <!--</p:dataTable>--> 
-           </h:panelGrid> 
+           <br/>       
+         </h:panelGrid> 
        </p:panel>                  
        	
 
 <!--CERTIFICACIÓN -->    
 <p:panel id="PosRepFiltroPanel2" header="Certificación de Rúbricas" >    
-         <h:panelGrid id="datosfactura" columns="3" cellpadding="15" rendered="#{not empty posRepPosgradosController.insAlumnoWrapper and not empty posRepPosgradosController.posgradoAlumnoWrapper and posRepPosgradosController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_CERTIFICACION)}" >  
+         <h:panelGrid id="datosfactura" columns="3" cellpadding="5" rendered="#{not empty posRepPosgradosController.insAlumnoWrapper and not empty posRepPosgradosController.posgradoAlumnoWrapper and posRepPosgradosController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_CERTIFICACION)}" >  
              <p:outputLabel value="#{posRepBundle['PosRepSede']}:"  for="sedeFacturacion"/> 
              <p:outputLabel value="#{posRepBundle['PosRepPuntoFac']}:" for="puntoFacturacion"/>
              <p:outputLabel value="#{posRepBundle['PosRepNumFac']}:" for="numFactura"/>
              
-             <p:inputText id="sedeFacturacion" value="#{posRepPosgradosController.sedeFactura}" required="true" requiredMessage="Ingrese la sede de Facturación."/>
-             <p:inputText id="puntoFacturacion" value="#{posRepPosgradosController.puntoFacturacion}" required="true" requiredMessage="Ingrese el punto de Facturación."/>
-             <p:inputText id="numFactura" value="#{posRepPosgradosController.numFactura}" required="true" requiredMessage="Ingrese el número de Factura."/>
+             <p:inputText id="sedeFacturacion" value="#{posRepPosgradosController.sedeFactura}" required="true" style=" text-align: right; width: 80%" requiredMessage="Ingrese la sede de Facturación."/>
+             <p:inputText id="puntoFacturacion" value="#{posRepPosgradosController.puntoFacturacion}" required="true" style=" text-align: right; width: 80%; " requiredMessage="Ingrese el punto de Facturación."/>
+             <p:inputText id="numFactura" value="#{posRepPosgradosController.numFactura}" required="true" style=" text-align: right; width: 80%" requiredMessage="Ingrese el número de Factura."/>
         </h:panelGrid> 
          <br/> 
         <h:panelGrid id="certificacionPanel" columns="2" rendered="#{not empty posRepPosgradosController.insAlumnoWrapper and not empty posRepPosgradosController.posgradoAlumnoWrapper and posRepPosgradosController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_CERTIFICACION)}" >   
@@ -296,9 +255,6 @@
                                              <h:outputText value="#{filtro.segNombre}" />  
                                          </p:column>
                            
-<!--                                         <p:ajax update="posRepFiltrarGrupo"                                    
-                                                 listener="#{posRepPosgradosController.updateGrupoList()}" 
-                                                 />-->
                                      </p:selectOneMenu>                        
                                  </ui:define>
                         </ui:decorate>
@@ -308,7 +264,7 @@
        </p:panel>
         
        <p:toolbar id="PosRepCerExportToolbar">  
-            <us:auth permissions="{'operations':['GENERAR']}">
+            <us:auth permissions="{'operations':['GENERAR']}">                                
 
                 <p:toolbarGroup align="center">                
                     <p:commandLink id="nonAjaxExcel"                                    
