@@ -36,7 +36,7 @@ public class RepSecretarioGeneralController extends AbstractController<RepSecret
     public void obtenerListSecretariaCert(){
          
          listadoSecretariaGeneral = repSecretarioGeneralFacade.obtieneSecretarioGeneral();
-         System.out.println("Cargando Lista Secretaria General");
+         //System.out.println("Cargando Lista Secretaria General");
          
          
     } 

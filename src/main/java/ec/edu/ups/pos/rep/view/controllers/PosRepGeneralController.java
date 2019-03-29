@@ -143,18 +143,7 @@ public class PosRepGeneralController implements Serializable{
                 gruCodigo=String.valueOf(ofeGrupo.getGruCodigo());
             }    
             String pagado= posRepResultadoController.getPafPagado();
-              
-            
-            
-        /*    System.out.println("codigoEstructura"+codigoEstructura);
-            System.out.println("pn_pel_codigo"+codigoPeriodo);
-            System.out.println("pv_per_codigo"+codigoPersona);
-            System.out.println("pv_mal_codigo"+malCodigo);
-            System.out.println("pv_mal_nivel"+codigoNivel);
-            System.out.println("pv_gru_codigo"+gruCodigo);
-            System.out.println("pv_pee_nivel"+codigoNivel);
-            System.out.println("pagado"+pagado);*/
-            
+                        
             
             //Definición de Parámetros
             ReportParamBuilder rpb =
@@ -305,25 +294,7 @@ public class PosRepGeneralController implements Serializable{
               numSecuenciaCertificado = repNumeroCertificadoController.obtieneSecuenciaCertificado(estSede, posAlumnoWrapper.getCodPeriodo(), repTipCerRepSis.getTicCodigo());
           
             }
-            
-            
-         /*   System.out.println("pn_alu_codigo"+codigoAlumno);
-            System.out.println("pv_nivel_matricula"+codigoNivel);
-            System.out.println("numSedeFactura"+numSedeFactura);
-            System.out.println("numPuntoFacturacion"+numPuntoFacturacion);
-            System.out.println("numFactura"+numFactura);
-            System.out.println("secretarioGeneral "+secretarioGeneral);
-            System.out.println("codPeriodo"+codigoPeriodo);
-            System.out.println("estCampus"+estCampus);
-            System.out.println("estPosgrado"+estPosgrado);
-            System.out.println("numSecuenciaCertificado"+numSecuenciaCertificado);
-            System.out.println("opcionCert"+opcionCert);
-            System.out.println("posAlumnoWrapper.getEstPosgrado()"+posAlumnoWrapper.getEstPosgrado());
-            System.out.println("mencionEstudiante "+mencionEstudiante);
-            System.out.println("totalMenciones "+totalMenciones);
-            System.out.println("imprimeTitulo "+imprimeTitulo);*/
- 
- 
+             
             //Definición de Parámetros
             ReportParamBuilder rpb =
                             ReportParamBuilder.create("pv_usuario", Faces.getRemoteUser())

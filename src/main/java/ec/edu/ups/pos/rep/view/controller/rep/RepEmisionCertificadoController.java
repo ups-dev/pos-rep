@@ -27,15 +27,7 @@ public class RepEmisionCertificadoController extends AbstractController<RepEmisi
     }
     
     public void registraEmisionCertificado(Long numCertificado,Long aluCodigo, Long estCodigo, Long pelCodigo, Long ticCodigo){
-                 
-        /* System.out.println("numCertificado"+numCertificado);
-           System.out.println("aluCodigo"+aluCodigo);
-           System.out.println("estCodigo"+estCodigo);
-           System.out.println("pelCodigo"+pelCodigo);
-           System.out.println("ticCodigo"+ticCodigo);
-           System.out.println("Faces.getRemoteUser()"+Faces.getRemoteUser());
-           System.out.println("fecha"+new Date());*/
-           
+                           
           RepEmisionCertificado emisionCertificado = new RepEmisionCertificado();
          
             emisionCertificado.setEmcNumCertificado(numCertificado);

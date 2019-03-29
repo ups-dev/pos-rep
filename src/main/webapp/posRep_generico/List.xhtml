@@ -108,7 +108,7 @@
                                            <p:column>
                                                <h:outputText value="#{p.aluNombres}"/>
                                            </p:column>                                                     
-                                        <!--p:ajax event="itemSelect" update="posRepFiltrarAsignatura, posRepFiltrarGrupo, posRepFiltrarDocente" listener="#{posRepResultadoController.updateAsignaturaList()}"></p:ajax-->
+                           
                                          <p:ajax event=  "itemSelect" update="posRepFiltrarAsignatura, posRepFiltrarGrupo, posRepFiltrarEstudiante" 
                                                  listener="#{posRepResultadoController.updateAsignaturaList()}"/>
                                          <p:ajax event="change" update="posRepFiltrarAsignatura, posRepFiltrarGrupo" 

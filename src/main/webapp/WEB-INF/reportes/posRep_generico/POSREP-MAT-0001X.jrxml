@@ -99,7 +99,7 @@ AND     gru.gru_codigo    = dis.gru_codigo
 AND     dis.per_codigo    = per.per_codigo(+)
 AND    NVL(dis.per_codigo,0) LIKE NVL($P{pv_per_codigo},0)
 AND     gru.gru_codigo  LIKE $P{pv_gru_codigo}
-ORDER   BY campus,posgrado,nivel,modulo,grupo,estudiante]]>
+ORDER   BY sede,campus,posgrado,nivel,modulo,grupo,docente,estudiante]]>
 	</queryString>
 	<field name="SEDE" class="java.lang.String"/>
 	<field name="CAMPUS" class="java.lang.String"/>
