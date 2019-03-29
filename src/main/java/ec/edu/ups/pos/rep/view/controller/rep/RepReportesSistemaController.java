@@ -36,20 +36,11 @@ public class RepReportesSistemaController extends AbstractController<RepReportes
             modulo = valor_modulo;
         }
     } 
-    
-//    @Override
-//    protected List<RepReportesSistema> findItems() {
-//        return getEjbFacade().findRecords(SearchBuilder.create(new DefaultParamSearch("audEliminado",
-//                        "N", SearchCondition.EQUAL)),
-//                        ParamBuilder.create(new CacheStoreModeParam(CacheStoreMode.REFRESH)).get());
-//    }
+       
     @Override
     protected List<RepReportesSistema> findItems() {
-        System.out.println("1s");
         return repReportesSistemaFacade.listaReportesAutorizados(Faces.getRemoteUser(), "POS-REP",modulo);
     }
     
-    
- 
 
 }

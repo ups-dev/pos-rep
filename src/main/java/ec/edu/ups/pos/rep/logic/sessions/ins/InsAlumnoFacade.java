@@ -51,7 +51,7 @@ public class InsAlumnoFacade extends AbstractFacade<InsAlumno> {
         try {
             List<String> params = new ArrayList<>();
             StringBuilder sb = new StringBuilder();
-            sb.append(" SELECT ALU.ALU_CODIGO aluCodigo, CLI.CLLC_RUC cllcRuc, ALU.ALU_APELLIDOS || ' ' || ALU.ALU_NOMBRES aluNombres "
+            sb.append(" SELECT ALU.ALU_CODIGO aluCodigo, CLI.CLLC_RUC cllcRuc,  ALU.ALU_APELLIDOS || ' ' || ALU.ALU_NOMBRES aluNombres "
                     + "FROM INS.INS_ALUMNO ALU, SIGAC.CLIENTE_LOCAL CLI WHERE ALU.CLLC_CDG = CLI.CLLC_CDG AND ");
             params.add(query.trim());
             //Separamos el texto a buscar por espacios

@@ -20,7 +20,6 @@ import ec.edu.ups.org.common.data.entities.OrgEstructura;
 import ec.edu.ups.org.common.data.entities.OrgPeriodoLectivo;
 import ec.edu.ups.ped.common.data.entities.PedMalla;
 import ec.edu.ups.ped.common.data.entities.PedModalidad;
-//import ec.edu.ups.pos.rep.data.entities.sigac.ClienteLocal;
 import ec.edu.ups.pos.rep.data.entities.wrapper.InsAlumnoWrapper;
 import ec.edu.ups.pos.rep.logic.sessions.ins.InsAlumnoFacade;
 import ec.edu.ups.util.jpa.search.DefaultParamOrderSearch;
@@ -73,6 +72,7 @@ public class PosRepResultadoController implements Serializable{
       
     private InsAlumnoWrapper insAlumnoWrapper;
     
+
       
     @Inject
     private SecOrgEstructuraController secOrgEstructuraController;
@@ -123,9 +123,7 @@ public class PosRepResultadoController implements Serializable{
         PrimeFaces.current().ajax().update("PosReportesForm:PosReportesSistemaDataTable");
         PrimeFaces.current().ajax().update("PosReportesForm:PosRepExportToolbar");
         PrimeFaces.current().ajax().update("PosReportesForm:PosRepFiltroPanel09"); 
-        
-      //  getRequestContext().update("PosReportesForm:SbeRepFiltroPanel");
-//        updateSedeList();        
+              
     }
     
     public List<RepReportesSistema> getRepReportesSistemaList() {
@@ -171,7 +169,6 @@ public class PosRepResultadoController implements Serializable{
             } else {
                 validaSeleccionEstructuraSeguridadCampus=false;
                 orgEstructuraCampusList = orgEstructuraFacade.listaEstructuraCampusActivo(getOrgEstructuraSede());
-//                orgEstructuraCampusList.retainAll(secOrgEstructuraController.updateCampusList(new SecEstructuraWrapper(getOrgEstructuraSede().getEstCodigo())));                 
             }            
         }  
         updateCarreraList();
@@ -182,15 +179,12 @@ public class PosRepResultadoController implements Serializable{
         
         setOrgEstructuraCarrera(null);
         setOrgEstructuraCarreraList(null);
-        //updatePeriodoPorCampusList();
         updateAsignaturaList();
         setGthPersona(null);
-        //setGthPersonaList(null);
         if (getOrgEstructuraCampus() != null) {
             if (secOrgEstructuraController.getTipoEstructura()==TipoEstructura.PROGRAMA) {
                 if (Objects.equals(secOrgEstructuraController.getEstructuraCarrera().getEstCodigo(), PosRepConstants.TODAS_CARRERAS)) {
-                    orgEstructuraCarreraList = orgEstructuraFacade.listaEstructuraPostGradoSelecActivo(getOrgEstructuraCampus());
-                    //orgEstructuraCarreraList.retainAll(secOrgEstructuraController.updateCarreraList(new SecEstructuraWrapper(getOrgEstructuraCampus().getEstCodigo())));
+                    orgEstructuraCarreraList = orgEstructuraFacade.listaEstructuraPostGradoSelecActivo(getOrgEstructuraCampus());    
                 } else {
                     orgEstructuraCarreraList = orgEstructuraFacade.listaEstructuraPostGradoSelecActivo(getOrgEstructuraCampus());
                     if (orgEstructuraCarreraList.contains(secOrgEstructuraController.getEstructuraCarrera())) {
@@ -202,26 +196,6 @@ public class PosRepResultadoController implements Serializable{
                 }
             }
           
-           
-           /* if (secOrgEstructuraController.getTipoEstructura()==TipoEstructura.CARRERA) {
-                if (Objects.equals(secOrgEstructuraController.getOrgEstructuraCarrera().getEstCodigo(), PosRepConstants.TODAS_CARRERAS)) {
-                    validaSeleccionEstructuraSeguridadCarrProg=false;
-                    orgEstructuraCarreraList = orgEstructuraFacade.listaEstructuraCarreraSelecActivo(getOrgEstructuraCampus());
-                    orgEstructuraCarreraList.retainAll(secOrgEstructuraController.updateCarreraList(getOrgEstructuraCampus()));
-                } else {
-                    validaSeleccionEstructuraSeguridadCarrProg=true;
-                    orgEstructuraCarreraList = orgEstructuraFacade.listaEstructuraCarreraSelecActivo(getOrgEstructuraCampus());
-                    if (orgEstructuraCarreraList.contains(secOrgEstructuraController.getOrgEstructuraCarrera())) {
-                        orgEstructuraCarreraList = new ArrayList<>();
-                        orgEstructuraCarreraList.add(secOrgEstructuraController.getOrgEstructuraCarrera());
-                    } else {
-                        orgEstructuraCarreraList = new ArrayList<>();
-                    }
-                    if(!(orgEstructuraCarreraList.isEmpty())){
-                        setOrgEstructuraCarrera(orgEstructuraCarreraList.get(0));
-                    }
-                }
-            }*/
         }  
          updatePeriodoPorCampusList();
     }
@@ -238,7 +212,7 @@ public class PosRepResultadoController implements Serializable{
              setOrgPeriodoLectivoList(orgPeriodoEstructuraFacade.obtieneCohortePorEstructura(obtenerEstructura()));
       
         }else{
-           // System.out.println("igual a NULL");
+    
             setOrgPeriodoLectivoList(orgPeriodoEstructuraFacade.obtienePeriodoLectivo());
         }
                
@@ -276,7 +250,6 @@ public class PosRepResultadoController implements Serializable{
         }
         if(getGthPersona()==null && pelCodigo != 0L){  
             setPedMallaList(null);
-//            setPedMallaList(pedMallaFacade.obtieneMalla(estCodigo, pelCodigo));
         }
     }
     
@@ -429,19 +402,17 @@ public class PosRepResultadoController implements Serializable{
         if (gthPersonaList == null) {  
             if(getOrgEstructuraCarrera()!=null){
                 gthPersonaList = gthPersonaFacade.listaGthPersonaFiltro(getFiltro(),getOrgEstructuraCarrera().getEstCodigo(), pelCodigo);
-                //gthPersonaList = gthPersonaFacade.listaGthPersonaFiltro(getFiltro(),584L,2001L);
-                
+                   
             }else if(getOrgEstructuraCampus()!=null){
                 gthPersonaList = gthPersonaFacade.listaGthPersonaFiltro(getFiltro(),getOrgEstructuraCampus().getEstCodigo(), pelCodigo);
-                //gthPersonaList = gthPersonaFacade.listaGthPersonaFiltro(getFiltro(),584L,2001L);
+                
             }else if(getOrgEstructuraSede()!=null){
                 gthPersonaList = gthPersonaFacade.listaGthPersonaFiltro(getFiltro(),getOrgEstructuraSede().getEstCodigo(), pelCodigo);
-              //gthPersonaList = gthPersonaFacade.listaGthPersonaFiltro(getFiltro(),584L,2001L);
+              
             }else{
                 gthPersonaList = gthPersonaFacade.listaGthPersonaFiltro(getFiltro(),0L, pelCodigo);
-               // gthPersonaList = gthPersonaFacade.listaGthPersonaFiltro(getFiltro(),584L,2001L);
             }   
-            System.out.println("lista" + gthPersonaList.size() );
+            //System.out.println("lista" + gthPersonaList.size() );
         }
         return gthPersonaList;
     }
@@ -488,7 +459,6 @@ public class PosRepResultadoController implements Serializable{
     }  
     
     public void filtrarDocente(String value) {
-         System.out.println("value" +value);
         setFiltro(value);
         setGthPersonaList(null);
     }
@@ -596,24 +566,18 @@ public class PosRepResultadoController implements Serializable{
     public void updateNivelMallaList() {  
         
         setPedMallaNivelList(null);
-         OrgPeriodoLectivo orgPeriodoInicial=getOrgPeriodoInicial();
-          //  Long codigoPeriodo= orgPeriodoInicial.getPelCodigo();
-           
-          
-         System.out.println("getOrgEstructuraCarrera().getEstCodigo()"+getOrgEstructuraCarrera());
-         System.out.println("getOrgEstructuraCampus().getEstCodigo()"+getOrgEstructuraCampus());
-         System.out.println("getOrgEstructuraSede().getEstCodigo()"+getOrgEstructuraSede());
-         System.out.println("periodouuuu "+getOrgPeriodoInicial());
-                
-        if (obtenerEstructura() != null) {
-           
-             pedMallaNivelList = pedMallaFacade.obtieneNivelMalla(obtenerEstructura().getEstCodigo(),2001L); 
-             //pedMallaNivelList = pedMallaFacade.obtieneNivelMalla(obtenerEstructura().getEstCodigo(),getOrgPeriodoInicial().getPelCodigo());
+        OrgPeriodoLectivo orgPeriodoInicial=getOrgPeriodoInicial();
+         
+        if   (orgPeriodoInicial   != null)  {
         
-        }else 
-        {
-            System.out.println("igual a NULL");
-            pedMallaNivelList = pedMallaFacade.obtieneNivelMalla(PosRepConstants.TODAS_SEDES, 2001L);   
+                if (obtenerEstructura() != null) {
+                    pedMallaNivelList = pedMallaFacade.obtieneNivelMalla(obtenerEstructura().getEstCodigo(),getOrgPeriodoInicial().getPelCodigo());
+
+                }else 
+                {
+                    pedMallaNivelList = pedMallaFacade.obtieneNivelMalla(PosRepConstants.TODAS_SEDES, getOrgPeriodoInicial().getPelCodigo());   
+                  
+                }
         }
         
     }

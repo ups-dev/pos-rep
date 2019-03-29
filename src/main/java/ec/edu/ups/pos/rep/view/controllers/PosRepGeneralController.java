@@ -8,7 +8,14 @@ import ec.edu.ups.pos.rep.view.controller.ins.InsAlumnoController;
 import ec.edu.ups.pos.rep.view.controller.rep.RepReportesSistemaController;
 import ec.edu.ups.org.common.data.entities.OrgPeriodoLectivo;
 import ec.edu.ups.ped.common.data.entities.PedMalla;
-import ec.edu.ups.ped.common.data.entities.PedModalidad;
+import ec.edu.ups.pos.rep.data.entities.rep.RepSecretarioGeneral;
+import ec.edu.ups.pos.rep.data.entities.rep.RepTipCerRepSis;
+import ec.edu.ups.pos.rep.data.entities.wrapper.InsAlumnoWrapper;
+import ec.edu.ups.pos.rep.data.entities.wrapper.PosgradoAlumnoWrapper;
+import ec.edu.ups.pos.rep.logic.sessions.rep.RepTipCerRepSisFacade;
+import ec.edu.ups.pos.rep.view.controller.rep.RepEmisionCertificadoController;
+import ec.edu.ups.pos.rep.view.controller.rep.RepNumeroCertificadoController;
+import ec.edu.ups.pos.rep.view.controller.rep.RepSecretarioGeneralController;
 import ec.edu.ups.util.jasper.ReportParamBuilder;
 import ec.edu.ups.util.jasper.ReportType;
 import java.io.Serializable;
@@ -29,17 +36,37 @@ import org.omnifaces.util.Faces;
 public class PosRepGeneralController implements Serializable{
             
     @Inject
-    PosReporteController evaReporteController;
+    PosReporteController posReporteController;
          
     @Inject
     InsAlumnoController insAlumnoController;
     
     @Inject
     RepReportesSistemaController repReportesSistemaController;
+    
     @Inject
     PosRepResultadoController posRepResultadoController;
     
+    @Inject
+    PosRepPosgradosController posRepPosgradosController;
     
+    @Inject
+    RepSecretarioGeneralController repSecretarioGeneralController;
+    
+    @Inject
+    RepNumeroCertificadoController repNumeroCertificadoController;
+    
+    @Inject
+    RepEmisionCertificadoController repEmisionCertificadoController;
+    
+    @Inject
+    RepTipCerRepSis repTipCerRepSis;
+            
+    @Inject
+    RepTipCerRepSisFacade repTipCerRepSisFacade;  
+    
+    
+
     /**
      * Generar reporte general.
      * @param formato  Extensión del archivo a obtener ej: "pdf" , "xlsx".
@@ -60,11 +87,11 @@ public class PosRepGeneralController implements Serializable{
             //Definición de nombre de: reporte y archivo
             String nombreReporte = "/WEB-INF/reportes/posRep_generico/"+nombre;        
             String nombreArchivo = repReportesSistema.getResReporte();    
-            
-            System.out.println("nombreArchivo   "+nombreArchivo);
+           
+            //System.out.println("nombreArchivo   "+nombreArchivo);
             
             //Identificar la estructura seleccionada para el reporte
-            OrgEstructura orgEstructura = evaReporteController.identificarEstructura();
+            OrgEstructura orgEstructura = posReporteController.identificarEstructura();
             Integer codigoEstructura=Integer.valueOf(String.valueOf(orgEstructura.getEstCodigo()));
             
             //Parámetro Periodo Inicial
@@ -116,18 +143,7 @@ public class PosRepGeneralController implements Serializable{
                 gruCodigo=String.valueOf(ofeGrupo.getGruCodigo());
             }    
             String pagado= posRepResultadoController.getPafPagado();
-              
-            
-            
-            System.out.println("codigoEstructura"+codigoEstructura);
-            System.out.println("pn_pel_codigo"+codigoPeriodo);
-            System.out.println("pv_per_codigo"+codigoPersona);
-            System.out.println("pv_mal_codigo"+malCodigo);
-            System.out.println("pv_mal_nivel"+codigoNivel);
-            System.out.println("pv_gru_codigo"+gruCodigo);
-             System.out.println("pv_pee_nivel"+codigoNivel);
-               System.out.println("pagado"+pagado);
-            
+                        
             
             //Definición de Parámetros
             ReportParamBuilder rpb =
@@ -147,15 +163,174 @@ public class PosRepGeneralController implements Serializable{
             //Definición de Formato de Archivo
             switch(formato){
                 case "pdf":
-                    evaReporteController.generarReporte(ReportType.PDF,".pdf",nombreArchivo,nombreReporte, rpb);
+                    posReporteController.generarReporte(ReportType.PDF,".pdf",nombreArchivo,nombreReporte, rpb);
                     break;
                 case "xlsx":
-                    evaReporteController.generarReporte(ReportType.XLSX,".xlsx",nombreArchivo,nombreReporte, rpb);
+                    posReporteController.generarReporte(ReportType.XLSX,".xlsx",nombreArchivo,nombreReporte, rpb);
                     break;
                 default:
                  throw new IllegalArgumentException("No se ha identificado el formato del archivo: " + formato);
             }   
         }
     }           
+    
+      /**
+     * Generar reporte Certificados.
+     * @param formato  Extensión del archivo a obtener ej: "pdf" , "xlsx".
+     */
+    public void generar_reporte_certificado(String formato,boolean certificacion){ 
+            
+       //System.out.println("generar_reporte_certificado");
+                
+       RepReportesSistema repReportesSistema=repReportesSistemaController.getSelected();   
+        
+       RepTipCerRepSis repTipCerRepSis = repTipCerRepSisFacade.consultaTipoCertificado(repReportesSistema.getResCodigo());
+        
+  
+        
+        
+        if(repReportesSistema!=null){   
+            String nombre="";//"repReportesSistema.getResArchivo();";
+            if(formato.equals("pdf"))
+            {
+                nombre = repReportesSistema.getResArchivo();
+            }
+            else if(formato.equals("xlsx"))
+            {
+                nombre = repReportesSistema.getResArchivoExcel();
+            }
+        
+            //Definición de nombre de: reporte y archivo
+            String nombreReporte = "/WEB-INF/reportes/posRep_certificado/"+nombre;        
+            String nombreArchivo = repReportesSistema.getResReporte();    
+            
+            //System.out.println("nombreArchivo   "+nombreArchivo);
+            
+            
+            //Parámetro Alumno
+            InsAlumnoWrapper insAlumnoWrapper=posRepPosgradosController.getInsAlumnoWrapper();
+            Integer codigoAlumno=null;
+            if(insAlumnoWrapper!=null){
+                codigoAlumno=Integer.valueOf(String.valueOf(insAlumnoWrapper.getAluCodigo()));
+            }    
+            
+            //Parámetro Semestre
+            String nivelPeriodoEstructura = posRepPosgradosController.getMatNivelPeriodoEstructura();
+            String codigoNivel="";
+            if(nivelPeriodoEstructura!=null){
+                codigoNivel=nivelPeriodoEstructura;
+            }
+                     
+           //Parámetro Periodo
+            PosgradoAlumnoWrapper posAlumnoWrapper=posRepPosgradosController.getPosgradoAlumnoWrapper();
+            Integer codigoPeriodo = null;
+            Integer estCampus = null;
+            Integer estPosgrado = null;
+            Long estSede = null;
+            String tituloPosgrado = null;
+            String mencionEstudiante = null;
+            Integer totalMenciones  = null;
+            Integer imprimeTitulo   = 0;
+            
+            if(posAlumnoWrapper!=null){
+                codigoPeriodo=Integer.valueOf(String.valueOf(posAlumnoWrapper.getCodPeriodo()));
+                estCampus = Integer.valueOf(String.valueOf(posAlumnoWrapper.getEstCampus()));
+                estPosgrado = Integer.valueOf(String.valueOf(posAlumnoWrapper.getEstPosgrado())); 
+                estSede = Long.valueOf(posAlumnoWrapper.getEstSede());
+                tituloPosgrado = String.valueOf(posAlumnoWrapper.getTitulo());
+                mencionEstudiante =  String.valueOf(posAlumnoWrapper.getTieneMencionEst());
+                totalMenciones = Integer.valueOf(String.valueOf(posAlumnoWrapper.getTotalMenciones()));
+                
+                if (mencionEstudiante.equals("S") || (totalMenciones == 1) )
+                { 
+                    imprimeTitulo = 1;
+                }else {
+                    imprimeTitulo = 0;
+                }
+
+                   
+            }    
+            
+            //Parámetro Sede Factura
+            String sedeFactura=posRepPosgradosController.getSedeFactura();
+            Integer numSedeFactura=null;
+            if(sedeFactura!=null){
+                numSedeFactura= Integer.valueOf(sedeFactura);
+            } 
+             //Parámetro Punto de Facturación
+            String puntoFacturacion=posRepPosgradosController.getPuntoFacturacion();
+            Integer numPuntoFacturacion=null;
+            if(puntoFacturacion!=null){
+                numPuntoFacturacion= Integer.valueOf(puntoFacturacion);
+            } 
+            
+             //Parámetro Número de Factura
+            String numeroFactura=posRepPosgradosController.getNumFactura();
+            Integer numFactura=null;
+            if(numeroFactura!=null){
+                numFactura= Integer.valueOf(numeroFactura);
+            } 
+            
+            //Parámetro Secretaria General
+            RepSecretarioGeneral secreGeneral= repSecretarioGeneralController.getSecretarioSeleccionado() ;
+            Integer secretarioGeneral=1;
+            if(secreGeneral!=null){    
+                secretarioGeneral=Integer.valueOf(String.valueOf(secreGeneral.getSegCodigo()));
+                
+            } 
+            
+            //Parámetro opcion Certificación
+            Integer opcion=posRepPosgradosController.opcionCertificacion();
+            Integer opcionCert= 0;
+            if(opcion!=null){
+                opcionCert= opcion;
+            } 
+            
+             //Parámetro Secuencia
+            Integer numSecuenciaCertificado = 0;
+           // Integer certificadoSemestre =1L;
+            
+            if ((estSede != null) && (certificacion == true)){      
+              numSecuenciaCertificado = repNumeroCertificadoController.obtieneSecuenciaCertificado(estSede, posAlumnoWrapper.getCodPeriodo(), repTipCerRepSis.getTicCodigo());
+          
+            }
+             
+            //Definición de Parámetros
+            ReportParamBuilder rpb =
+                            ReportParamBuilder.create("pv_usuario", Faces.getRemoteUser())
+                                            .add(JRParameter.REPORT_LOCALE, new Locale("es","ES"));                                            
+            rpb.add("pn_alu_codigo", codigoAlumno);            
+            rpb.add("pn_pel_codigo", codigoPeriodo);
+            rpb.add("pv_nivel", codigoNivel);
+            rpb.add("pn_est_codigo", estPosgrado);  
+            rpb.add("pn_campus", estCampus);
+            rpb.add("pn_certificacion",opcionCert);  
+            rpb.add("pn_seg_codigo", secretarioGeneral);
+            rpb.add("pn_sedeFacturacion", numSedeFactura);  
+            rpb.add("pn_puntoFacturacion", numPuntoFacturacion);  
+            rpb.add("pn_numFactura", numFactura);
+            rpb.add("pn_secuencia", numSecuenciaCertificado);
+            rpb.add("pv_tituloPosgrado", tituloPosgrado);
+            rpb.add("pn_imprimeTitulo", imprimeTitulo);
+            
+            
+           if ((estSede != null) && (certificacion == true)){     
+             repEmisionCertificadoController.registraEmisionCertificado(Long.valueOf(numSecuenciaCertificado), Long.valueOf(codigoAlumno), Long.valueOf(posAlumnoWrapper.getEstPosgrado()), posAlumnoWrapper.getCodPeriodo(), repTipCerRepSis.getTicCodigo());
+         
+            }
+           
+            //Definición de Formato de Archivo
+            switch(formato){
+                case "pdf":
+                    posReporteController.generarReporte(ReportType.PDF,".pdf",nombreArchivo,nombreReporte, rpb);
+                    break;
+                case "xlsx":
+                    posReporteController.generarReporte(ReportType.XLSX,".xlsx",nombreArchivo,nombreReporte, rpb);
+                    break;
+                default:
+                 throw new IllegalArgumentException("No se ha identificado el formato del archivo: " + formato);
+            }  
+        }
+    } 
     
 }

@@ -71,6 +71,7 @@ AND     pos.est_codigo  IN (SELECT est_codigo e
                             START WITH e.est_codigo = $P{pn_est_codigo}
                             CONNECT BY PRIOR e.est_codigo = e.est_codigo_padre)
 AND     mat.aud_eliminado = 'N'
+AND     mat.mat_anulado = 'N'
 AND     paf.paf_pagado like $P{pv_paf_pagado}
 ORDER BY sede,campus,posgrado,pee.pee_nivel,estudiante]]>
 	</queryString>
