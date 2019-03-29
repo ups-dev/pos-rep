@@ -32,7 +32,7 @@ public class RepNumeroCertificadoController extends AbstractController<RepNumero
 
             RepNumeroCertificado numCertificado = new RepNumeroCertificado();
 
-            numCertificado.setNceNumeroCertificado(1);
+            numCertificado.setNceNumeroCertificado(1L);
             numCertificado.setPelCodigo(pelCodigo);
             numCertificado.setEstCodigo(estCodigo);
             numCertificado.setTicCodigo(ticCodigo);

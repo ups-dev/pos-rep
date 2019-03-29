@@ -58,22 +58,23 @@ public class RepTipCerRepSis extends EntitySuperclass{
     public void setTcrCodigo(Long tcrCodigo) {
         this.tcrCodigo = tcrCodigo;
     }
-    public long getResCodigo() {
+
+    public Long getResCodigo() {
         return resCodigo;
     }
 
-    public void setResCodigo(long resCodigo) {
+    public void setResCodigo(Long resCodigo) {
         this.resCodigo = resCodigo;
     }
 
-    public long getTicCodigo() {
+    public Long getTicCodigo() {
         return ticCodigo;
     }
 
-    public void setTicCodigo(long ticCodigo) {
+    public void setTicCodigo(Long ticCodigo) {
         this.ticCodigo = ticCodigo;
     }
-
+    
     @Override
     public int hashCode() {
         int hash = 0;

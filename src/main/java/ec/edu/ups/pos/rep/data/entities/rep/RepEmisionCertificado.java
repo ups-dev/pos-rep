@@ -83,35 +83,35 @@ public class RepEmisionCertificado extends EntitySuperclass{
         this.emcNumCertificado = emcNumCertificado;
     }
 
-    public long getAluCodigo() {
+    public Long getAluCodigo() {
         return aluCodigo;
     }
 
-    public void setAluCodigo(long aluCodigo) {
+    public void setAluCodigo(Long aluCodigo) {
         this.aluCodigo = aluCodigo;
     }
 
-    public long getPelCodigo() {
+    public Long getPelCodigo() {
         return pelCodigo;
     }
 
-    public void setPelCodigo(long pelCodigo) {
+    public void setPelCodigo(Long pelCodigo) {
         this.pelCodigo = pelCodigo;
     }
 
-    public long getEstCodigo() {
+    public Long getEstCodigo() {
         return estCodigo;
     }
 
-    public void setEstCodigo(long estCodigo) {
+    public void setEstCodigo(Long estCodigo) {
         this.estCodigo = estCodigo;
     }
 
-    public long getTicCodigo() {
+    public Long getTicCodigo() {
         return ticCodigo;
     }
 
-    public void setTicCodigo(long ticCodigo) {
+    public void setTicCodigo(Long ticCodigo) {
         this.ticCodigo = ticCodigo;
     }
 

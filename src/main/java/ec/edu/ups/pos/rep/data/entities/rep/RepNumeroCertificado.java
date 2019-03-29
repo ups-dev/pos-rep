@@ -70,34 +70,34 @@ public class RepNumeroCertificado extends EntitySuperclass{
         this.nceCodigo = nceCodigo;
     }
 
-    public long getEstCodigo() {
+    public Long getEstCodigo() {
         return estCodigo;
     }
 
-    public void setEstCodigo(long estCodigo) {
+    public void setEstCodigo(Long estCodigo) {
         this.estCodigo = estCodigo;
     }
 
-    public long getPelCodigo() {
+    public Long getPelCodigo() {
         return pelCodigo;
     }
 
-    public void setPelCodigo(long pelCodigo) {
+    public void setPelCodigo(Long pelCodigo) {
         this.pelCodigo = pelCodigo;
     }
-
-    public long getTicCodigo() {
+    
+    public Long getTicCodigo() {
         return ticCodigo;
     }
 
-    public void setTicCodigo(long ticCodigo) {
+    public void setTicCodigo(Long ticCodigo) {
         this.ticCodigo = ticCodigo;
     }
-    public long getNceNumeroCertificado() {
+    public Long getNceNumeroCertificado() {
         return nceNumeroCertificado;
     }
 
-    public void setNceNumeroCertificado(long nceNumeroCertificado) {
+    public void setNceNumeroCertificado(Long nceNumeroCertificado) {
         this.nceNumeroCertificado = nceNumeroCertificado;
     }
 
