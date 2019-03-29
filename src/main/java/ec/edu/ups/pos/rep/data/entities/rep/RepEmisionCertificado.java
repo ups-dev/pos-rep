@@ -36,19 +36,19 @@ public class RepEmisionCertificado extends EntitySuperclass{
     @Basic(optional = false)
     @NotNull
     @Column(name = "ALU_CODIGO", nullable = false)
-    private long aluCodigo;
+    private Long aluCodigo;
     @Basic(optional = false)
     @NotNull
     @Column(name = "PEL_CODIGO", nullable = false)
-    private long pelCodigo;
+    private Long pelCodigo;
     @Basic(optional = false)
     @NotNull
     @Column(name = "EST_CODIGO", nullable = false)
-    private long estCodigo;
+    private Long estCodigo;
     @Basic(optional = false)
     @NotNull
     @Column(name = "TIC_CODIGO", nullable = false)
-    private long ticCodigo;
+    private Long ticCodigo;
 
     public RepEmisionCertificado() {
     }
@@ -57,7 +57,7 @@ public class RepEmisionCertificado extends EntitySuperclass{
         this.emcCodigo = emcCodigo;
     }
 
-    public RepEmisionCertificado(Long emcCodigo, Long emcNumCertificado, long aluCodigo, long pelCodigo, long estCodigo, long ticCodigo) {
+    public RepEmisionCertificado(Long emcCodigo, Long emcNumCertificado, Long aluCodigo, Long pelCodigo, Long estCodigo, Long ticCodigo) {
         this.emcCodigo = emcCodigo;
         this.emcNumCertificado = emcNumCertificado;
         this.aluCodigo = aluCodigo;

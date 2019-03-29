@@ -33,19 +33,19 @@ public class RepNumeroCertificado extends EntitySuperclass{
     @Basic(optional = false)
     @NotNull
     @Column(name = "EST_CODIGO", nullable = false)
-    private long estCodigo;
+    private Long estCodigo;
     @Basic(optional = false)
     @NotNull
     @Column(name = "PEL_CODIGO", nullable = false)
-    private long pelCodigo;
+    private Long pelCodigo;
     @Basic(optional = false)
     @NotNull
     @Column(name = "TIC_CODIGO", nullable = false)
-    private long ticCodigo;
+    private Long ticCodigo;
     @Basic(optional = false)
     @NotNull
     @Column(name = "NCE_NUMERO_CERTIFICADO", nullable = false)
-    private long nceNumeroCertificado;
+    private Long nceNumeroCertificado;
 
     public RepNumeroCertificado() {
     }
@@ -53,14 +53,14 @@ public class RepNumeroCertificado extends EntitySuperclass{
     public RepNumeroCertificado(Long nceCodigo) {
         this.nceCodigo = nceCodigo;
     }
-
-    public RepNumeroCertificado(Long nceCodigo, long estCodigo, long pelCodigo, long ticCodigo, long nceNumeroCertificado) {
+   public RepNumeroCertificado(Long nceCodigo, Long estCodigo, Long pelCodigo, Long ticCodigo, Long nceNumeroCertificado) {
         this.nceCodigo = nceCodigo;
         this.estCodigo = estCodigo;
         this.pelCodigo = pelCodigo;
         this.ticCodigo = ticCodigo;
         this.nceNumeroCertificado = nceNumeroCertificado;
     }
+    
 
     public Long getNceCodigo() {
         return nceCodigo;

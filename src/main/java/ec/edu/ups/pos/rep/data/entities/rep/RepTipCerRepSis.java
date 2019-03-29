@@ -32,11 +32,11 @@ public class RepTipCerRepSis extends EntitySuperclass{
     @Basic(optional = false)
     @NotNull
     @Column(name = "RES_CODIGO", nullable = false)
-    private long resCodigo;
+    private Long resCodigo;
     @Basic(optional = false)
     @NotNull
     @Column(name = "TIC_CODIGO", nullable = false)
-    private long ticCodigo;
+    private Long ticCodigo;
 
     public RepTipCerRepSis() {
     }
@@ -44,13 +44,13 @@ public class RepTipCerRepSis extends EntitySuperclass{
     public RepTipCerRepSis(Long tcrCodigo) {
         this.tcrCodigo = tcrCodigo;
     }
-
-    public RepTipCerRepSis(Long tcrCodigo, long resCodigo, long ticCodigo) {
+    
+    public RepTipCerRepSis(Long tcrCodigo, Long resCodigo, Long ticCodigo) {
         this.tcrCodigo = tcrCodigo;
         this.resCodigo = resCodigo;
         this.ticCodigo = ticCodigo;
     }
-
+   
     public Long getTcrCodigo() {
         return tcrCodigo;
     }
