@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-CER-0001" pageWidth="595" pageHeight="842" columnWidth="551" leftMargin="22" rightMargin="22" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="289"/>
+	<property name="ireport.y" value="0"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_pel_codigo" class="java.lang.Integer">
@@ -268,14 +268,14 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 					<textFieldExpression><![CDATA[$F{CEDULA}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement style="Estilo_titulo" x="1" y="0" width="128" height="14" uuid="a2b6cd54-6b4a-43a2-bb1f-b727b1990c41"/>
+					<reportElement style="Estilo_titulo" x="1" y="0" width="133" height="14" uuid="a2b6cd54-6b4a-43a2-bb1f-b727b1990c41"/>
 					<textElement verticalAlignment="Top">
 						<font size="8" isBold="true"/>
 					</textElement>
 					<text><![CDATA[ESTUDIANTE:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_titulo" x="1" y="13" width="128" height="14" uuid="ba5f1ea0-ebf8-4c00-8929-44d142a682ad"/>
+					<reportElement style="Estilo_titulo" x="1" y="13" width="132" height="14" uuid="ba5f1ea0-ebf8-4c00-8929-44d142a682ad"/>
 					<textElement verticalAlignment="Top">
 						<font size="8" isBold="true"/>
 					</textElement>
@@ -289,7 +289,7 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 		<groupHeader>
 			<band height="14">
 				<staticText>
-					<reportElement style="Estilo_titulo" x="1" y="0" width="128" height="14" uuid="8477fc6a-f910-41f5-8490-84f0d1baec77"/>
+					<reportElement style="Estilo_titulo" x="1" y="0" width="132" height="14" uuid="8477fc6a-f910-41f5-8490-84f0d1baec77"/>
 					<textElement verticalAlignment="Top">
 						<font size="8" isBold="true"/>
 					</textElement>
@@ -313,7 +313,7 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 					<textFieldExpression><![CDATA[$F{MODALIDAD}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement style="Estilo_titulo" x="1" y="0" width="128" height="14" uuid="8b8a1a1f-2410-4b24-aff1-f77795881ff5"/>
+					<reportElement style="Estilo_titulo" x="1" y="0" width="132" height="14" uuid="8b8a1a1f-2410-4b24-aff1-f77795881ff5"/>
 					<textElement verticalAlignment="Top">
 						<font size="8" isBold="true"/>
 					</textElement>
@@ -327,9 +327,9 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 		<groupHeader>
 			<band height="14">
 				<staticText>
-					<reportElement style="Estilo_titulo" x="1" y="0" width="128" height="14" uuid="da62874e-b7cb-4ec3-83ef-734e335092d8"/>
+					<reportElement style="Estilo_titulo" x="1" y="0" width="132" height="14" uuid="da62874e-b7cb-4ec3-83ef-734e335092d8"/>
 					<textElement>
-						<font size="8"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 					<text><![CDATA[TOTAL HORAS DEL PROGRAMA:]]></text>
 				</staticText>
@@ -349,9 +349,9 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 					<textFieldExpression><![CDATA[$F{COHORTE}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement style="Estilo_titulo" x="1" y="0" width="128" height="14" uuid="cd591e87-530b-467c-8fcb-f5bc750bdece"/>
+					<reportElement style="Estilo_titulo" x="1" y="0" width="132" height="14" uuid="cd591e87-530b-467c-8fcb-f5bc750bdece"/>
 					<textElement>
-						<font size="8"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 					<text><![CDATA[COHORTE:]]></text>
 				</staticText>
@@ -364,9 +364,9 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 			<band height="14">
 				<printWhenExpression><![CDATA[$P{pn_imprimeTitulo}.equals( 1 )]]></printWhenExpression>
 				<staticText>
-					<reportElement style="Estilo_titulo" x="1" y="0" width="128" height="14" uuid="e933cef8-40c5-4bff-baa6-a3b5256bd7a7"/>
+					<reportElement style="Estilo_titulo" x="1" y="0" width="132" height="14" uuid="e933cef8-40c5-4bff-baa6-a3b5256bd7a7"/>
 					<textElement>
-						<font size="8"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 					<text><![CDATA[TÍTULO A OBTENER:]]></text>
 				</staticText>
@@ -382,7 +382,7 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 		<groupHeader>
 			<band height="14">
 				<staticText>
-					<reportElement style="Estilo_titulo" x="1" y="0" width="128" height="14" uuid="a4f573aa-4d26-4570-a4f5-4891f1ecbc3f"/>
+					<reportElement style="Estilo_titulo" x="1" y="0" width="132" height="14" uuid="a4f573aa-4d26-4570-a4f5-4891f1ecbc3f"/>
 					<textElement verticalAlignment="Top">
 						<font size="8" isBold="true"/>
 					</textElement>
