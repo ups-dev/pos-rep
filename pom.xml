@@ -8,9 +8,9 @@
         <version>7.0</version>
     </parent>
     
-    <groupId>ec.edu.ups.pos</groupId>
+    <groupId>ec.edu.ups.rep.pos</groupId>
     <artifactId>pos-rep</artifactId>
-    <version>1.3.1</version>
+    <version>1.3.2</version>
     <packaging>war</packaging>
 
     <name>pos-rep</name>
