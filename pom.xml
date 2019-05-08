@@ -8,7 +8,7 @@
         <version>7.0</version>
     </parent>
     
-    <groupId>ec.edu.ups.pos</groupId>
+    <groupId>ec.edu.ups.rep.pos</groupId>
     <artifactId>pos-rep</artifactId>
     <version>1.4.0-SNAPSHOT</version>
     <packaging>war</packaging>

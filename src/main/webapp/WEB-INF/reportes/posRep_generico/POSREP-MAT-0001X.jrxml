@@ -54,10 +54,10 @@ FROM    mat.mat_matricula           mat,
         ped.ped_des_est_pro_edu     dep,
         org.org_descripcion_estructura dpos,
         org.org_descripcion_estructura dcam,
-				org.org_descripcion_estructura dsed,
+        org.org_descripcion_estructura dsed,
         org.org_estructura          pos,
         org.org_estructura          cam,
-				org.org_estructura          sed,
+        org.org_estructura          sed,
         org.org_periodo_estructura  pee,
         org.org_periodo_lectivo     pel,
         ins.ins_alumno              alu,
@@ -99,6 +99,7 @@ AND     gru.gru_codigo    = dis.gru_codigo
 AND     dis.per_codigo    = per.per_codigo(+)
 AND    NVL(dis.per_codigo,0) LIKE NVL($P{pv_per_codigo},0)
 AND     gru.gru_codigo  LIKE $P{pv_gru_codigo}
+AND     dis.dis_califica = 'S'
 ORDER   BY sede,campus,posgrado,nivel,modulo,grupo,docente,estudiante]]>
 	</queryString>
 	<field name="SEDE" class="java.lang.String"/>
