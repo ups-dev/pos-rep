@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-MAT-0001X" pageWidth="2070" pageHeight="842" columnWidth="2030" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a5610fb4-cc29-46b5-b47b-735f7e78b38b">
 	<property name="ireport.zoom" value="1.2418426461183107"/>
-	<property name="ireport.x" value="1638"/>
+	<property name="ireport.x" value="1377"/>
 	<property name="ireport.y" value="0"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
-	<template><![CDATA["C:\\Users\\UPS\\Documents\\Proyectos_Nuevos\\pos-rep\\src\\main\\webapp\\WEB-INF\\reportes\\estilosRep\\Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
