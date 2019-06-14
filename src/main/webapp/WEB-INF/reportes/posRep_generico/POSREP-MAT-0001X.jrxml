@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-MAT-0001X" pageWidth="1999" pageHeight="842" columnWidth="1959" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a5610fb4-cc29-46b5-b47b-735f7e78b38b">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-MAT-0001X" pageWidth="2070" pageHeight="842" columnWidth="2030" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a5610fb4-cc29-46b5-b47b-735f7e78b38b">
 	<property name="ireport.zoom" value="1.2418426461183107"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="1638"/>
 	<property name="ireport.y" value="0"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
+	<template><![CDATA["C:\\Users\\UPS\\Documents\\Proyectos_Nuevos\\pos-rep\\src\\main\\webapp\\WEB-INF\\reportes\\estilosRep\\Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -41,6 +42,15 @@
         gru.gru_descripcion         grupo,
         cal.cal_nota_final          nota_final,
         DECODE(paf.paf_pagado,'S','SI','N','NO')  pagado,
+        DECODE((select SUM(DECODE(p.paf_pagado,'S',0,'N',1))
+               from fac.fac_pago_factura p,
+                    mat.mat_matricula    m
+               where  p.ins_codigo = m.mat_codigo
+               and    m.cllc_cdg  = mat.cllc_cdg
+               and  p.tip_codigo  = 4
+               and  m.mat_tipo_proceso = 'M'
+               and  m.aud_eliminado = 'N'
+               group by  m.cllc_cdg),0,' NO','SI') valores_pendientes,
         DECODE(fof.fof_tipo,'P','POR PERIODO','T','TOTAL')forma_pago
 FROM    mat.mat_matricula           mat,
         cal.cal_calificacion        cal,
@@ -118,6 +128,7 @@ ORDER   BY sede,campus,posgrado,nivel,modulo,grupo,docente,estudiante]]>
 	<field name="GRUPO" class="java.lang.String"/>
 	<field name="NOTA_FINAL" class="java.math.BigDecimal"/>
 	<field name="PAGADO" class="java.lang.String"/>
+	<field name="VALORES_PENDIENTES" class="java.lang.String"/>
 	<field name="FORMA_PAGO" class="java.lang.String"/>
 	<variable name="EVALUADO_SUM" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[]]></variableExpression>
@@ -215,14 +226,14 @@ ORDER   BY sede,campus,posgrado,nivel,modulo,grupo,docente,estudiante]]>
 				<text><![CDATA[NOTA FINAL]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1808" y="0" width="52" height="16" uuid="e2d156b8-2748-4935-ab8a-7b47478dc80b"/>
+				<reportElement x="1808" y="0" width="123" height="16" uuid="e2d156b8-2748-4935-ab8a-7b47478dc80b"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[PAGADO]]></text>
+				<text><![CDATA[VALORES PENDIENTES]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1860" y="0" width="100" height="16" uuid="066927df-5b22-49d9-9c07-5fb9dc90c616"/>
+				<reportElement x="1931" y="0" width="99" height="16" uuid="066927df-5b22-49d9-9c07-5fb9dc90c616"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -324,14 +335,7 @@ ORDER   BY sede,campus,posgrado,nivel,modulo,grupo,docente,estudiante]]>
 				<textFieldExpression><![CDATA[$F{NOTA_FINAL}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="1808" y="0" width="52" height="20" isPrintWhenDetailOverflows="true" uuid="f9093c98-7287-4dd8-84c3-f3da55a01958"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{PAGADO}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="1860" y="0" width="100" height="20" isPrintWhenDetailOverflows="true" uuid="d5c76526-c42f-4ea1-bb87-a9ed38124b48"/>
+				<reportElement x="1931" y="0" width="99" height="20" isPrintWhenDetailOverflows="true" uuid="d5c76526-c42f-4ea1-bb87-a9ed38124b48"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -343,6 +347,10 @@ ORDER   BY sede,campus,posgrado,nivel,modulo,grupo,docente,estudiante]]>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{SEDE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1808" y="0" width="123" height="20" uuid="7887c980-4a2a-4709-818e-f813e560499c"/>
+				<textFieldExpression><![CDATA[$F{VALORES_PENDIENTES}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
