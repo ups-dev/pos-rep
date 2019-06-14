@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-MAT-0001" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
-	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="53"/>
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="29"/>
+	<property name="ireport.y" value="222"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_pel_codigo" class="java.lang.Integer">
@@ -39,6 +39,16 @@
         gru.gru_descripcion         grupo,
         cal.cal_nota_final          nota_final,
         DECODE(paf.paf_pagado,'S','SI','N','NO')  pagado,
+        DECODE((select SUM(DECODE(p.paf_pagado,'S',0,'N',1))
+               from fac.fac_pago_factura p,
+                    mat.mat_matricula    m
+               where  p.ins_codigo = m.mat_codigo
+               and    m.cllc_cdg  = mat.cllc_cdg
+               and  p.tip_codigo  = 4
+               and  m.mat_tipo_proceso = 'M'
+               and  m.aud_eliminado = 'N'
+               group by  m.cllc_cdg),0,' NO','SI') valores_pendientes,
+
         DECODE(fof.fof_tipo,'P','POR PERIODO','T','TOTAL')forma_pago
 FROM    mat.mat_matricula           mat,
         cal.cal_calificacion        cal,
@@ -116,6 +126,7 @@ ORDER   BY sede,campus,posgrado,nivel,modulo,grupo,docente,estudiante]]>
 	<field name="GRUPO" class="java.lang.String"/>
 	<field name="NOTA_FINAL" class="java.math.BigDecimal"/>
 	<field name="PAGADO" class="java.lang.String"/>
+	<field name="VALORES_PENDIENTES" class="java.lang.String"/>
 	<field name="FORMA_PAGO" class="java.lang.String"/>
 	<variable name="ESTUDIANTE_1" class="java.lang.Integer" resetType="Group" resetGroup="docente_grup" calculation="Count">
 		<variableExpression><![CDATA[$F{ESTUDIANTE}]]></variableExpression>
@@ -311,28 +322,29 @@ ORDER   BY sede,campus,posgrado,nivel,modulo,grupo,docente,estudiante]]>
 					<text><![CDATA[DOCENTE:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_titulo" x="19" y="44" width="67" height="16" uuid="152986d9-6a89-444f-ad6b-3ffb73d013e4"/>
+					<reportElement style="Estilo_titulo7" x="19" y="44" width="67" height="16" uuid="152986d9-6a89-444f-ad6b-3ffb73d013e4"/>
 					<text><![CDATA[CEDULA]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_titulo" x="86" y="44" width="204" height="16" uuid="5a4eb27f-1a58-4b31-81af-e2ae47c7ebe8"/>
+					<reportElement style="Estilo_titulo7" x="86" y="44" width="205" height="16" uuid="5a4eb27f-1a58-4b31-81af-e2ae47c7ebe8"/>
 					<text><![CDATA[ESTUDIANTE]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_titulo" x="294" y="43" width="163" height="16" uuid="39c516b7-dcad-445d-a921-4c897939ccd5"/>
+					<reportElement style="Estilo_titulo7" x="292" y="44" width="163" height="16" uuid="39c516b7-dcad-445d-a921-4c897939ccd5"/>
 					<text><![CDATA[EMAIL]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_titulo" x="500" y="43" width="54" height="16" uuid="e2769248-57e3-4dd3-b26e-3ca874f62efa"/>
+					<reportElement style="Estilo_titulo7" x="510" y="43" width="45" height="17" uuid="e2769248-57e3-4dd3-b26e-3ca874f62efa"/>
 					<text><![CDATA[NOTA FINAL]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_titulo" x="2" y="44" width="18" height="16" uuid="9c7cc943-d1de-4a23-8aa7-8ba240af937f"/>
+					<reportElement style="Estilo_titulo7" x="2" y="44" width="18" height="16" uuid="9c7cc943-d1de-4a23-8aa7-8ba240af937f"/>
 					<text><![CDATA[N°]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_titulo" x="457" y="43" width="43" height="16" uuid="513d3912-d6c9-4a36-9a24-ad1035baaa34"/>
-					<text><![CDATA[PAGADO]]></text>
+					<reportElement style="Estilo_titulo7" x="457" y="32" width="52" height="28" uuid="513d3912-d6c9-4a36-9a24-ad1035baaa34"/>
+					<textElement verticalAlignment="Middle"/>
+					<text><![CDATA[VALORES PENDIENTES]]></text>
 				</staticText>
 				<staticText>
 					<reportElement style="Estilo_titulo" x="2" y="0" width="84" height="16" printWhenGroupChanges="docente_grup" uuid="13e2d6f6-f1aa-4dec-8ce5-1e3b4722fb29"/>
@@ -423,21 +435,14 @@ ORDER   BY sede,campus,posgrado,nivel,modulo,grupo,docente,estudiante]]>
 				<textFieldExpression><![CDATA[$F{ESTUDIANTE}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido7" x="294" y="0" width="163" height="16" isPrintWhenDetailOverflows="true" uuid="39522700-e97d-4a7f-a3be-119d0c761c71"/>
+				<reportElement style="Estilo_contenido7" x="292" y="0" width="163" height="16" isPrintWhenDetailOverflows="true" uuid="39522700-e97d-4a7f-a3be-119d0c761c71"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{EMAIL}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido7" x="457" y="0" width="43" height="16" isPrintWhenDetailOverflows="true" uuid="d69e5733-7394-4f30-93c9-91a40c7c99b3"/>
-				<textElement textAlignment="Center">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{PAGADO}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido7" x="500" y="0" width="55" height="16" isPrintWhenDetailOverflows="true" uuid="d9f5088d-bf29-407c-a464-4a9a97d4b129"/>
+				<reportElement style="Estilo_contenido7" x="510" y="0" width="45" height="16" isPrintWhenDetailOverflows="true" uuid="d9f5088d-bf29-407c-a464-4a9a97d4b129"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
@@ -446,6 +451,11 @@ ORDER   BY sede,campus,posgrado,nivel,modulo,grupo,docente,estudiante]]>
 			<textField>
 				<reportElement style="Estilo_contenido7" x="2" y="0" width="18" height="16" uuid="f4b55b7d-5661-4d5f-a659-b89e2986362a"/>
 				<textFieldExpression><![CDATA[$V{ESTUDIANTE_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Estilo_contenido7" x="457" y="0" width="42" height="16" uuid="7fd98301-5f26-43bf-8822-ec9006b76c1e"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{VALORES_PENDIENTES}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
