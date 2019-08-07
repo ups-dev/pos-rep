@@ -25,6 +25,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import net.sf.jasperreports.engine.JRParameter;
 import org.omnifaces.util.Faces;
+import org.primefaces.model.StreamedContent;
 
 
 /**
@@ -70,8 +71,10 @@ public class PosRepGeneralController implements Serializable{
     /**
      * Generar reporte general.
      * @param formato  Extensión del archivo a obtener ej: "pdf" , "xlsx".
+     * @return 
      */
-    public void generar_reporte_generico(String formato){ 
+    public StreamedContent generar_reporte_generico(String formato){ 
+        StreamedContent result = null;
         RepReportesSistema repReportesSistema=repReportesSistemaController.getSelected();        
         if(repReportesSistema!=null){   
             String nombre="";//"repReportesSistema.getResArchivo();";
@@ -160,35 +163,39 @@ public class PosRepGeneralController implements Serializable{
             rpb.add("pv_pee_nivel", codigoNivel);
             rpb.add("pv_paf_pagado", pagado);
 
-            //Definición de Formato de Archivo
-            switch(formato){
+     //Definición de Formato de Archivo
+      switch (formato) {
                 case "pdf":
-                    posReporteController.generarReporte(ReportType.PDF,".pdf",nombreArchivo,nombreReporte, rpb);
+                    result = posReporteController.generarStreamedReporte(ReportType.PDF, ".pdf", nombreArchivo, 
+                            nombreReporte, rpb);
                     break;
                 case "xlsx":
-                    posReporteController.generarReporte(ReportType.XLSX,".xlsx",nombreArchivo,nombreReporte, rpb);
+                    result = posReporteController.generarStreamedReporte(ReportType.XLSX, ".xlsx", nombreArchivo, 
+                            nombreReporte, rpb);
                     break;
                 default:
-                 throw new IllegalArgumentException("No se ha identificado el formato del archivo: " + formato);
-            }   
-        }
+                    throw new IllegalArgumentException("No se ha identificado el formato del archivo: " + formato);
+            }
+         }
+        
+        return result;    
     }           
     
       /**
      * Generar reporte Certificados.
      * @param formato  Extensión del archivo a obtener ej: "pdf" , "xlsx".
+     * @param certificacion
+     * @return 
      */
-    public void generar_reporte_certificado(String formato,boolean certificacion){ 
-            
+    public StreamedContent generar_reporte_certificado(String formato,boolean certificacion){ 
+       StreamedContent result = null;
        //System.out.println("generar_reporte_certificado");
                 
        RepReportesSistema repReportesSistema=repReportesSistemaController.getSelected();   
         
        RepTipCerRepSis repTipCerRepSis = repTipCerRepSisFacade.consultaTipoCertificado(repReportesSistema.getResCodigo());
         
-  
-        
-        
+          
         if(repReportesSistema!=null){   
             String nombre="";//"repReportesSistema.getResArchivo();";
             if(formato.equals("pdf"))
@@ -318,19 +325,21 @@ public class PosRepGeneralController implements Serializable{
              repEmisionCertificadoController.registraEmisionCertificado(Long.valueOf(numSecuenciaCertificado), Long.valueOf(codigoAlumno), Long.valueOf(posAlumnoWrapper.getEstPosgrado()), posAlumnoWrapper.getCodPeriodo(), repTipCerRepSis.getTicCodigo());
          
             }
-           
-            //Definición de Formato de Archivo
-            switch(formato){
+           //Definición de Formato de Archivo
+             switch (formato) {
                 case "pdf":
-                    posReporteController.generarReporte(ReportType.PDF,".pdf",nombreArchivo,nombreReporte, rpb);
+                    result = posReporteController.generarStreamedReporte(ReportType.PDF, ".pdf", nombreArchivo, 
+                            nombreReporte, rpb);
                     break;
                 case "xlsx":
-                    posReporteController.generarReporte(ReportType.XLSX,".xlsx",nombreArchivo,nombreReporte, rpb);
+                    result = posReporteController.generarStreamedReporte(ReportType.XLSX, ".xlsx", nombreArchivo, 
+                            nombreReporte, rpb);
                     break;
                 default:
-                 throw new IllegalArgumentException("No se ha identificado el formato del archivo: " + formato);
-            }  
-        }
+                    throw new IllegalArgumentException("No se ha identificado el formato del archivo: " + formato);
+            }
+         }  
+        return result;    
     } 
     
 }

@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-CER-0002" pageWidth="595" pageHeight="842" columnWidth="551" leftMargin="22" rightMargin="22" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="637"/>
+	<property name="ireport.y" value="174"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_alu_codigo" class="java.lang.Integer">
@@ -378,35 +378,35 @@ ORDER BY semestre,materia_mencion nulls first,modulo]]>
 		<groupExpression><![CDATA[$F{CEDULA}]]></groupExpression>
 		<groupHeader>
 			<band height="135">
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement style="Estilo_contenido7" isPrintRepeatedValues="false" x="156" y="56" width="395" height="14" uuid="10943c12-7dd7-41b0-bcb5-47e3d7830f17"/>
 					<textElement>
 						<font size="7"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{ESTUDIANTE}]]></textFieldExpression>
 				</textField>
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement style="Estilo_contenido7" isPrintRepeatedValues="false" x="156" y="69" width="395" height="14" uuid="a429ec97-d639-457f-bca1-28f0cbfb959e"/>
 					<textElement>
 						<font size="7"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{CEDULA}]]></textFieldExpression>
 				</textField>
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement style="Estilo_contenido7" x="156" y="81" width="395" height="14" uuid="c4c94785-8d8c-40a8-ac2d-622f14e1af58"/>
 					<textElement>
 						<font size="7"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{PROGRAMA}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="Estilo_contenido7" x="156" y="120" width="395" height="14" isPrintWhenDetailOverflows="true" uuid="8548e313-d898-405a-97f1-f6de03f68317"/>
 					<textElement>
 						<font size="7"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{MODALIDAD}]]></textFieldExpression>
 				</textField>
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement style="Estilo_contenido7" x="156" y="107" width="395" height="14" uuid="e2d2f370-bb0a-4ee4-a6c1-a65c027bf1f2"/>
 					<textElement>
 						<font size="7"/>
@@ -469,7 +469,7 @@ ORDER BY semestre,materia_mencion nulls first,modulo]]>
 					</textElement>
 					<text><![CDATA[UNIVERSIDAD POLITECNICA SALESIANA]]></text>
 				</staticText>
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement style="Estilo_contenido7" x="156" y="94" width="394" height="14" uuid="95f0b462-211e-44c9-9277-bc3b70ce183b"/>
 					<textFieldExpression><![CDATA[$F{TOTAL_HORAS}]]></textFieldExpression>
 				</textField>
@@ -602,7 +602,7 @@ ORDER BY semestre,materia_mencion nulls first,modulo]]>
 					</textElement>
 					<text><![CDATA[FECHA INICIO DE ESTUDIOS:]]></text>
 				</staticText>
-				<textField pattern="dd/MM/yyyy">
+				<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
 					<reportElement style="Estilo_contenido7" x="156" y="0" width="395" height="14" uuid="4a912d73-cf6b-48cb-8ade-49d58d084b7f"/>
 					<textFieldExpression><![CDATA[$F{FECHA_INICIO_CARRERA}]]></textFieldExpression>
 				</textField>

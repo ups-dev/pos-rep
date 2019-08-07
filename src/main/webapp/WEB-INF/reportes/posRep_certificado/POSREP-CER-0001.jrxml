@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-CER-0001" pageWidth="595" pageHeight="842" columnWidth="551" leftMargin="22" rightMargin="22" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="215"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_pel_codigo" class="java.lang.Integer">
@@ -257,12 +257,12 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 		<groupExpression><![CDATA[$F{CEDULA}]]></groupExpression>
 		<groupHeader>
 			<band height="27">
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement style="Estilo_contenido7" x="133" y="0" width="418" height="14" uuid="2db27eb1-0636-47d8-88d4-a9aeb95bff83"/>
 					<textElement verticalAlignment="Top"/>
 					<textFieldExpression><![CDATA[$F{ESTUDIANTE}]]></textFieldExpression>
 				</textField>
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement style="Estilo_contenido7" x="133" y="13" width="418" height="14" uuid="e5d868f9-5702-4b61-a5b5-60d57ae07125"/>
 					<textElement verticalAlignment="Top"/>
 					<textFieldExpression><![CDATA[$F{CEDULA}]]></textFieldExpression>
@@ -295,7 +295,7 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 					</textElement>
 					<text><![CDATA[PROGRAMA DE POSGRADO:]]></text>
 				</staticText>
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement style="Estilo_contenido7" x="134" y="0" width="405" height="14" uuid="f5de055a-3fdc-4dc7-88ad-ca36f74f06bd"/>
 					<textElement verticalAlignment="Top"/>
 					<textFieldExpression><![CDATA[$F{POSGRADO}]]></textFieldExpression>
@@ -307,7 +307,7 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 		<groupExpression><![CDATA[$F{MODALIDAD}]]></groupExpression>
 		<groupHeader>
 			<band height="14">
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement style="Estilo_contenido7" x="134" y="0" width="417" height="14" uuid="4dbc38fb-e897-41e7-9a53-d729979ac632"/>
 					<textElement verticalAlignment="Top"/>
 					<textFieldExpression><![CDATA[$F{MODALIDAD}]]></textFieldExpression>
@@ -333,7 +333,7 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 					</textElement>
 					<text><![CDATA[TOTAL HORAS DEL PROGRAMA:]]></text>
 				</staticText>
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement style="Estilo_contenido7" x="134" y="0" width="120" height="14" uuid="0e645d84-db28-4dbc-b08e-4ca185925b28"/>
 					<textFieldExpression><![CDATA[$F{TOTAL_HORAS}]]></textFieldExpression>
 				</textField>
@@ -344,7 +344,7 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 		<groupExpression><![CDATA[$F{COHORTE}]]></groupExpression>
 		<groupHeader>
 			<band height="14">
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement style="Estilo_contenido7" x="134" y="0" width="416" height="14" uuid="de5b4caa-04bc-49eb-addf-9c5bf8e6d2db"/>
 					<textFieldExpression><![CDATA[$F{COHORTE}]]></textFieldExpression>
 				</textField>
@@ -370,7 +370,7 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 					</textElement>
 					<text><![CDATA[TÍTULO A OBTENER:]]></text>
 				</staticText>
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement style="Estilo_contenido7" x="133" y="0" width="417" height="14" uuid="bf654eae-a172-4d18-aeb1-86d5abef62e3"/>
 					<textFieldExpression><![CDATA[$F{TITULO}]]></textFieldExpression>
 				</textField>
@@ -388,7 +388,7 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 					</textElement>
 					<text><![CDATA[PERÍODO ACADÉMICO:]]></text>
 				</staticText>
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement style="Estilo_contenido7" x="134" y="0" width="416" height="14" uuid="f29872cb-3edb-44b6-a5ac-90d28a49f3c7"/>
 					<textElement verticalAlignment="Top"/>
 					<textFieldExpression><![CDATA[$F{FECHA_SEMESTRE}]]></textFieldExpression>

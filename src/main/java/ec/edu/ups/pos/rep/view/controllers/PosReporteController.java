@@ -10,6 +10,7 @@ import ec.edu.ups.pos.rep.data.utils.PosRepConstants;
 import ec.edu.ups.util.jasper.JasperUtils;
 import ec.edu.ups.util.jasper.ReportParamBuilder;
 import ec.edu.ups.util.jasper.ReportType;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -29,6 +30,8 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
 import org.omnifaces.util.Faces;
 import org.omnifaces.util.Messages;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 /**
  *
@@ -52,13 +55,18 @@ public class PosReporteController implements Serializable {
      * @param nombreArchivo Nombre del archivo con el que saldrá el reporte
      * @param nombreReporte Nombre del archivo compilado del reporte
      * @param params Parámetros de reporte
+     * @return 
      */
-    public void generarReporte(ReportType reportType, String fileExtension, String nombreArchivo, String nombreReporte, ReportParamBuilder params) {
+      
+     public StreamedContent generarStreamedReporte(ReportType reportType, String fileExtension, String nombreArchivo,
+    String nombreReporte, ReportParamBuilder params) {
+        Connection connection = null;
+
         try {
             //Obtiene conexión a datasource de Base de Datos
             InitialContext context = new InitialContext();
             DataSource dataSource = (DataSource) context.lookup(PosRepConstants.DATASOURCE_NAME);
-            Connection connection = dataSource.getConnection();
+            connection = dataSource.getConnection();
 
             if (fileExtension.equals(".xlsx")) {
                 SimpleXlsxReportConfiguration simpleXlsxReportConfiguration = new SimpleXlsxReportConfiguration();
@@ -68,50 +76,44 @@ public class PosReporteController implements Serializable {
                 simpleXlsxReportConfiguration.setRemoveEmptySpaceBetweenRows(true);
                 simpleXlsxReportConfiguration.setRemoveEmptySpaceBetweenColumns(true);
                 simpleXlsxReportConfiguration.setIgnorePageMargins(false); //ant:true                                
-                params.setReportExportConfiguration(simpleXlsxReportConfiguration);                                
-                
+                params.setReportExportConfiguration(simpleXlsxReportConfiguration);
             }
 
             //Obtiene archivo de reporte
             URL url = Faces.getResource(nombreReporte);
-            System.out.println("nombreReporte " + nombreReporte);
+
             //Generación de reporte
             byte[] archivoReporte = JasperUtils.generateReport(new File(url.toURI()), reportType,
                     params,
                     connection);
+            String nombreFinal = nombreArchivo
+                    + DateFormat.getDateInstance(DateFormat.SHORT).format(new Date()).replace("/", "_") + fileExtension;
 
-            System.out.println("Reporte " + archivoReporte.length);
             if ((archivoReporte.length < PosRepConstants.REPORTE_VACIO_PDF && fileExtension.equalsIgnoreCase(".pdf"))
                     || (archivoReporte.length < PosRepConstants.REPORTE_VACIO_XLSX && fileExtension.equalsIgnoreCase(".xlsx"))) {
-                Messages.addGlobalWarn("No se han obtenido resultados para " + nombreArchivo + DateFormat.getDateInstance(DateFormat.SHORT).format(new Date()).replace("/", "_") + fileExtension);
+                Messages.addGlobalWarn("No se han obtenido resultados para " + nombreFinal);
                 Faces.validationFailed();
             } else {
-
-                Faces.sendFile(archivoReporte, nombreArchivo + DateFormat.getDateInstance(DateFormat.SHORT).format(new Date()).replace("/", "_") + fileExtension, true);
-                System.out.println("Reporte Generado");
+                return new DefaultStreamedContent(
+                        new ByteArrayInputStream(archivoReporte),
+                        Faces.getMimeType(nombreReporte),
+                        nombreFinal,
+                        archivoReporte.length
+                );
             }
-            connection.close();
-        } catch (IOException ex) {
-            Messages.addGlobalError("Error en carga de archivo de reporte. \n " + ex.getMessage());
+        } catch (Exception ex) {
+            Messages.addGlobalError("Error al generar el reporte. \n " + ex.getMessage());
             Faces.validationFailed();
-            //Logger.getLogger(RepAsegPermisosRolesController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (JRException ex) {
-            Messages.addGlobalError("Error en archivo de reporte. \n" + ex.getMessage());
-            Faces.validationFailed();
-            //Logger.getLogger(RepAsegPermisosRolesController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (URISyntaxException ex) {
-            Messages.addGlobalError("Error en busquéda de archivo de reporte. \n" + ex.getMessage());
-            Faces.validationFailed();
-            //Logger.getLogger(RepAsegPermisosRolesController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NamingException ex) {
-            Messages.addGlobalError("Error en obteción de contexto. \n" + ex.getMessage());
-            Faces.validationFailed();
-            //Logger.getLogger(RepMenuSeccionRutaController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Messages.addGlobalError("Error en conexión a base de datos. \n" + ex.getMessage());
-            Faces.validationFailed();
-            //Logger.getLogger(RepMenuSeccionRutaController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                }
+            }
         }
+
+        return null;
     }
     
     /**
