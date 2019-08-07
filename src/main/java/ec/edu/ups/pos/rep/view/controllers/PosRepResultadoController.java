@@ -34,6 +34,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -181,22 +182,22 @@ public class PosRepResultadoController implements Serializable{
         setOrgEstructuraCarreraList(null);
         updateAsignaturaList();
         setGthPersona(null);
-        if (getOrgEstructuraCampus() != null) {
+        
+         if (getOrgEstructuraCampus() != null) {
             if (secOrgEstructuraController.getTipoEstructura()==TipoEstructura.PROGRAMA) {
                 if (Objects.equals(secOrgEstructuraController.getEstructuraCarrera().getEstCodigo(), PosRepConstants.TODAS_CARRERAS)) {
-                    orgEstructuraCarreraList = orgEstructuraFacade.listaEstructuraPostGradoSelecActivo(getOrgEstructuraCampus());    
+                    orgEstructuraCarreraList = orgEstructuraFacade.listaEstructuraPostGradoSelecActivo(getOrgEstructuraCampus());                    
                 } else {
-                    orgEstructuraCarreraList = orgEstructuraFacade.listaEstructuraPostGradoSelecActivo(getOrgEstructuraCampus());
-                    if (orgEstructuraCarreraList.contains(secOrgEstructuraController.getEstructuraCarrera())) {
-                        orgEstructuraCarreraList = new ArrayList<>();
-                        orgEstructuraCarreraList.add(orgEstructuraFacade.find(secOrgEstructuraController.getEstructuraCarrera().getEstCodigo(), true));
-                    } else {
-                        orgEstructuraCarreraList = new ArrayList<>();
+                    orgEstructuraCarreraList = orgEstructuraFacade.listaEstructuraPostGradoSelecActivo(getOrgEstructuraCampus());                                     
+                    orgEstructuraCarreraList = orgEstructuraCarreraList.stream()
+                        .filter(est -> Objects.equals(est.getEstCodigo(), secOrgEstructuraController.getEstructuraCarrera().getEstCodigo()))
+                        .collect(Collectors.toList());
+                    if(!orgEstructuraCarreraList.isEmpty()){                    
+                        setOrgEstructuraCarrera(orgEstructuraCarreraList.get(0));
                     }
                 }
             }
-          
-        }  
+        }                   
          updatePeriodoPorCampusList();
     }
 

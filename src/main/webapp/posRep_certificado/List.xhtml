@@ -263,35 +263,50 @@
        </p:panel> <!--certificación-->           
        </p:panel>
         
-       <p:toolbar id="PosRepCerExportToolbar">  
-            <us:auth permissions="{'operations':['GENERAR']}">                                
-
-                <p:toolbarGroup align="center">                
+        <p:toolbar id="PosRepCerExportToolbar">
+            <us:auth permissions="{'operations':['GENERAR']}">
+                
+                <p:toolbarGroup align="center">           
+                    
                     <p:commandLink id="nonAjaxExcel"                                    
-                                   ajax="false" 
-                                   validateClient="true"
-                                   update="messagePanel"                             
-                                   actionListener="#{posRepGeneralController.generar_reporte_certificado('xlsx',posRepPosgradosController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_CERTIFICACION))}"
-                                   disabled="#{(repReportesSistemaController.selected.resFormato eq null or (repReportesSistemaController.selected.resFormato ne 'EXCEL' and repReportesSistemaController.selected.resFormato ne 'PDF - EXCEL')) or posRepPosgradosController.posgradoAlumnoWrapper eq null}">  
+                                   ajax="false"
+                                   update="messagePanel"     
+                                   process="@this" 
+                                   onclick="PrimeFaces.monitorDownload(start, stop);"
+                                   disabled="#{repReportesSistemaController.selected.resFormato eq null or (repReportesSistemaController.selected.resFormato ne 'EXCEL' and repReportesSistemaController.selected.resFormato ne 'PDF - EXCEL')}">  
                         <p:graphicImage library="ups-template" 
                                         name="images/icons/apps/xls.png" 
                                         alt="#{posRepBundle['ExportXls']}" 
                                         title="#{posRepBundle['ExportXls']}"/>  
+                        <p:fileDownload value="#{posRepGeneralController.generar_reporte_certificado('xlsx',posRepPosgradosController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_CERTIFICACION))}"  />
                     </p:commandLink>
+                    
                     <p:commandLink id="nonAjaxPdf"                                    
                                    ajax="false" 
-                                   validateClient="true"
                                    update="messagePanel"
-                                   actionListener="#{posRepGeneralController.generar_reporte_certificado('pdf',posRepPosgradosController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_CERTIFICACION))}"
-                                   disabled="#{(repReportesSistemaController.selected.resFormato eq null or (repReportesSistemaController.selected.resFormato ne 'PDF' and repReportesSistemaController.selected.resFormato ne 'PDF - EXCEL'))or posRepPosgradosController.posgradoAlumnoWrapper eq null }">
+                                   process="@this" 
+                                   onclick="PrimeFaces.monitorDownload(start, stop);"
+                                   disabled="#{repReportesSistemaController.selected.resFormato eq null or (repReportesSistemaController.selected.resFormato ne 'PDF' and repReportesSistemaController.selected.resFormato ne 'PDF - EXCEL')}">
                         <p:graphicImage library="ups-template" 
                                         name="images/icons/apps/pdf.png" 
                                         alt="#{posRepBundle['ExportPdf']}" 
                                         title="#{posRepBundle['ExportPdf']}"/>  
-                    </p:commandLink>                
+                        <p:fileDownload value="#{posRepGeneralController.generar_reporte_certificado('pdf',posRepPosgradosController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_CERTIFICACION))}" />
+                    </p:commandLink>                                        
+                    
                 </p:toolbarGroup>
 
             </us:auth>
-        </p:toolbar>
+        </p:toolbar>   
     </h:form>
+    
+  <script>
+     function start() {
+         PF('statusDialog').show();
+     }
+
+     function stop() {
+         PF('statusDialog').hide();
+     }
+  </script>   
 </ui:composition>
