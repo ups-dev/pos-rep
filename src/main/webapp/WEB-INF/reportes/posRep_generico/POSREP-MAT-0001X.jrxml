@@ -80,6 +80,7 @@ AND     cal.mal_codigo  = mal.mal_codigo
 AND     mal.mat_codigo  = mtr.mat_codigo
 AND     mal.pre_numero  = pre.pre_numero
 AND     mat.pee_codigo  = pee.pee_codigo
+AND     dep.dep_codigo  = mat.dep_codigo --
 AND     dep.pre_numero  = pre.pre_numero
 AND     dep.dee_codigo  = dpos.dee_codigo
 AND     pee.est_codigo  = pos.est_codigo
