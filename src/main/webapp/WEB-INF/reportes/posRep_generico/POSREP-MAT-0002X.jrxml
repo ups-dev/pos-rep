@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-MAT-0002X" pageWidth="1480" pageHeight="840" columnWidth="1440" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a5610fb4-cc29-46b5-b47b-735f7e78b38b">
 	<property name="ireport.zoom" value="6.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="144"/>
+	<property name="ireport.y" value="0"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -36,6 +36,7 @@ FROM    mat.mat_matricula           mat,
         fac.fac_pago_factura        paf,
         fac.fac_forma_facturacion   fof,
         sigac.cliente_local         cli,
+        ins.ins_alumno              alu,
         ped.ped_proyecto_educacion  pre,
         ped.ped_des_est_pro_edu     dep,
         org.org_descripcion_estructura dpos,
@@ -45,11 +46,16 @@ FROM    mat.mat_matricula           mat,
         org.org_estructura          cam,
         org.org_estructura          sed,
         org.org_periodo_estructura  pee,
-        org.org_periodo_lectivo     pel,
-        ins.ins_alumno              alu
+        org.org_periodo_lectivo     pel
 WHERE   mat.mat_codigo  = paf.ins_codigo
+AND     mat.mat_tipo_proceso = 'M'
+AND     mat.aud_eliminado = 'N'
+AND     mat.mat_anulado = 'N'
+AND     paf.tip_codigo  = 4
+AND     fof.ins_codigo  = mat.ins_codigo
 AND     mat.cllc_cdg    = cli.cllc_cdg
-AND     mat.pee_codigo  = pee.pee_codigo
+AND     alu.cllc_cdg    = cli.cllc_cdg
+AND     dep.dep_codigo  = mat.dep_codigo
 AND     dep.pre_numero  = pre.pre_numero
 AND     dep.dee_codigo  = dpos.dee_codigo
 AND     pee.est_codigo  = pos.est_codigo
@@ -58,10 +64,7 @@ AND     cam.est_codigo  = pos.est_codigo_padre
 AND     cam.dee_codigo  = dcam.dee_codigo
 AND     sed.est_codigo  = cam.est_codigo_padre
 AND     sed.dee_codigo  = dsed.dee_codigo
-AND     alu.cllc_cdg    = mat.cllc_cdg
-AND     fof.ins_codigo  = mat.ins_codigo
-AND     mat.mat_tipo_proceso = 'M'
-AND     paf.tip_codigo  = 4
+AND     mat.pee_codigo  = pee.pee_codigo
 AND     pel.pel_codigo  = pee.pel_codigo
 AND     pee.pee_nivel   like $P{pv_pee_nivel}
 AND     pee.pel_codigo  = $P{pn_pel_codigo}
@@ -70,8 +73,7 @@ AND     pos.est_codigo  IN (SELECT est_codigo e
                             WHERE  e.est_nivel  = 4
                             START WITH e.est_codigo = $P{pn_est_codigo}
                             CONNECT BY PRIOR e.est_codigo = e.est_codigo_padre)
-AND     mat.aud_eliminado = 'N'
-AND     mat.mat_anulado = 'N'
+
 AND     paf.paf_pagado like $P{pv_paf_pagado}
 ORDER BY sede,campus,posgrado,pee.pee_nivel,estudiante]]>
 	</queryString>
