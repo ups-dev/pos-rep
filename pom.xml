@@ -14,7 +14,7 @@
     <packaging>war</packaging>
 
     <name>pos-rep</name>
-    <description>Sistema para generaciÃ³n de reportes de Posgrados.</description>
+    <description>Sistema para generaciÃƒÂ³n de reportes de Posgrados.</description>
 
     <developers>
         <developer>
@@ -26,7 +26,7 @@
         </developer>
         <developer>
             <id>vclavijo</id>
-            <name>VerÃ³nica Clavijo</name>
+            <name>VerÃƒÂ³nica Clavijo</name>
             <email>vclavijo@ups.edu.ec</email>
             <organization>UPS</organization>
             <organizationUrl>http://www.ups.edu.ec</organizationUrl>
