@@ -209,11 +209,9 @@ public class PosRepGeneralController implements Serializable{
         
             //Definición de nombre de: reporte y archivo
             String nombreReporte = "/WEB-INF/reportes/posRep_certificado/"+nombre;        
-            String nombreArchivo = repReportesSistema.getResReporte();    
-            
+            String nombreArchivo = repReportesSistema.getResReporte();             
             //System.out.println("nombreArchivo   "+nombreArchivo);
-            
-            
+        
             //Parámetro Alumno
             InsAlumnoWrapper insAlumnoWrapper=posRepPosgradosController.getInsAlumnoWrapper();
             Integer codigoAlumno=null;
@@ -237,7 +235,10 @@ public class PosRepGeneralController implements Serializable{
             String tituloPosgrado = null;
             String mencionEstudiante = null;
             Integer totalMenciones  = null;
+            String cddCodigo = null;
+            Integer preNumero = null;
             Integer imprimeTitulo   = 0;
+            
             
             if(posAlumnoWrapper!=null){
                 codigoPeriodo=Integer.valueOf(String.valueOf(posAlumnoWrapper.getCodPeriodo()));
@@ -248,14 +249,16 @@ public class PosRepGeneralController implements Serializable{
                 mencionEstudiante =  String.valueOf(posAlumnoWrapper.getTieneMencionEst());
                 totalMenciones = Integer.valueOf(String.valueOf(posAlumnoWrapper.getTotalMenciones()));
                 
+                cddCodigo = String.valueOf(posAlumnoWrapper.getCodMencionEstudiante());
+                preNumero = Integer.valueOf(String.valueOf(posAlumnoWrapper.getPreCodigo()));
+                
                 if (mencionEstudiante.equals("S") || (totalMenciones == 1) )
                 { 
                     imprimeTitulo = 1;
                 }else {
                     imprimeTitulo = 0;
                 }
-
-                   
+       
             }    
             
             //Parámetro Sede Factura
@@ -319,7 +322,9 @@ public class PosRepGeneralController implements Serializable{
             rpb.add("pn_secuencia", numSecuenciaCertificado);
             rpb.add("pv_tituloPosgrado", tituloPosgrado);
             rpb.add("pn_imprimeTitulo", imprimeTitulo);
-            
+            rpb.add("pv_cdd_codigo", cddCodigo);
+            rpb.add("pn_pre_numero", preNumero);
+              
             
            if ((estSede != null) && (certificacion == true)){     
              repEmisionCertificadoController.registraEmisionCertificado(Long.valueOf(numSecuenciaCertificado), Long.valueOf(codigoAlumno), Long.valueOf(posAlumnoWrapper.getEstPosgrado()), posAlumnoWrapper.getCodPeriodo(), repTipCerRepSis.getTicCodigo());

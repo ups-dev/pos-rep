@@ -2,319 +2,264 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-REC-0001" pageWidth="590" pageHeight="842" columnWidth="546" leftMargin="22" rightMargin="22" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="204"/>
+	<property name="ireport.y" value="594"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_alu_codigo" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-	<parameter name="pn_est_codigo" class="java.lang.Integer">
+	<parameter name="pn_imprimeTitulo" class="java.lang.Integer"/>
+	<parameter name="pn_pre_numero" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-	<parameter name="pn_imprimeTitulo" class="java.lang.Integer"/>
+	<parameter name="pv_cdd_codigo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[select ma.campus,ma.programa,ma.cohorte,
-       ma.mal_codigo,ma.mat_codigo,
-       ma.modulo,
-       ma.mal_nivel,
-       ma.mal_nro_horas,
-       ma.semestre,
-       ma.modalidad,
-       ma.titulo,
-       ma.total_horas,
-       ma.cllc_cdg,
-       ma.cedula,
-       ma.estudiante,
-       ma.fecha_inicio_carrera,
-       ma.fecha_actual,
-       ma.tiene_mencion_est,
-       ma.tiene_mencion_proyecto,
-       ma.total_menciones,
-       ma.cdd_codigo_mencion,
-       ma.materia_mencion,
-       ma.tiene_mencion_proyecto,
-       ca.fecha_semestre,
-       ca.nota_final,
-       ca.numero_veces,
-       ca.tipo_aprobacion,
-       ca.observaciones_matricula,
-       NVL(ca.estado,ma.estado) estado,
-       ca.para_contar,
-       ca.para_promediar
-from
-       (select distinct campus, programa,est_codigo,cllc_cdg,cedula,estudiante,
-                cohorte,total_horas,tiene_mencion_pro,
-                cdd_codigo_mencion,
-                materia_mencion,
-           decode(tiene_mencion_pro,'N',p.mal_codigo,'S',decode(total_menciones,1,p.mal_codigo,decode(tiene_mencion_est,'S',decode(p.cdd_codigo_mencion,null,p.mal_codigo,(select mm.mal_codigo
-                                                                                                                                                                                from ped.ped_malla_mencion mm
-                                                                                                                                                                                where mm.mal_codigo = p.mal_codigo
-                                                                                                                                                                                and   mm.cdd_codigo = p.cod_mencion_estudiante
-                                                                                                                                                                                and   mm.aud_eliminado = 'N'),p.mal_codigo),p.mal_codigo))) mal_codigo,
-           decode(tiene_mencion_pro,'N',p.mat_codigo,'S',decode(total_menciones,1,p.mat_codigo,decode(tiene_mencion_est,'S',decode(p.cdd_codigo_mencion,null,p.mat_codigo,(select mt.mat_codigo
-                                                                                                                                                                    from ped.ped_malla_mencion mm,
-                                                                                                                                                                         ped.ped_malla         ma,
-                                                                                                                                                                         ped.ped_materia       mt
-                                                                                                                                                                    where mm.mal_codigo = p.mal_codigo
-                                                                                                                                                                    and   mm.cdd_codigo = p.cod_mencion_estudiante
-                                                                                                                                                                    and   ma.mal_codigo = mm.mal_codigo
-                                                                                                                                                                    and   mt.mat_codigo = ma.mat_codigo
-                                                                                                                                                                    and   mm.aud_eliminado = 'N')),p.mat_codigo))) mat_codigo,
-          decode(tiene_mencion_pro,'N',p.modulo,'S',decode(total_menciones,1,p.modulo,decode(tiene_mencion_est,'S',decode(p.cdd_codigo_mencion,null,p.modulo,(select mt.mat_descripcion
-                                                                                                                                                                    from ped.ped_malla_mencion mm,
-                                                                                                                                                                         ped.ped_malla         ma,
-                                                                                                                                                                         ped.ped_materia       mt
-                                                                                                                                                                    where mm.mal_codigo = p.mal_codigo
-                                                                                                                                                                    and   mm.cdd_codigo = p.cod_mencion_estudiante
-                                                                                                                                                                    and   ma.mal_codigo = mm.mal_codigo
-                                                                                                                                                                    and   mt.mat_codigo = ma.mat_codigo
-                                                                                                                                                                    and   mm.aud_eliminado = 'N')),p.modulo))) modulo,
-           mal_nivel,
-           mal_nro_horas,
-           semestre,
-           modalidad,
-           tiene_mencion_pro tiene_mencion_proyecto,
-           total_menciones,
-           NVL(tiene_mencion_est,'N') tiene_mencion_est,
-           cod_mencion_estudiante,
-           mencion_estudiante,
-           total_modulo_mencion,
-           total_modulo,
-           fecha_inicio_carrera,
-           fecha_actual,
-           decode(tiene_mencion_pro,'N',decode(p.titulo,'OTRO',p.cde_des_tit_opcional,p.titulo),'S',decode(total_menciones,1,p.mencion_proyecto,decode(tiene_mencion_est,'S',titulo||', '||p.mencion_estudiante,null))) titulo,
-           estado
-           from(
-               select distinct dcam.dee_descripcion              campus,
-                 dpos.dee_descripcion                            programa,
-                 pos.est_codigo,
-                 pel.pel_descripcion ||' ('||extract (year from pel.pel_fecha_inicio)||' - '||extract (year from pel.pel_fecha_fin)||') ' cohorte,
-                 mal.mal_codigo,
-                 mal.mal_nivel,
-                 mal.mal_nro_horas,
-                 TO_CHAR(mal.mal_nivel, 'FMRN')||' '||'SEMESTRE' semestre,
-                 mtr.mat_codigo,
-                 mtr.mat_descripcion              modulo,
-                 mod.mod_descripcion                             modalidad,
-                 (select ppe.ppe_descripcion_texto
-                  from ped.ped_par_pro_edu ppe,
-                       ped.ped_tip_par_tip_pro_edu tpt
-                  where ppe.tpt_codigo=tpt.tpt_codigo
-                  and ppe.pre_numero = pre.pre_numero
-                  and tpt.tpp_codigo = 114)                      tiene_mencion_pro,
-
-                 (select count(cdd1.cdd_mencion)
-                 from ped.ped_cde_dep  cdd1
-                 where cdd1.dep_codigo = dep.dep_codigo
-                 )                                              total_menciones,
-                cac2.cac_descripcion                            titulo,
-                cac2.cac_descripcion||', '||'MENCIÓN '||UPPER(cdd.cdd_mencion) mencion_proyecto,
-                (select 'S'
-                  from    ped.ped_cde_dep cdd,
-                          ins.ins_ipa_cdd iic,
-                          ins.ins_ins_pro_aca ipa
-                   where  cdd.cdd_codigo = iic.cdd_codigo
-                   and    ipa.ipa_codigo = iic.ipa_codigo
-                   and    ipa.ins_codigo = mat.ins_codigo
-                   and    cdd.dep_codigo = dep.dep_codigo )  tiene_mencion_est,
-                  (select cdd.cdd_codigo
-                  from    ped.ped_cde_dep cdd,
-                          ins.ins_ipa_cdd iic,
-                          ins.ins_ins_pro_aca ipa
-                   where  cdd.cdd_codigo = iic.cdd_codigo
-                   and    ipa.ipa_codigo = iic.ipa_codigo
-                   and    ipa.ins_codigo = mat.ins_codigo
-                   and    cdd.dep_codigo = dep.dep_codigo)     cod_mencion_estudiante,
-                  (select 'MENCIÓN '||UPPER(cdd.cdd_mencion)
-                  from    ped.ped_cde_dep cdd,
-                          ins.ins_ipa_cdd iic,
-                          ins.ins_ins_pro_aca ipa
-                   where  cdd.cdd_codigo = iic.cdd_codigo
-                   and    ipa.ipa_codigo = iic.ipa_codigo
-                   and    ipa.ins_codigo = mat.ins_codigo
-                   and    cdd.dep_codigo = dep.dep_codigo)      mencion_estudiante,
-
-                 (select ppe.ppe_descripcion_numero
-                  from ped.ped_par_pro_edu ppe,
-                       ped.ped_tip_par_tip_pro_edu tpt
-                  where ppe.tpt_codigo=tpt.tpt_codigo
-                  and ppe.pre_numero = pre.pre_numero
-                  and tpt.tpp_codigo = 117)                     total_horas,
-                 mat.cllc_cdg,
-                 cli.cllc_ruc                                   cedula,
-                 cli.cllc_nmb                                   estudiante,
-                 inc.ins_fecha_inicio_carrera                   fecha_inicio_carrera,
-                 'Cuenca, '||TO_CHAR(sysdate, 'DD')|| ' de '||DECODE(TO_CHAR(sysdate, 'MM'), '01', 'Enero', '02', 'Febrero', '03', 'Marzo', '04', 'Abril', '05', 'Mayo', '06', 'Junio',
-                                       '07', 'Julio', '08', 'Agosto', '09', 'Septiembre', '10', 'Octubre', '11', 'Noviembre',
-                                       '12', 'Diciembre')||' de '||
-                 TO_CHAR(sysdate, 'YYYY')||'.'                  fecha_actual,
-                 mam.CDD_codigo                                 cdd_codigo_mencion,
-                 mam.mal_codigo                                 mal_codigo_mencion,
-                 (select 'MENCIÓN '||cd.cdd_mencion
-                 from ped.ped_cde_dep cd
-                 where cd.cdd_codigo = mam.CDD_codigo)          materia_mencion,
-                 decode(mam.cdd_codigo,null,0,1 )               total_modulo_mencion,
-                 decode(mam.cdd_codigo,null,1,0 )               total_modulo,
-                 'NO CURSADO' estado,
-                 cde.cde_des_tit_opcional
-          from   ped.ped_proyecto_educacion  pre,
-                 ped.ped_malla               mal,
-                 ped.ped_materia             mtr,
-                 ped.ped_des_est_pro_edu     dep,
-                 ped.ped_mod_pro_edu         mpe,
-                 ped.ped_modalidad           mod,
-                 org.org_descripcion_estructura dpos,
-                 org.org_descripcion_estructura dcam,
-                 org.org_estructura          pos,
-                 org.org_estructura          cam,
-                 ped.ped_cde_dep             cdd,
-                 ped.ped_cam_des_est         cde,
-                 ped.ped_cam_con_tip_tit     ctt,
-                 ped.ped_campo_conocimiento  cac,
-                 ped.ped_campo_conocimiento  cac2,
-                 ped.ped_tipo_titulacion     tit,
-                 mat.mat_matricula           mat,
-                 sigac.cliente_local         cli,
-                 ins.ins_inscripcion         inc,
-                 org.org_periodo_estructura  pee,
-                 org.org_periodo_lectivo     pel,
-                 ped.ped_malla_mencion       mam
-          where   pre.pre_numero  = mal.pre_numero
-          AND     mtr.mat_codigo  = mal.mat_codigo
-          AND     dep.pre_numero  = pre.pre_numero
-          AND     pre.pre_numero  = mpe.pre_numero
-          AND     mod.mod_codigo  = mpe.mod_codigo
-          AND     dep.dee_codigo  = dpos.dee_codigo
-          AND     pos.dee_codigo  = dpos.dee_codigo
-          AND     cam.est_codigo  = pos.est_codigo_padre
-          AND     cam.dee_codigo  = dcam.dee_codigo
-          AND     mal.aud_eliminado = 'N'
-          AND     pos.est_codigo  = $P{pn_est_codigo}
-          AND     dep.dep_codigo  = cdd.dep_codigo
-          AND     cde.cde_codigo  = cdd.cde_codigo
-          AND     ctt.cct_codigo  = cde.cct_codigo
-          AND     cac.cac_codigo  = ctt.cac_codigo
-          AND     cac.cac_codigo_padre = cac2.cac_codigo
-          AND     tit.tit_codigo       = ctt.tit_codigo
-          AND     tit.ned_codigo       = 2
-          AND     mat.dep_codigo  = dep.dep_codigo
-          AND     inc.alu_codigo  = $P{pn_alu_codigo}
-          AND     mat.cllc_cdg    = cli.cllc_cdg
-          AND     mat.ins_codigo  = inc.ins_codigo
-          AND     mat.pee_codigo  = pee.pee_codigo
-          AND     pee.pel_codigo  = pel.pel_codigo
-          AND     mal.mal_codigo  = mam.mal_codigo(+)
-          )p)ma,
-          (SELECT  dsed.dee_descripcion        sede,
-                    dcam.dee_descripcion        campus,
-                    pos.est_codigo,
-                    dpos.dee_descripcion        posgrado,
-                    mod.mod_descripcion         modalidad,
+		<![CDATA[WITH MALLAPOS AS
+  (select p.*,'NO CURSADO' estado,
+          (select ppe.ppe_descripcion_numero
+           from ped.ped_par_pro_edu ppe,
+                ped.ped_tip_par_tip_pro_edu tpt
+          where ppe.tpt_codigo=tpt.tpt_codigo
+          and ppe.pre_numero = p.pre_numero
+          and tpt.tpp_codigo = 117)      total_horas,
+         (select ppe.ppe_descripcion_texto
+          from ped.ped_par_pro_edu ppe,
+               ped.ped_tip_par_tip_pro_edu tpt
+          where ppe.tpt_codigo=tpt.tpt_codigo
+          and ppe.pre_numero = p.pre_numero
+          and tpt.tpp_codigo = 114)              tiene_mencion_pro,
+          (select count(cdd1.cdd_mencion)
+             from ped.ped_cde_dep  cdd1
+             where cdd1.dep_codigo = p.dep_codigo
+             and   cdd1.aud_eliminado = 'N'
+           )                                      total_menciones
+   from
+    ( select  pre.pre_numero,
+              dep.dep_codigo,
+              mal.mal_codigo,
+              mte.mat_codigo,
+              mte.mat_descripcion,
+              mal.mal_nivel,
+              TO_CHAR(mal.mal_nivel, 'FMRN')||' '||'SEMESTRE' semestre,
+              mal.mal_nro_horas,
+              'N' materia_mencion,
+              null mencion
+      from    ped.ped_des_est_pro_edu    dep,
+              ped.ped_proyecto_educacion pre,
+              ped.ped_malla              mal,
+              ped.ped_materia            mte
+       where pre.pre_numero = dep.pre_numero
+       and   pre.pre_numero   = mal.pre_numero
+       and   NOT EXISTS  (select * from  ped.ped_malla_mencion mm
+                                          where mm.mal_codigo = mal.mal_codigo
+                                          and   mm.aud_eliminado = 'N'  )
+       and   mte.mat_codigo   = mal.mat_codigo
+       and   pre.pre_numero   = $P{pn_pre_numero}
+      UNION
+      select  pre.pre_numero,
+             dep.dep_codigo,
+              mal.mal_codigo,
+              mte.mat_codigo,
+              mte.mat_descripcion,
+              mal.mal_nivel,
+              TO_CHAR(mal.mal_nivel, 'FMRN')||' '||'SEMESTRE' semestre,
+              mal.mal_nro_horas,
+              decode(($P{pv_cdd_codigo}),null,'SIN','S') materia_mencion,
+              'MENCIÓN '||UPPER(cdd.cdd_mencion)
+      from    ped.ped_des_est_pro_edu    dep,
+              ped.ped_proyecto_educacion pre,
+              ped.ped_malla              mal,
+              ped.ped_malla_mencion      mam,
+              ped.ped_materia            mte,
+              ped.ped_cde_dep            cdd
+       where pre.pre_numero = dep.pre_numero
+       and   pre.pre_numero   = mal.pre_numero
+       and   mal.mal_codigo   = mam.mal_codigo
+       and   mte.mat_codigo   = mal.mat_codigo
+       and   pre.pre_numero   = $P{pn_pre_numero}
+       and   cdd.cdd_codigo   = mam.cdd_codigo
+       and   dep.dep_codigo   = cdd.dep_codigo
+       and   mam.cdd_codigo   like NVL($P{pv_cdd_codigo},'%')
+       and   mam.aud_eliminado = 'N')p ),
+  CALIFICACIONPOS AS
+          (SELECT   pre.pre_numero,
+                    mat.ins_codigo,
                     pel.pel_descripcion, pel.pel_codigo,
                     extract (year from pee.pee_fecha_inicial)||' - '||extract (year from pee.pee_fecha_final) fecha_semestre,
-                    cli.cllc_cdg,
-                    mtr.mat_codigo,
-                    mtr.mat_descripcion         ,
                     mal.mal_codigo,
-                    mal.mal_nivel               nivel,
+                    mtr.mat_codigo,
+                    mtr.mat_descripcion         modulo,
                     mal.mal_nro_horas,
                     cal.cal_nota_final          nota_final,
                     cal.cal_numero_veces        numero_veces,
                     cal.tap_codigo,
-	          tap.tap_descripcion        tipo_aprobacion,
+                    tap.tap_descripcion         tipo_aprobacion,
                     mat.mat_observaciones       observaciones_matricula,
                     decode(cal.cal_aprobado,'S','APROBADO',DECODE(pee.pee_vigente,'S','CURSANDO',DECODE(cal.cal_aprobado,'S','APROBADO','REPROBADO')) ) estado,
                     decode(cal.cal_aprobado,'S',1,DECODE(pee.pee_vigente,'S',0,DECODE(cal.cal_aprobado,'S',1,0)) ) para_contar,
                     DECODE(cal.cal_aprobado,'S',cal.cal_nota_final) para_promediar
-          FROM    mat.mat_matricula           mat,
-                  ins.ins_inscripcion         inc,
-                  ins.ins_oferta_inscripcion_inicial oii,
-                  cal.cal_calificacion        cal,
+          FROM    cal.cal_calificacion        cal,
                   cal.cal_tipo_aprobacion     tap,
-                  fac.fac_pago_factura        paf,
-                  sigac.cliente_local         cli,
                   ped.ped_malla               mal,
                   ped.ped_materia             mtr,
                   ped.ped_proyecto_educacion  pre,
-                  ped.ped_des_est_pro_edu     dep,
-                  ped.ped_mod_pro_edu         mpe,
-                  ped.ped_modalidad           mod,
-                  org.org_descripcion_estructura dpos,
-                  org.org_descripcion_estructura dcam,
-                  org.org_descripcion_estructura dsed,
-                  org.org_estructura          pos,
-                  org.org_estructura          cam,
-                  org.org_estructura          sed,
+                  mat.mat_matricula           mat,
+                  ins.ins_inscripcion         inc,
                   org.org_periodo_estructura  pee,
-                  org.org_periodo_lectivo     pel,
-                  ins.ins_alumno              alu
-          WHERE   mat.mat_codigo  = cal.mat_codigo
-          AND     inc.ins_codigo  = mat.ins_codigo
-          AND     oii.oii_codigo  = inc.oii_codigo
-          AND     mat.mat_codigo  = paf.ins_codigo
-          AND     mat.cllc_cdg    = cli.cllc_cdg
-          AND     tap.tap_codigo  = cal.tap_codigo
+                  org.org_periodo_lectivo     pel
+          WHERE   tap.tap_codigo  = cal.tap_codigo
           AND     cal.mal_codigo  = mal.mal_codigo
           AND     mal.mat_codigo  = mtr.mat_codigo
           AND     mal.pre_numero  = pre.pre_numero
+          AND     mat.mat_codigo  = cal.mat_codigo
+          AND     inc.ins_codigo  = mat.ins_codigo
+          AND     inc.ins_vigencia  = 'S'
+          AND     mal.pre_numero    = $P{pn_pre_numero}
+          AND     inc.alu_codigo    = $P{pn_alu_codigo}
           AND     mat.pee_codigo  = pee.pee_codigo
-          AND     dep.pre_numero  = pre.pre_numero
-          AND     pre.pre_numero  = mpe.pre_numero
-          AND     mod.mod_codigo  = mpe.mod_codigo
-          AND     oii.est_codigo   = pos.est_codigo
-          AND     pos.dee_codigo  = dpos.dee_codigo
-          AND     cam.est_codigo  = pos.est_codigo_padre
-          AND     cam.dee_codigo  = dcam.dee_codigo
-          AND     sed.est_codigo  = cam.est_codigo_padre
-          AND     sed.dee_codigo  = dsed.dee_codigo
-          AND     alu.cllc_cdg    = mat.cllc_cdg
+          AND     pel.pel_codigo  = pee.pel_codigo
           AND     mat.mat_tipo_proceso = 'M'
           AND     mat.aud_eliminado = 'N'
           AND     mat.mat_anulado   = 'N'
-          AND     paf.tip_codigo  = 4
-          AND     pel.pel_codigo  = pee.pel_codigo
-          AND     pos.est_codigo  = $P{pn_est_codigo}
+          AND     mat.mat_pagado    = 'S'
           AND     cal.aud_eliminado = 'N'
           AND     cal.cal_retirado  = 'N'
-          AND     paf.paf_pagado    = 'S'
-          AND     alu.alu_codigo    = $P{pn_alu_codigo}
-    )ca
-      where    ma.est_codigo  = ca.est_codigo (+)
-      AND      ma.mal_codigo = ca.mal_codigo(+)
-      AND      ma.cllc_cdg   = ca.cllc_cdg(+)
-      AND      ma.mat_codigo is not null
-ORDER BY semestre,materia_mencion nulls first,modulo]]>
+          AND   (pee.pel_codigo, mal.mal_codigo) IN (SELECT MAX(pee.pel_codigo),cal.mal_codigo
+                                                     FROM   cal.cal_calificacion       cal,
+                                                            mat.mat_matricula          mat,
+                                                            org.org_periodo_estructura pee
+                                                     WHERE  mat.mat_codigo    = cal.mat_codigo
+                                                     AND    mat.pee_codigo    = pee.pee_codigo
+                                                     AND    mat.ins_codigo    = inc.ins_codigo
+                                                     AND    mat.mat_pagado    = 'S'
+                                                     AND    mat.mat_anulado   = 'N'
+                                                     AND    mat.aud_eliminado = 'N'
+                                                     AND    cal.aud_eliminado = 'N'
+                                                     AND    cal.cal_retirado  = 'N'
+                                                     GROUP BY cal.mal_codigo,mat.ins_codigo) )
+
+SELECT  distinct alu.alu_codigo,cli.cllc_cdg,cli.cllc_ruc cedula,
+         alu.alu_apellidos||' '||alu.alu_nombres estudiante,
+         pre.pre_titulo_proyecto proyecto,
+         dpos.dee_descripcion_visual programa,
+        (CASE WHEN ins.ins_fecha_inicio_carrera IS NOT NULL
+         THEN TO_CHAR(ins.ins_fecha_inicio_carrera,'dd/mm/yyyy')
+         ELSE '*Fecha pendiente de revisión' END) fecha_inicio_carrera,
+         mod.mod_descripcion modalidad,
+         decode(dsed.dee_descripcion,'MATRIZ CUENCA','Cuenca',INITCAP(dsed.dee_descripcion))||', '||TO_CHAR(sysdate, 'DD')|| ' de '||DECODE(TO_CHAR(sysdate, 'MM'), '01', 'Enero', '02', 'Febrero', '03', 'Marzo', '04', 'Abril', '05', 'Mayo', '06', 'Junio',
+                                       '07', 'Julio', '08', 'Agosto', '09', 'Septiembre', '10', 'Octubre', '11', 'Noviembre',
+                                       '12', 'Diciembre')||' de '||TO_CHAR(sysdate, 'YYYY') fecha_actual,
+        pel.pel_descripcion ||' ('||extract (year from pel.pel_fecha_inicio)||' - '||extract (year from pel.pel_fecha_fin)||') ' cohorte,
+        malp.semestre, malp.mal_nivel, malp.mal_nro_horas, malp.mat_codigo,malp.mat_descripcion modulo,malp.total_horas,malp.mencion,
+        decode(malp.materia_mencion,'S',1,0 ) cont_modulos_men_est,decode(malp.materia_mencion,'SIN',1,0 ) cont_modulos_mencion, decode(malp.materia_mencion,'N',1,0) cont_modulos,malp.total_menciones,
+        calp.numero_veces, calp.nota_final, NVL(calp.estado,malp.estado) estado_modulo,calp.tap_codigo,calp.tipo_aprobacion,observaciones_matricula,
+        calp.pel_codigo, calp.pel_descripcion,calp.fecha_semestre,calp.para_contar,calp.para_promediar,
+        DECODE(malp.tiene_mencion_pro,'S',decode(malp.total_menciones,1,cac2.cac_descripcion||', '||'MENCIÓN '||UPPER(cdd.cdd_mencion),
+           NVL((cac2.cac_descripcion||', '||(select 'MENCIÓN '||UPPER(cdd.cdd_mencion)
+                from    ped.ped_cde_dep cdd,
+                      ins.ins_ipa_cdd iic,
+                      ins.ins_ins_pro_aca ipa
+                where  cdd.cdd_codigo = iic.cdd_codigo
+                and    ipa.ipa_codigo = iic.ipa_codigo
+                and    iic.aud_eliminado  = 'N'
+                and    ipa.ins_codigo     = ins.ins_codigo
+                and    cdd.dep_codigo     = dep.dep_codigo)),0)),'N',decode(cac2.cac_descripcion,'OTRO',cde.cde_des_tit_opcional,cac2.cac_descripcion))TITULO
+FROM    ins.ins_inscripcion             ins,
+        fac.fac_pago_factura            paf,
+        ins.ins_ins_pro_aca             ipa,
+        ins.ins_alumno                  alu,
+        sigac.cliente_local             cli,
+        ped.ped_mod_pro_edu             mpe,
+        ped.ped_proyecto_educacion      pre,
+        ped.ped_des_est_pro_edu         dep,
+        org.org_descripcion_estructura  dpos,
+        org.org_estructura              pos,
+        ped.ped_modalidad               mod,
+        ins.ins_oferta_inscripcion_inicial oii,
+        org.org_estructura              cam,
+        org.org_estructura              sed,
+        org.org_descripcion_estructura  dsed,
+        org.org_periodo_lectivo         pel,
+        ped.ped_cde_dep                 cdd,
+        ped.ped_cam_des_est             cde,
+        ped.ped_cam_con_tip_tit         ctt,
+        ped.ped_campo_conocimiento      cac,
+        ped.ped_campo_conocimiento      cac2,
+        ped.ped_tipo_titulacion         tit,
+        MALLAPOS                        malp,
+        CALIFICACIONPOS                 calp
+WHERE   ins.ins_codigo    = paf.ins_codigo
+AND     paf.tip_codigo    = 8 --Inscripcion Posgrado
+AND     paf.paf_pagado    = 'S'
+AND     ins.alu_codigo    = alu.alu_codigo
+AND     ins.ins_vigencia  = 'S'
+AND     ins.ins_codigo    = ipa.ins_codigo
+AND     ipa.ipa_vigente   = 'S'
+AND     ipa.aud_eliminado = 'N'
+
+AND     cli.cllc_cdg      = alu.cllc_cdg
+AND     ipa.mpe_codigo    = mpe.mpe_codigo
+AND     mpe.pre_numero    = pre.pre_numero
+AND     pre.pre_numero    = dep.pre_numero
+AND     dep.dee_codigo    = dpos.dee_codigo
+AND     mpe.mod_codigo    = mod.mod_codigo
+AND     pos.dee_codigo    = dpos.dee_codigo
+AND     oii.oii_codigo    = ins.oii_codigo
+AND     pos.est_codigo    = oii.est_codigo
+AND     pos.est_codigo_padre  = cam.est_codigo
+AND     cam.est_codigo_padre  = sed.est_codigo
+AND     sed.dee_codigo        = dsed.dee_codigo
+AND     pel.pel_codigo        = oii.pel_codigo
+AND     pre.pre_numero        = $P{pn_pre_numero}
+AND     alu.alu_codigo        = $P{pn_alu_codigo}
+AND   dep.dep_codigo          = cdd.dep_codigo
+AND   cde.cde_codigo          = cdd.cde_codigo
+AND   ctt.cct_codigo          = cde.cct_codigo
+AND   cac.cac_codigo          = ctt.cac_codigo
+AND   cac.cac_codigo_padre    = cac2.cac_codigo
+AND   tit.tit_codigo          = ctt.tit_codigo
+AND   tit.ned_codigo          = 2
+AND    pre.pre_numero         = malp.pre_numero
+AND    ins.ins_codigo         = calp.ins_codigo(+)
+AND    malp.mal_codigo        = calp.mal_codigo(+)
+AND    pre.pre_numero         = calp.pre_numero(+)
+ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 	</queryString>
-	<field name="CAMPUS" class="java.lang.String"/>
-	<field name="PROGRAMA" class="java.lang.String"/>
-	<field name="COHORTE" class="java.lang.String"/>
-	<field name="MAL_CODIGO" class="java.math.BigDecimal"/>
-	<field name="MAT_CODIGO" class="java.math.BigDecimal"/>
-	<field name="MODULO" class="java.lang.String"/>
-	<field name="MAL_NIVEL" class="java.math.BigDecimal"/>
-	<field name="MAL_NRO_HORAS" class="java.math.BigDecimal"/>
-	<field name="SEMESTRE" class="java.lang.String"/>
-	<field name="MODALIDAD" class="java.lang.String"/>
-	<field name="TITULO" class="java.lang.String"/>
-	<field name="TOTAL_HORAS" class="java.math.BigDecimal"/>
+	<field name="ALU_CODIGO" class="java.math.BigDecimal"/>
 	<field name="CLLC_CDG" class="java.math.BigDecimal"/>
 	<field name="CEDULA" class="java.lang.String"/>
 	<field name="ESTUDIANTE" class="java.lang.String"/>
-	<field name="FECHA_INICIO_CARRERA" class="java.sql.Timestamp"/>
+	<field name="PROYECTO" class="java.lang.String"/>
+	<field name="PROGRAMA" class="java.lang.String"/>
+	<field name="FECHA_INICIO_CARRERA" class="java.lang.String"/>
+	<field name="MODALIDAD" class="java.lang.String"/>
 	<field name="FECHA_ACTUAL" class="java.lang.String"/>
-	<field name="TIENE_MENCION_EST" class="java.lang.String"/>
-	<field name="TIENE_MENCION_PROYECTO" class="java.lang.String"/>
+	<field name="COHORTE" class="java.lang.String"/>
+	<field name="SEMESTRE" class="java.lang.String"/>
+	<field name="MAL_NIVEL" class="java.math.BigDecimal"/>
+	<field name="MAL_NRO_HORAS" class="java.math.BigDecimal"/>
+	<field name="MAT_CODIGO" class="java.math.BigDecimal"/>
+	<field name="MODULO" class="java.lang.String"/>
+	<field name="TOTAL_HORAS" class="java.math.BigDecimal"/>
+	<field name="MENCION" class="java.lang.String"/>
+	<field name="CONT_MODULOS_MEN_EST" class="java.math.BigDecimal"/>
+	<field name="CONT_MODULOS_MENCION" class="java.math.BigDecimal"/>
+	<field name="CONT_MODULOS" class="java.math.BigDecimal"/>
 	<field name="TOTAL_MENCIONES" class="java.math.BigDecimal"/>
-	<field name="CDD_CODIGO_MENCION" class="java.math.BigDecimal"/>
-	<field name="MATERIA_MENCION" class="java.lang.String"/>
-	<field name="FECHA_SEMESTRE" class="java.lang.String"/>
-	<field name="NOTA_FINAL" class="java.math.BigDecimal"/>
 	<field name="NUMERO_VECES" class="java.math.BigDecimal"/>
+	<field name="NOTA_FINAL" class="java.math.BigDecimal"/>
+	<field name="ESTADO_MODULO" class="java.lang.String"/>
+	<field name="TAP_CODIGO" class="java.math.BigDecimal"/>
 	<field name="TIPO_APROBACION" class="java.lang.String"/>
 	<field name="OBSERVACIONES_MATRICULA" class="java.lang.String"/>
-	<field name="ESTADO" class="java.lang.String"/>
+	<field name="PEL_CODIGO" class="java.math.BigDecimal"/>
+	<field name="PEL_DESCRIPCION" class="java.lang.String"/>
+	<field name="FECHA_SEMESTRE" class="java.lang.String"/>
 	<field name="PARA_CONTAR" class="java.math.BigDecimal"/>
 	<field name="PARA_PROMEDIAR" class="java.math.BigDecimal"/>
+	<field name="TITULO" class="java.lang.String"/>
 	<variable name="contador" class="java.lang.Integer" resetType="Group" resetGroup="estudiante_grup" calculation="Count">
 		<variableExpression><![CDATA[$F{MAT_CODIGO}]]></variableExpression>
 	</variable>
@@ -327,17 +272,20 @@ ORDER BY semestre,materia_mencion nulls first,modulo]]>
 	<variable name="para_contar_aprobadas" class="java.lang.Integer" calculation="Sum">
 		<variableExpression><![CDATA[$F{PARA_CONTAR}]]></variableExpression>
 	</variable>
-	<variable name="num_componentes_mencion" class="java.lang.Integer" calculation="Count">
-		<variableExpression><![CDATA[$F{CDD_CODIGO_MENCION}.intValue()]]></variableExpression>
+	<variable name="num_comp_mencion_est" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{CONT_MODULOS_MEN_EST}.intValue()]]></variableExpression>
+	</variable>
+	<variable name="num_comp_mencion" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{CONT_MODULOS_MENCION}.intValue()]]></variableExpression>
 	</variable>
 	<variable name="num_Menciones" class="java.lang.Integer">
 		<variableExpression><![CDATA[$F{TOTAL_MENCIONES}.intValue()]]></variableExpression>
 	</variable>
-	<variable name="Total_componente_aca" class="java.lang.Integer">
-		<variableExpression><![CDATA[$V{total_componentes}-$V{num_componentes_mencion}]]></variableExpression>
+	<variable name="Total_componente_aca" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{CONT_MODULOS}.intValue()]]></variableExpression>
 	</variable>
 	<variable name="Total_componente_men" class="java.lang.Integer">
-		<variableExpression><![CDATA[($F{TIENE_MENCION_EST}.equals( "S" ) ? $V{num_componentes_mencion}.intValue() : $V{num_componentes_mencion}.intValue()/$V{num_Menciones}.intValue())]]></variableExpression>
+		<variableExpression><![CDATA[(($V{num_comp_mencion_est}.intValue() != 0 )? $V{num_comp_mencion_est} : $V{num_comp_mencion}/$F{TOTAL_MENCIONES}.intValue() )]]></variableExpression>
 	</variable>
 	<variable name="Promedio_general" class="java.lang.Double">
 		<variableExpression><![CDATA[$V{para_promediar}/$V{para_contar_aprobadas}]]></variableExpression>
@@ -484,12 +432,12 @@ ORDER BY semestre,materia_mencion nulls first,modulo]]>
 					</textElement>
 					<text><![CDATA[TOTAL COMPONENTES ACADÉMICOS:]]></text>
 				</staticText>
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement style="Estilo_contenido" x="265" y="22" width="38" height="15" uuid="12f0444d-60b6-4da2-b3ab-34af720960ba"/>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$V{Total_componente_aca}]]></textFieldExpression>
 				</textField>
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement style="Estilo_contenido" x="265" y="36" width="38" height="15" uuid="b473d1b7-31d3-4a84-b21c-f58baace3c4f"/>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$V{Total_componente_men}]]></textFieldExpression>
@@ -637,12 +585,12 @@ ORDER BY semestre,materia_mencion nulls first,modulo]]>
 		</groupHeader>
 	</group>
 	<group name="mencion_grup">
-		<groupExpression><![CDATA[$F{MATERIA_MENCION}]]></groupExpression>
+		<groupExpression><![CDATA[$F{MENCION}]]></groupExpression>
 		<groupHeader>
 			<band height="15">
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="Estilo_titulo7" x="4" y="1" width="541" height="14" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="5fc5fab7-ad72-4a1d-a59a-553746ebbbe1"/>
-					<textFieldExpression><![CDATA[$F{MATERIA_MENCION}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{MENCION}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -738,7 +686,7 @@ ORDER BY semestre,materia_mencion nulls first,modulo]]>
 				<textElement>
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{ESTADO}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ESTADO_MODULO}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Estilo_contenido7" x="400" y="0" width="85" height="14" isPrintWhenDetailOverflows="true" uuid="d3ddbae6-41b8-4993-bbb6-ea7130d1f998"/>
