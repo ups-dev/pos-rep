@@ -141,9 +141,7 @@ public class PosRepPosgradosController implements Serializable{
        
     }  
  
-    
-    
-     public void actualizaCamposFac(){
+  public void actualizaCamposFac(){
        
         setCertificacion(false);
         setListSecretariaGeneral(null);

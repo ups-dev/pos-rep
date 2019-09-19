@@ -33,7 +33,7 @@ public class PosRepPosgradosFacade extends AbstractFacade<PosgradoAlumnoWrapper>
         super(PosgradoAlumnoWrapper.class);
     }
     
-    //Obtiene el Posgrado del alumno con sus menciones
+    //Obtiene el Posgrado del alumno con sus menciones 
     public List<PosgradoAlumnoWrapper> listaPosgrados(Long aluCodigo) {
         
         //System.out.println("aluCodigoo: "+aluCodigo);
@@ -51,11 +51,12 @@ public class PosRepPosgradosFacade extends AbstractFacade<PosgradoAlumnoWrapper>
                                                     "       cohorte,  " +
                                                     "       cedula,  " +
                                                     "       estudiante,   " +
-                                                    "       totalHoras,     " +
                                                     "       tieneMencion,  " +
                                                     "       NVL(tieneMencionEst,'N') tieneMencionEst,  " +
                                                     "       totalMenciones, " +
-                                                    "       decode( tieneMencion,'N',decode(titulo,'OTRO',cde_des_tit_opcional,titulo),'S',(decode(totalMenciones,1,mencionProyecto,decode(mencionEstudiante,null,null,mencionEstudiante)))) titulo " +
+                                                    "       decode( tieneMencion,'N',decode(titulo,'OTRO',cde_des_tit_opcional,titulo),'S',(decode(totalMenciones,1,mencionProyecto,decode(mencionEstudiante,null,null,mencionEstudiante)))) titulo, " +
+                                                    "       preCodigo, " +
+                                                    "       codMencionEstudiante " +
                                                     "       from ( SELECT  dse.dee_descripcion        sede,  " +
                                                     "               dcm.dee_descripcion        campus,  " +
                                                     "               dpos.dee_descripcion        posgrado,  " +
@@ -71,12 +72,6 @@ public class PosRepPosgradosFacade extends AbstractFacade<PosgradoAlumnoWrapper>
                                                     "               cli.cllc_cdg                cllcCdg ,  " +
                                                     "               cli.cllc_ruc                cedula,  " +
                                                     "               cli.cllc_nmb                estudiante, " +
-                                                    "               ( select ppe.ppe_descripcion_numero  " +
-                                                    "                 from   ped.ped_par_pro_edu ppe,  " +
-                                                    "                        ped.ped_tip_par_tip_pro_edu tpt  " +
-                                                    "               where ppe.tpt_codigo = tpt.tpt_codigo  " +
-                                                    "               and ppe.pre_numero = mpe.pre_numero  " +
-                                                    "               and tpt.tpp_codigo = 117) totalHoras,  " +
                                                     "               ( select ppe.ppe_descripcion_texto  " +
                                                     "               from ped.ped_par_pro_edu ppe,  " +
                                                     "                     ped.ped_tip_par_tip_pro_edu tpt  " +

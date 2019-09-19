@@ -34,6 +34,8 @@ public class PosgradoAlumnoWrapper implements Serializable {
     private String tieneMencionEst;
     private Long   totalMenciones;
     private String titulo;
+    private Long    preCodigo;
+    private String  codMencionEstudiante;
     
     
     
@@ -46,7 +48,7 @@ public class PosgradoAlumnoWrapper implements Serializable {
         this.aluCodigo = aluCodigo;
     }
 
-    public PosgradoAlumnoWrapper(String identificador, Long aluCodigo, String sede, String campus, String posgrado, String estSede, String estCampus, String estPosgrado, String modalidad, String periodo, Long codPeriodo, String cohorte, String tieneMencion, String tieneMencionEst, Long totalMenciones, String titulo) {
+    public PosgradoAlumnoWrapper(String identificador, Long aluCodigo, String sede, String campus, String posgrado, String estSede, String estCampus, String estPosgrado, String modalidad, String periodo, Long codPeriodo, String cohorte, String tieneMencion, String tieneMencionEst, Long totalMenciones, String titulo, Long preCodigo, String codMencionEstudiante) {
         this.identificador = identificador;
         this.aluCodigo = aluCodigo;
         this.sede = sede;
@@ -63,11 +65,9 @@ public class PosgradoAlumnoWrapper implements Serializable {
         this.tieneMencionEst = tieneMencionEst;
         this.totalMenciones = totalMenciones;
         this.titulo = titulo;
-    }
-
-  
-     
-     
+        this.preCodigo = preCodigo;
+        this.codMencionEstudiante = codMencionEstudiante;
+    }     
 
     public Long getAluCodigo() {
         return aluCodigo;
@@ -198,7 +198,23 @@ public class PosgradoAlumnoWrapper implements Serializable {
         this.totalMenciones = totalMenciones;
     }
 
-  
+    public Long getPreCodigo() {
+        return preCodigo;
+    }
+
+    public void setPreCodigo(Long preCodigo) {
+        this.preCodigo = preCodigo;
+    }
+
+    public String getCodMencionEstudiante() {
+        return codMencionEstudiante;
+    }
+
+    public void setCodMencionEstudiante(String codMencionEstudiante) {
+        this.codMencionEstudiante = codMencionEstudiante;
+    }
+
+
    
     
     @Override
