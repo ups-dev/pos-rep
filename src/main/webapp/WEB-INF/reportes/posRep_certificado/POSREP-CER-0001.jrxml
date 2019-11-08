@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-CER-0001" pageWidth="595" pageHeight="842" columnWidth="551" leftMargin="22" rightMargin="22" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="215"/>
+	<property name="ireport.y" value="339"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_pel_codigo" class="java.lang.Integer">
@@ -82,7 +82,7 @@ from
         cal.cal_nota_final          nota_final,
         TO_CHAR(cal.cal_numero_veces, 'FMRN')numero_veces,
         cal.tap_codigo,
-        decode(tap.tap_codigo,1,'N',5,'H.A.C',6,'H.V.C',NULL) tipo_aprobacion,
+        decode(tap.tap_codigo,1,'N',4,'H.A.C',5,'H.V.C',NULL) tipo_aprobacion,
         mta.mat_observaciones       observaciones_matricula,
         decode(cal.cal_aprobado,'S','APROBADO',DECODE(pee.pee_vigente,'S','CURSANDO',DECODE(cal.cal_aprobado,'S','APROBADO','REPROBADO')) ) estado,
         decode(dse.dee_descripcion,'MATRIZ CUENCA','Cuenca',INITCAP(dse.dee_descripcion))||', '||TO_CHAR(sysdate, 'DD')|| ' de '||DECODE(TO_CHAR(sysdate, 'MM'), '01', 'Enero', '02', 'Febrero', '03', 'Marzo', '04', 'Abril', '05', 'Mayo', '06', 'Junio',
@@ -523,7 +523,7 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 					</graphicElement>
 				</rectangle>
 				<staticText>
-					<reportElement style="Estilo_titulo7" x="4" y="0" width="411" height="14" uuid="b18d835d-9140-44c7-b69e-adf325dac311"/>
+					<reportElement style="Estilo_titulo7" x="4" y="0" width="446" height="14" uuid="b18d835d-9140-44c7-b69e-adf325dac311"/>
 					<box>
 						<leftPen lineWidth="0.0"/>
 						<bottomPen lineWidth="0.0"/>
@@ -533,15 +533,15 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 					<text><![CDATA[NÚMERO DE COMPONENTES ACADÉMICOS CURSADOS:]]></text>
 				</staticText>
 				<textField>
-					<reportElement style="Estilo_titulo7" x="415" y="0" width="35" height="14" uuid="ccec02dc-a8b3-4a7d-ad7e-13cd27c1e176"/>
+					<reportElement style="Estilo_titulo7" x="473" y="0" width="35" height="14" uuid="ccec02dc-a8b3-4a7d-ad7e-13cd27c1e176"/>
 					<box>
-						<rightPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.0"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<textFieldExpression><![CDATA[$V{NIVEL_1}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement style="Estilo_titulo7" mode="Opaque" x="4" y="14" width="411" height="14" uuid="4360db56-e040-47ec-b6a8-e2eefa1ef61b"/>
+					<reportElement style="Estilo_titulo7" mode="Opaque" x="4" y="14" width="446" height="14" uuid="4360db56-e040-47ec-b6a8-e2eefa1ef61b"/>
 					<box>
 						<topPen lineWidth="0.25"/>
 						<leftPen lineWidth="0.0"/>
@@ -552,9 +552,9 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 					<text><![CDATA[PROMEDIO DEL SEMESTRE:]]></text>
 				</staticText>
 				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
-					<reportElement style="Estilo_titulo7" x="415" y="14" width="35" height="15" uuid="63e386f6-460e-45b6-8414-b072d45fd40c"/>
+					<reportElement style="Estilo_titulo7" x="473" y="14" width="35" height="15" uuid="63e386f6-460e-45b6-8414-b072d45fd40c"/>
 					<box>
-						<rightPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.0"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<textFieldExpression><![CDATA[$V{NOTA_FINAL_2}]]></textFieldExpression>
