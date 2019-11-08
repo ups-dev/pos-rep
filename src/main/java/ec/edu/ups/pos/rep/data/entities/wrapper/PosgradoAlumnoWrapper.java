@@ -36,10 +36,7 @@ public class PosgradoAlumnoWrapper implements Serializable {
     private String titulo;
     private Long    preCodigo;
     private String  codMencionEstudiante;
-    
-    
-    
-    
+   
 
     public PosgradoAlumnoWrapper() {
     }
