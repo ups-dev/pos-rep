@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-MAT-0002X" pageWidth="1480" pageHeight="840" columnWidth="1440" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a5610fb4-cc29-46b5-b47b-735f7e78b38b">
-	<property name="ireport.zoom" value="6.0"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-MAT-0002X" pageWidth="2035" pageHeight="840" columnWidth="1995" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a5610fb4-cc29-46b5-b47b-735f7e78b38b">
+	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
@@ -26,15 +26,37 @@
         dpos.dee_descripcion        posgrado,
         pel.pel_descripcion, pel.pel_codigo,
         cli.cllc_ruc                cedula,
-        cli.cllc_nmb                estudiante,
+        TRIM(cli.cllc_nmb)          estudiante,
         alu.alu_email               email,
         PEE.PEE_NIVEL               nivel,
         to_char(mat.mat_fecha_registro,'dd/mm/yyyy')     fecha_matricula,
         DECODE(paf.paf_pagado,'S','SI','N','NO')  pagado,
-        DECODE(fof.fof_tipo,'P','POR PERIODO','T','TOTAL')forma_pago
-FROM    mat.mat_matricula           mat,
+        DECODE(fof.fof_tipo,'P','POR PERIODO','T','TOTAL')forma_facturacion,
+        DECODE(enp.enve_tipo_pago,1,'EFECTIVO / T.C',2,'CUOTAS')forma_pago,enp.enp_codigo,
+       (select count(*)
+        from fac.fac_prefactura_vencimiento pv
+        where pv.enp_codigo = enp.enp_codigo
+        and   pv.aud_eliminado = 'N')nro_cuotas,
+       (select count(*)
+        from fac.fac_prefactura_vencimiento pv
+        where pv.enp_codigo = enp.enp_codigo
+        and   pv.prv_cancelado = 'S'
+        and   pv.aud_eliminado = 'N')cuotas_pagadas,
+       (select count(*)
+        from fac.fac_prefactura_vencimiento pv
+        where pv.enp_codigo = enp.enp_codigo
+        and   pv.prv_cancelado = 'N'
+        and   pv.aud_eliminado = 'N')cuotas_pendientes,
+       (select count(*)
+        from fac.fac_prefactura_vencimiento pv
+        where pv.enp_codigo =  enp.enp_codigo
+        and   pv.prv_cancelado = 'N'
+        and   pv.prv_fecha < SYSDATE
+        and   pv.aud_eliminado = 'N')cuotas_vencidas
+      FROM mat.mat_matricula        mat,
         fac.fac_pago_factura        paf,
         fac.fac_forma_facturacion   fof,
+        fac.fac_encabezado_prefactura enp,
         sigac.cliente_local         cli,
         ins.ins_alumno              alu,
         ped.ped_proyecto_educacion  pre,
@@ -66,6 +88,7 @@ AND     sed.est_codigo  = cam.est_codigo_padre
 AND     sed.dee_codigo  = dsed.dee_codigo
 AND     mat.pee_codigo  = pee.pee_codigo
 AND     pel.pel_codigo  = pee.pel_codigo
+AND     enp.enp_codigo  = paf.enp_codigo
 AND     pee.pee_nivel   like $P{pv_pee_nivel}
 AND     pee.pel_codigo  = $P{pn_pel_codigo}
 AND     pos.est_codigo  IN (SELECT est_codigo e
@@ -74,7 +97,7 @@ AND     pos.est_codigo  IN (SELECT est_codigo e
                             START WITH e.est_codigo = $P{pn_est_codigo}
                             CONNECT BY PRIOR e.est_codigo = e.est_codigo_padre)
 
-AND     paf.paf_pagado like $P{pv_paf_pagado}
+AND    paf.paf_pagado like $P{pv_paf_pagado}
 ORDER BY sede,campus,posgrado,pee.pee_nivel,estudiante]]>
 	</queryString>
 	<field name="SEDE" class="java.lang.String"/>
@@ -89,7 +112,13 @@ ORDER BY sede,campus,posgrado,pee.pee_nivel,estudiante]]>
 	<field name="NIVEL" class="java.math.BigDecimal"/>
 	<field name="FECHA_MATRICULA" class="java.lang.String"/>
 	<field name="PAGADO" class="java.lang.String"/>
+	<field name="FORMA_FACTURACION" class="java.lang.String"/>
 	<field name="FORMA_PAGO" class="java.lang.String"/>
+	<field name="ENP_CODIGO" class="java.math.BigDecimal"/>
+	<field name="NRO_CUOTAS" class="java.math.BigDecimal"/>
+	<field name="CUOTAS_PAGADAS" class="java.math.BigDecimal"/>
+	<field name="CUOTAS_PENDIENTES" class="java.math.BigDecimal"/>
+	<field name="CUOTAS_VENCIDAS" class="java.math.BigDecimal"/>
 	<variable name="EVALUADO_SUM" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[]]></variableExpression>
 	</variable>
@@ -158,11 +187,11 @@ ORDER BY sede,campus,posgrado,pee.pee_nivel,estudiante]]>
 				<text><![CDATA[PAGADO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Estilo_titulo" x="1335" y="0" width="105" height="16" uuid="066927df-5b22-49d9-9c07-5fb9dc90c616"/>
+				<reportElement style="Estilo_titulo" x="1468" y="0" width="105" height="16" uuid="066927df-5b22-49d9-9c07-5fb9dc90c616"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[FORMA PAGO]]></text>
+				<text><![CDATA[FORMA DE PAGO]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Estilo_titulo" x="0" y="0" width="99" height="16" uuid="a4e32891-1aa9-4c72-a000-1a58aba89ab4"/>
@@ -176,7 +205,30 @@ ORDER BY sede,campus,posgrado,pee.pee_nivel,estudiante]]>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[FECHA_MATRICULA]]></text>
+				<text><![CDATA[FECHA MATRICULA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Estilo_titulo" x="1335" y="0" width="133" height="16" uuid="df82e5a7-d6ca-4c28-861f-87a06eddadcf"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FORMA DE FACTURACIÓN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Estilo_titulo" x="1573" y="0" width="100" height="16" uuid="060bcd4e-e5dc-4c66-9040-285705f72471"/>
+				<text><![CDATA[TOTAL DE CUOTAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Estilo_titulo" x="1673" y="0" width="100" height="16" uuid="fac33a2b-376e-48b9-ad9d-02318e38fbdb"/>
+				<text><![CDATA[CUOTAS PAGADAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Estilo_titulo" x="1773" y="0" width="120" height="16" uuid="6deff7e5-dbae-4ff5-b149-bdfddbb54e8c"/>
+				<text><![CDATA[CUOTAS_PENDIENTES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Estilo_titulo" x="1893" y="0" width="102" height="16" uuid="ec146625-2671-49f3-80f8-b216fee7536b"/>
+				<text><![CDATA[CUOTAS VENCIDAS]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -232,7 +284,7 @@ ORDER BY sede,campus,posgrado,pee.pee_nivel,estudiante]]>
 				<textFieldExpression><![CDATA[$F{PAGADO}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="1335" y="0" width="105" height="20" isPrintWhenDetailOverflows="true" uuid="d5c76526-c42f-4ea1-bb87-a9ed38124b48"/>
+				<reportElement x="1468" y="0" width="105" height="20" isPrintWhenDetailOverflows="true" uuid="d5c76526-c42f-4ea1-bb87-a9ed38124b48"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -252,6 +304,26 @@ ORDER BY sede,campus,posgrado,pee.pee_nivel,estudiante]]>
 			<textField>
 				<reportElement x="239" y="0" width="318" height="20" uuid="93fc95fe-90a0-4750-a1a9-5205f1a44cef"/>
 				<textFieldExpression><![CDATA[$F{POSGRADO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1335" y="0" width="133" height="20" uuid="97dad221-3a5b-4f23-925e-2d4f20362176"/>
+				<textFieldExpression><![CDATA[$F{FORMA_FACTURACION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1573" y="0" width="100" height="20" uuid="39dafb24-29f0-4c2e-b25d-f314bdd7f181"/>
+				<textFieldExpression><![CDATA[$F{NRO_CUOTAS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1673" y="0" width="100" height="20" uuid="65aee27b-c24e-46b8-9f49-162a0c20a525"/>
+				<textFieldExpression><![CDATA[$F{CUOTAS_PAGADAS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1773" y="0" width="120" height="20" uuid="61469c41-5c1d-47f6-8e3d-8c8b8c91a848"/>
+				<textFieldExpression><![CDATA[$F{CUOTAS_PENDIENTES}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1893" y="0" width="102" height="20" uuid="93b6038d-102b-477b-94f8-db28a46654e9"/>
+				<textFieldExpression><![CDATA[$F{CUOTAS_VENCIDAS}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
