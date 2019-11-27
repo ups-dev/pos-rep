@@ -30,7 +30,7 @@
         to_char(mat.mat_fecha_registro,'dd/mm/yyyy')     fecha_matricula,
         DECODE(paf.paf_pagado,'S','SI','N','NO')  pagado,
         DECODE(fof.fof_tipo,'P','POR PERIODO','T','TOTAL')forma_facturacion,
-        DECODE(enp.enve_tipo_pago,1,'EFECTIVO / T.C',2,'CUOTAS')forma_pago
+        DECODE(enp.enve_tipo_pago,1,'EFECTIVO / T.C',2,'CUOTAS','EFECTIVO / T.C')forma_pago
 FROM    mat.mat_matricula           mat,
         fac.fac_pago_factura        paf,
         fac.fac_forma_facturacion   fof,
@@ -52,7 +52,7 @@ AND     mat.mat_tipo_proceso = 'M'
 AND     paf.tip_codigo  = 4
 AND     mat.aud_eliminado = 'N'
 AND     mat.mat_anulado = 'N'
-AND     fof.ins_codigo  = mat.ins_codigo
+AND     fof.ins_codigo(+)  = mat.ins_codigo
 AND     mat.cllc_cdg    = cli.cllc_cdg
 AND     alu.cllc_cdg    = cli.cllc_cdg
 AND     dep.dep_codigo  = mat.dep_codigo
@@ -66,7 +66,7 @@ AND     sed.est_codigo  = cam.est_codigo_padre
 AND     sed.dee_codigo  = dsed.dee_codigo
 AND     mat.pee_codigo  = pee.pee_codigo
 AND     pel.pel_codigo  = pee.pel_codigo
-AND     enp.enp_codigo  = paf.enp_codigo
+AND     enp.enp_codigo(+)  = paf.enp_codigo
 AND     pee.pee_nivel   like $P{pv_pee_nivel}
 AND     pee.pel_codigo  = $P{pn_pel_codigo}
 AND     pos.est_codigo  IN (SELECT est_codigo e
