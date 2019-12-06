@@ -150,7 +150,7 @@
           AND     cal.cal_retirado  = 'N'
           AND     cre.cal_codigo(+) = cal.cal_codigo
           AND     res.res_codigo(+) = cre.res_codigo
-          AND   (pee.pel_codigo, mal.mal_codigo) IN (SELECT MAX(pee.pel_codigo),cal.mal_codigo
+          AND   (pee.pee_codigo, mal.mal_codigo) IN (SELECT MAX(pee.pee_codigo),cal.mal_codigo
                                                      FROM   cal.cal_calificacion       cal,
                                                             mat.mat_matricula          mat,
                                                             org.org_periodo_estructura pee

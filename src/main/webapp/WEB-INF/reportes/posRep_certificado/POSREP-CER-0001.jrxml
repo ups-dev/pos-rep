@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-CER-0001" pageWidth="595" pageHeight="842" columnWidth="551" leftMargin="22" rightMargin="22" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="339"/>
+	<property name="ireport.x" value="14"/>
+	<property name="ireport.y" value="129"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_pel_codigo" class="java.lang.Integer">
@@ -202,7 +202,7 @@ and   pos.est_codigo  IN (SELECT est_codigo e
                             WHERE  e.est_nivel  = 4
                             START WITH e.est_codigo = $P{pn_est_codigo}
                             CONNECT BY PRIOR e.est_codigo = e.est_codigo_padre )
-and   mal.mal_nivel  = $P{pv_nivel}
+and   pee.pee_nivel  = $P{pv_nivel}
 and  inc.alu_codigo  = $P{pn_alu_codigo}
 ) p
 ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
@@ -395,6 +395,32 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 				</textField>
 			</band>
 		</groupHeader>
+		<groupFooter>
+			<band height="134">
+				<subreport>
+					<reportElement x="0" y="0" width="547" height="112" isPrintWhenDetailOverflows="true" uuid="7f4d8041-500a-4f6b-9eae-8997d633277f"/>
+					<subreportParameter name="pn_campus">
+						<subreportParameterExpression><![CDATA[$P{pn_campus}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["POSREP-CER-0001_subreport1.jasper"]]></subreportExpression>
+				</subreport>
+				<subreport>
+					<reportElement x="0" y="111" width="547" height="23" isPrintWhenDetailOverflows="true" uuid="55eb4f76-74e0-455d-a2c2-76b964528ba2"/>
+					<subreportParameter name="pn_seg_codigo">
+						<subreportParameterExpression><![CDATA[$P{pn_seg_codigo}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="pn_certificacion">
+						<subreportParameterExpression><![CDATA[$P{pn_certificacion}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="pn_campus">
+						<subreportParameterExpression><![CDATA[$P{pn_campus}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["POSREP-CER-0001_subreport2.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupFooter>
 	</group>
 	<group name="niv_grup">
 		<groupExpression><![CDATA[$F{NIVEL}]]></groupExpression>
@@ -509,7 +535,7 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="169">
+			<band height="29">
 				<rectangle>
 					<reportElement x="1" y="0" width="538" height="15" uuid="9ea560a5-f87e-4af7-9e23-bf248bd2caad"/>
 					<graphicElement>
@@ -559,28 +585,6 @@ ORDER   BY campus,posgrado,nivel,modulo,estudiante]]>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<textFieldExpression><![CDATA[$V{NOTA_FINAL_2}]]></textFieldExpression>
 				</textField>
-				<subreport>
-					<reportElement x="1" y="34" width="547" height="112" isPrintWhenDetailOverflows="true" uuid="7f4d8041-500a-4f6b-9eae-8997d633277f"/>
-					<subreportParameter name="pn_campus">
-						<subreportParameterExpression><![CDATA[$P{pn_campus}]]></subreportParameterExpression>
-					</subreportParameter>
-					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					<subreportExpression><![CDATA["POSREP-CER-0001_subreport1.jasper"]]></subreportExpression>
-				</subreport>
-				<subreport>
-					<reportElement x="1" y="146" width="547" height="23" isPrintWhenDetailOverflows="true" uuid="55eb4f76-74e0-455d-a2c2-76b964528ba2"/>
-					<subreportParameter name="pn_seg_codigo">
-						<subreportParameterExpression><![CDATA[$P{pn_seg_codigo}]]></subreportParameterExpression>
-					</subreportParameter>
-					<subreportParameter name="pn_certificacion">
-						<subreportParameterExpression><![CDATA[$P{pn_certificacion}]]></subreportParameterExpression>
-					</subreportParameter>
-					<subreportParameter name="pn_campus">
-						<subreportParameterExpression><![CDATA[$P{pn_campus}]]></subreportParameterExpression>
-					</subreportParameter>
-					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					<subreportExpression><![CDATA["POSREP-CER-0001_subreport2.jasper"]]></subreportExpression>
-				</subreport>
 			</band>
 		</groupFooter>
 	</group>
