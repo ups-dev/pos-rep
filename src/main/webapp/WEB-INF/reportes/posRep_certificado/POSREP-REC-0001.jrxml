@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-REC-0001" pageWidth="595" pageHeight="842" columnWidth="551" leftMargin="22" rightMargin="22" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="188"/>
-	<property name="ireport.y" value="336"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="278"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_alu_codigo" class="java.lang.Integer">
@@ -448,17 +448,17 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$V{Total_componente_men}]]></textFieldExpression>
 				</textField>
-				<textField pattern="#,##0.00 %">
+				<textField pattern="#,##0.00 %" isBlankWhenNull="true">
 					<reportElement style="Estilo_contenido" x="265" y="78" width="38" height="15" uuid="b12a509f-e3b4-4d2b-b4e6-ce134677eebc"/>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$V{porcentaje}]]></textFieldExpression>
 				</textField>
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement style="Estilo_contenido" x="265" y="64" width="38" height="15" uuid="ea43bbd8-9bf8-4e3a-9dd2-0011d546397e"/>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$V{para_contar_aprobadas}]]></textFieldExpression>
 				</textField>
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement style="Estilo_contenido" x="265" y="92" width="38" height="15" uuid="72fbfa7e-a098-4aa6-a028-20ad391d25b3"/>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$V{componentes_pendientes}]]></textFieldExpression>
