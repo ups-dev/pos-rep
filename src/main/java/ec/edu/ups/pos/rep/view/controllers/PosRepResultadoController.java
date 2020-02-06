@@ -21,6 +21,7 @@ import ec.edu.ups.org.common.data.entities.OrgPeriodoLectivo;
 import ec.edu.ups.ped.common.data.entities.PedMalla;
 import ec.edu.ups.ped.common.data.entities.PedModalidad;
 import ec.edu.ups.pos.rep.data.entities.wrapper.InsAlumnoWrapper;
+import ec.edu.ups.pos.rep.data.entities.wrapper.PosgradoAlumnoWrapper;
 import ec.edu.ups.pos.rep.logic.sessions.ins.InsAlumnoFacade;
 import ec.edu.ups.util.jpa.search.DefaultParamOrderSearch;
 import ec.edu.ups.util.jpa.search.SearchOrder;
@@ -68,12 +69,13 @@ public class PosRepResultadoController implements Serializable{
     private List<OfeGrupo> ofeGrupoList;
     private List<Integer> pedMallaNivelList;
     private Integer pedNivelMalla;
-    private List<InsAlumnoWrapper> listadoAlumnos;
     private String pafPagado;
       
     private InsAlumnoWrapper insAlumnoWrapper;
+    private List<InsAlumnoWrapper> listadoAlumnos;
+    private Long aluCodigo;
     
-
+    
       
     @Inject
     private SecOrgEstructuraController secOrgEstructuraController;
@@ -495,6 +497,7 @@ public class PosRepResultadoController implements Serializable{
         setOfeGrupo(null);
         setOfeGrupoList(null);
         updateSedeList();
+        setInsAlumnoWrapper(null);
         
     }
 

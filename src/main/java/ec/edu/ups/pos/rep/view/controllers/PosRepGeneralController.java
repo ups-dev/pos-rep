@@ -93,6 +93,14 @@ public class PosRepGeneralController implements Serializable{
            
             //System.out.println("nombreArchivo   "+nombreArchivo);
             
+            //Parámetro Alumno
+            InsAlumnoWrapper insAlumnoWrapper=posRepResultadoController.getInsAlumnoWrapper();
+            Integer codigoAlumno=null;
+            if(insAlumnoWrapper!=null){
+                codigoAlumno=Integer.valueOf(String.valueOf(insAlumnoWrapper.getAluCodigo()));
+            }    
+            //System.out.println("codigoAlumnoo   "+codigoAlumno);
+            
             //Identificar la estructura seleccionada para el reporte
             OrgEstructura orgEstructura = posReporteController.identificarEstructura();
             Integer codigoEstructura=Integer.valueOf(String.valueOf(orgEstructura.getEstCodigo()));
@@ -162,6 +170,7 @@ public class PosRepGeneralController implements Serializable{
             rpb.add("pv_mal_nivel", codigoNivel);
             rpb.add("pv_pee_nivel", codigoNivel);
             rpb.add("pv_paf_pagado", pagado);
+            rpb.add("pn_alu_codigo", codigoAlumno);
 
      //Definición de Formato de Archivo
       switch (formato) {

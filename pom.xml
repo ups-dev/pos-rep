@@ -103,7 +103,7 @@
         <dependency>
             <groupId>ec.edu.ups.jsf.security</groupId>
             <artifactId>jsf-security-ups</artifactId>
-            <version>2.1</version>
+            <version>2.5</version>
         </dependency>
         
         <dependency>

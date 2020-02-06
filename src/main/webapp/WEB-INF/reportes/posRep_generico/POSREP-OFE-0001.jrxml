@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-OFE-0001" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
 	<property name="ireport.zoom" value="3.0"/>
-	<property name="ireport.x" value="115"/>
-	<property name="ireport.y" value="336"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="310"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_pel_codigo" class="java.lang.Integer">
@@ -29,7 +29,7 @@
         gru.gru_descripcion         grupo,
         dis.dis_fecha_inicio,
         dis.dis_fecha_fin,
-        ( select  decode(emp2.emp_nombre,'UNIVERSIDAD POLITECNICA SALESIANA','RECTORADO',emp2.emp_nombre)
+        ( select distinct decode(emp2.emp_nombre,'UNIVERSIDAD POLITECNICA SALESIANA','RECTORADO',emp2.emp_nombre)
           from    gth.gth_contrato con,
                   gth.gth_empresa  emp,
                   gth.gth_empresa   emp2

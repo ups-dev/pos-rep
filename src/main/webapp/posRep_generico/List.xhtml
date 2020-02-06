@@ -79,9 +79,9 @@
                     
             <p:panel id="PosRepFiltroPanel" header="Parámetros Generales">
                 
-                   <h:panelGroup id="alumno">
+                 <h:panelGroup id="alumno">
                     <ui:fragment rendered="#{repReportesSistemaController.selected ne null 
-                                             and posRepResultadoController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_ALUMNO)}">
+                                             and posRepPosgradosController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_ALUMNO)}">
                         <!--Filtro Estudiante-->
                         <ui:decorate template="/WEB-INF/templates/decorators/search/ups-search-param.xhtml">
                             <ui:define name="ups-search-param-title">  
@@ -93,27 +93,27 @@
                                     <p:autoComplete id="posRepFiltrarEstudiante2" value="#{posRepResultadoController.insAlumnoWrapper}"                                
                                                     cache="true" forceSelection="true" maxResults="10" minQueryLength="2" cacheTimeout="30000"
                                                    var="p" 
-                                                    itemLabel="#{not empty p?p.aluNombres:''}" 
+                                                   itemLabel="#{not empty p?p.cllcRuc:''}#{not empty p?' - ':''}#{not empty p?p.aluNombres:''}" 
                                                     itemValue="#{p}" 
                                                    
                                                  
                                                     autocomplete="on"
                                                     completeMethod="#{posRepResultadoController.autoCompleteAlumnos}"
-                                                    queryDelay="0"                                                                       
+                                                    queryDelay="0"                                                                      
                                                     > 
                                         <o:converter converterId="omnifaces.ListConverter" list="#{posRepResultadoController.listadoAlumnos}" />
+
                                            <p:column>
                                            <h:outputText value="#{p.cllcRuc}" />
                                            </p:column>
                                            <p:column>
                                                <h:outputText value="#{p.aluNombres}"/>
                                            </p:column>                                                     
-                           
-                                         <p:ajax event=  "itemSelect" update="posRepFiltrarAsignatura, posRepFiltrarGrupo, posRepFiltrarEstudiante" 
-                                                 listener="#{posRepResultadoController.updateAsignaturaList()}"/>
-                                         <p:ajax event="change" update="posRepFiltrarAsignatura, posRepFiltrarGrupo" 
-                                                 listener="#{posRepResultadoController.updateAsignaturaList()}"/>
-                                        
+<!--                                        <p:ajax event=  "itemSelect" update="panelDataTable,semestre,PosRepFiltroPanel2, messagePanel"  
+                                                 listener="#{posRepPosgradosController.cargarLista()}"/>
+                                        <p:ajax event=  "change" update="panelDataTable,semestre,PosRepFiltroPanel2, messagePanel"  
+                                                 listener="#{posRepPosgradosController.cargarLista()}"/>-->
+                                         
                                     </p:autoComplete>   
                                     <p:watermark value="Escriba nombre o apellido del estudiante, caso contrario será Todos." for="posRepFiltrarEstudiante2" />
                    
@@ -121,8 +121,7 @@
                             </ui:define>
                         </ui:decorate>
                     </ui:fragment>
-                </h:panelGroup>
-                         
+                </h:panelGroup>         
                 
                 <h:panelGroup id="sede">
                     <ui:fragment rendered="#{repReportesSistemaController.selected ne null 
