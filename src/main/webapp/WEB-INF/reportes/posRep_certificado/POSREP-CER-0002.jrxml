@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-CER-0002" pageWidth="595" pageHeight="842" columnWidth="551" leftMargin="22" rightMargin="22" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="471"/>
-	<property name="ireport.y" value="480"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="336"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_alu_codigo" class="java.lang.Integer">
@@ -168,9 +168,27 @@ SELECT  distinct alu.alu_codigo,cli.cllc_cdg,cli.cllc_ruc cedula,
          alu.alu_apellidos||' '||alu.alu_nombres estudiante,
          pre.pre_titulo_proyecto proyecto,
          dpos.dee_descripcion_visual programa,
-        (CASE WHEN ins.ins_fecha_inicio_carrera IS NOT NULL
+        /*(CASE WHEN ins.ins_fecha_inicio_carrera IS NOT NULL
          THEN TO_CHAR(ins.ins_fecha_inicio_carrera,'dd/mm/yyyy')
-         ELSE '*Fecha pendiente de revisión' END) fecha_inicio_carrera,
+         ELSE '*Fecha pendiente de revisión' END) fecha_inicio_carrera,*/
+         NVL((select TO_CHAR(min(dis.dis_fecha_inicio),'dd/mm/yyyy')
+              from ofe.ofe_grupo gru,
+                     ofe.ofe_distributivo dis,
+                     cal.cal_calificacion clf,
+                     mat.mat_matricula    mta,
+                     ped.ped_des_est_pro_edu dep
+               where gru.gru_codigo = dis.gru_codigo
+               and   gru.gru_codigo = clf.gru_codigo
+               and   mta.mat_codigo = clf.mat_codigo
+               and   mta.mat_tipo_proceso = 'M'
+               and   mta.aud_eliminado = 'N'
+               and   mta.mat_anulado   = 'N'
+               and   mta.mat_pagado    = 'S'
+               and   clf.aud_eliminado = 'N'
+               and   clf.cal_retirado  = 'N'
+               and   dep.dep_codigo    = mta.dep_codigo
+               and   mta.cllc_cdg   = cli.cllc_cdg
+               and   dep.pre_numero = pre.pre_numero),'*Fecha pendiente de revisión') fecha_inicio_carrera,
          mod.mod_descripcion modalidad,
          decode(dsed.dee_descripcion,'MATRIZ CUENCA','Cuenca',INITCAP(dsed.dee_descripcion))||', '||TO_CHAR(sysdate, 'DD')|| ' de '||DECODE(TO_CHAR(sysdate, 'MM'), '01', 'Enero', '02', 'Febrero', '03', 'Marzo', '04', 'Abril', '05', 'Mayo', '06', 'Junio',
                                        '07', 'Julio', '08', 'Agosto', '09', 'Septiembre', '10', 'Octubre', '11', 'Noviembre',
