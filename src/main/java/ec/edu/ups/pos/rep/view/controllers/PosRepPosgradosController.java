@@ -93,11 +93,9 @@ public class PosRepPosgradosController implements Serializable{
     
     public void cargarValidaciones(RepReportesSistema repReportesSistema){
         
-        
         //System.out.println("repReportesSistema.getResCodigo() " + repReportesSistema.getResCodigo());
         // System.out.println("PosRepConstants.REPORTE_SISTEMA_RECORD_ACADEMICO_GRADUADOS" + PosRepConstants.REPORTE_SISTEMA_RECORD_ACADEMICO_GRADUADOS);
-       
-        if(repReportesSistema.getResCodigo().equals(PosRepConstants.REPORTE_SISTEMA_CALIFICACIONES_SEMESTRE)) {
+       if(repReportesSistema.getResCodigo().equals(PosRepConstants.REPORTE_SISTEMA_CALIFICACIONES_SEMESTRE)) {
             
          matNivelPeriodoEstructuraList= matMatriculaFacade.obtieneSemestre(insAlumnoWrapper.getAluCodigo());
         //System.out.println("insAlumnoWrapper.getAluCodigo()" + insAlumnoWrapper.getAluCodigo());
@@ -109,13 +107,27 @@ public class PosRepPosgradosController implements Serializable{
                 
                     Messages.addGlobalWarn("El estudiante no posee Acta de Grado en el Programa y Proyecto seleccionado.");
 
-            
             }
         
-        }
-       
+        } 
         actualizaCamposFac();
 
+    }
+      public boolean validarParametros(RepReportesSistema repReportesSistema){
+            
+        if(repReportesSistema.getResCodigo().equals(PosRepConstants.REPORTE_SISTEMA_CALIFICACIONES_SEMESTRE)) {
+            
+            if(matNivelPeriodoEstructuraList != null ){
+                
+                if (matNivelPeriodoEstructuraList.size()>0 && matNivelPeriodoEstructura == null){
+                    
+                    Messages.addGlobalWarn("Seleccione el Semestre del Programa.");
+                    return false;
+                }
+            }
+          
+        }
+        return true;
     }
 
       public List<InsAlumnoWrapper> autoCompleteAlumnos(String query) {
