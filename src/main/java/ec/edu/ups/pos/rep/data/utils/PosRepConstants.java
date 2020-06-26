@@ -59,12 +59,14 @@ public class PosRepConstants {
     public static final String REP_PARAMETRO_MODULO_CERTIFICADOS = "REPORTES_CERTIFICADOS";     //Parámetro fijo del Módulo    
     public static final String REP_PARAMETRO_MODULO_REPORTES = "REPORTES";     //Parámetro fijo del Módulo
     public static final Long REP_PARAMETRO_PAGADO = 17L;          //Parámetro de Pagado SI/NO
+    public static final Long REPORTE_SISTEMA_CALIFICACIONES_SEMESTRE = 24L;
+    public static final Long REPORTE_SISTEMA_RECORD_ACADEMICO_GRADUADOS = 38L;
     
     static {
 //        EMAIL_TO_ERROR.add("mpinedav@ups.edu.ec");        
 //        EMAIL_TO_ERROR.add("mjarama@ups.edu.ec");
         EMAIL_TO_ERROR.add("emora@ups.edu.ec");
-        EMAIL_TO_ERROR.add("prodriguezl@ups.edu.ec");
+     //   EMAIL_TO_ERROR.add("prodriguezl@ups.edu.ec");
         EMAIL_TO_ERROR.add("myunga@ups.edu.ec");
         EMAIL_TO_ERROR.add("dperalta@ups.edu.ec");
         EMAIL_TO_ERROR.add("vclavijo@ups.edu.ec");

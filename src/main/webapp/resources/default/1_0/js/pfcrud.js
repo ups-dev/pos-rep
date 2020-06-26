@@ -33,7 +33,15 @@ function handleSubmit(xhr, status, args, dialog) {
         dialog.hide();
     }
 }
-
+function handleSubmitPDF(xhr, status, args) {
+    if (args && args.validationFailed) {
+       
+       return;
+        
+    } else {
+        PrimeFaces.monitorDownload(start, stop);
+    }
+}
 //PrimeFaces.widget.SelectOneMenu.prototype.init = function(init) {
 //    return function() {
 //        init.apply(this, arguments);

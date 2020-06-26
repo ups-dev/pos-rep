@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-CER-0002" pageWidth="595" pageHeight="842" columnWidth="551" leftMargin="22" rightMargin="22" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-CER-0003" pageWidth="595" pageHeight="842" columnWidth="551" leftMargin="22" rightMargin="22" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="90"/>
-	<property name="ireport.y" value="866"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_alu_codigo" class="java.lang.Integer">
@@ -129,7 +129,7 @@
                   ins.ins_inscripcion         inc,
                   org.org_periodo_estructura  pee,
                   org.org_periodo_lectivo     pel,
-          cal.cal_calificacion_resolucion cre,
+                  cal.cal_calificacion_resolucion cre,
                   sse.sse_resolucion              res
           WHERE   tap.tap_codigo  = cal.tap_codigo
           AND     cal.mal_codigo  = mal.mal_codigo
@@ -137,7 +137,7 @@
           AND     mal.pre_numero  = pre.pre_numero
           AND     mat.mat_codigo  = cal.mat_codigo
           AND     inc.ins_codigo  = mat.ins_codigo
-         -- AND     inc.ins_vigencia  = 'S'
+          AND     inc.ins_vigencia  = 'S'
           AND     mal.pre_numero    = $P{pn_pre_numero}
           AND     inc.alu_codigo    = $P{pn_alu_codigo}
           AND     mat.pee_codigo  = pee.pee_codigo
@@ -168,37 +168,18 @@ SELECT  distinct alu.alu_codigo,cli.cllc_cdg,cli.cllc_ruc cedula,
          alu.alu_apellidos||' '||alu.alu_nombres estudiante,
          pre.pre_titulo_proyecto proyecto,
          dpos.dee_descripcion_visual programa,
-  NVL( (select TO_CHAR(MIN(icd.iic_fecha_inicio),'dd/mm/yyyy')
-          from ins.ins_ipa_cdd   icd
-          where icd.ipa_codigo = ipa.ipa_codigo
-          and   icd.aud_eliminado = 'N'
-          ),(SELECT TO_CHAR(MIN(pee.pee_fecha_inicio_clase),'dd/mm/yyyy')
-             FROM mat.mat_matricula mat,
-                  org.org_periodo_estructura pee,
-                  ins.ins_inscripcion        inc2,
-                  ins.ins_ins_pro_aca        ipa2,
-                  org.org_periodo_lectivo    pel2
-              WHERE MAT.ins_codigo = inc2.ins_codigo
-              and pee.pee_codigo = mat.pee_codigo
-              and mat.mat_anulado = 'N'
-              and mat.aud_eliminado = 'N'
-              and inc2.ins_codigo   = ipa2.ins_codigo
-              and pel2.pel_codigo    = pee.pel_codigo
-              and pel2.pel_codigo   = ipa2.pel_codigo_inicio_proyecto
-              and ipa2.ipa_codigo   = ipa.ipa_codigo))fecha_inicio_posgrado,
-  (select TO_CHAR(MIN(icd.iic_fecha_egresa),'dd/mm/yyyy')
-          from ins.ins_ipa_cdd   icd
-          where icd.ipa_codigo = ipa.ipa_codigo
-          and   icd.aud_eliminado = 'N' ) fecha_fin_posgrado,
+         icd.iic_fecha_inicio fecha_inicio_posgrado,
+         icd.iic_fecha_egresa fecha_fin_posgrado,
          mod.mod_descripcion modalidad,
          decode(dsed.dee_descripcion,'MATRIZ CUENCA','Cuenca',INITCAP(dsed.dee_descripcion))||', '||TO_CHAR(sysdate, 'DD')|| ' de '||DECODE(TO_CHAR(sysdate, 'MM'), '01', 'Enero', '02', 'Febrero', '03', 'Marzo', '04', 'Abril', '05', 'Mayo', '06', 'Junio',
                                        '07', 'Julio', '08', 'Agosto', '09', 'Septiembre', '10', 'Octubre', '11', 'Noviembre',
                                        '12', 'Diciembre')||' de '||TO_CHAR(sysdate, 'YYYY') fecha_actual,
-        pel.pel_descripcion ||' ('||extract (year from (select min(pee.pee_fecha_inicial_cohorte) from org.org_periodo_estructura pee
+ pel.pel_descripcion ||' ('||extract (year from (select min(pee.pee_fecha_inicial_cohorte) from org.org_periodo_estructura pee
                       where pee.pel_codigo = pel.pel_codigo
                       and   pee.est_codigo = pos.est_codigo))||' - '||extract (year from (select min(pee.pee_fecha_final_cohorte) from org.org_periodo_estructura pee
                       where pee.pel_codigo = pel.pel_codigo
                       and   pee.est_codigo = pos.est_codigo))||') ' cohorte,
+
         malp.semestre, malp.mal_nivel, malp.mal_nro_horas, malp.mat_codigo,malp.mat_descripcion modulo,malp.total_horas,malp.mencion,
         decode(malp.materia_mencion,'S',1,0 ) cont_modulos_men_est,decode(malp.materia_mencion,'SIN',1,0 ) cont_modulos_mencion, decode(malp.materia_mencion,'N',1,0) cont_modulos,malp.total_menciones,
         calp.numero_veces, calp.nota_final, NVL(calp.estado,malp.estado) estado_modulo,calp.tap_codigo,calp.tipo_aprobacion,observaciones_matricula,
@@ -212,7 +193,13 @@ SELECT  distinct alu.alu_codigo,cli.cllc_cdg,cli.cllc_ruc cedula,
                 and    ipa.ipa_codigo = iic.ipa_codigo
                 and    iic.aud_eliminado  = 'N'
                 and    ipa.ins_codigo     = ins.ins_codigo
-                and    cdd.dep_codigo     = dep.dep_codigo)),0)),'N',decode(cac2.cac_descripcion,'OTRO',cde.cde_des_tit_opcional,cac2.cac_descripcion))TITULO
+                and    cdd.dep_codigo     = dep.dep_codigo)),0)),'N',decode(cac2.cac_descripcion,'OTRO',cde.cde_des_tit_opcional,cac2.cac_descripcion))TITULO,
+         round((acg.acg_promedio_academico*70)/100,2) promedio_academico,
+         round((acg.acg_trabajo_grado*30)/100,2) trabajo_grado,
+         acg.acg_nota_definitiva_grado nota_definitiva_grado,
+         acg.acg_equivalencia equivalencia,
+         DECODE(acg.acg_apreciacion,'E','EXCELENTE') apreciacion,
+         met.met_descripcion mecanismo_graduacion
 FROM    ins.ins_inscripcion             ins,
         fac.fac_pago_factura            paf,
         ins.ins_ins_pro_aca             ipa,
@@ -235,6 +222,11 @@ FROM    ins.ins_inscripcion             ins,
         ped.ped_campo_conocimiento      cac,
         ped.ped_campo_conocimiento      cac2,
         ped.ped_tipo_titulacion         tit,
+        ins.ins_ipa_cdd                 icd,
+        stg.stg_acta_grado              acg,
+        stg.stg_trabajo_graduacion      trg,
+        ped.ped_mecanismo_titulacion    met,
+        ped.ped_proyecto_mecanismo      prm,
         mat.mat_matricula               mta,
         MALLAPOS                        malp,
         CALIFICACIONPOS                 calp
@@ -242,10 +234,11 @@ WHERE  ins.ins_codigo    = paf.ins_codigo
 AND    paf.tip_codigo    = 8 --Inscripcion Posgrado
 AND    paf.paf_pagado    = 'S'
 AND    ins.alu_codigo    = alu.alu_codigo
---AND     ins.ins_vigencia  = 'S'
+AND    ins.ins_vigencia  = 'S'
 AND    ins.ins_codigo    = ipa.ins_codigo
---AND     ipa.ipa_vigente   = 'S'
+AND    ipa.ipa_vigente   = 'S'
 AND    ipa.aud_eliminado = 'N'
+AND    ipa.ipa_codigo    = icd.ipa_codigo
 AND    cli.cllc_cdg      = alu.cllc_cdg
 AND    ipa.mpe_codigo    = mpe.mpe_codigo
 AND    mpe.pre_numero    = pre.pre_numero
@@ -261,21 +254,25 @@ AND    sed.dee_codigo        = dsed.dee_codigo
 AND    pel.pel_codigo        = ipa.pel_codigo_inicio_proyecto
 AND    pre.pre_numero        = $P{pn_pre_numero}
 AND    alu.alu_codigo        = $P{pn_alu_codigo}
-AND    dep.dep_codigo        = cdd.dep_codigo
-AND    cde.cde_codigo        = cdd.cde_codigo
-AND    ctt.cct_codigo        = cde.cct_codigo
-AND    cac.cac_codigo        = ctt.cac_codigo
-AND    cac.cac_codigo_padre  = cac2.cac_codigo
-AND    tit.tit_codigo        = ctt.tit_codigo
-AND    tit.ned_codigo        = 2
-AND    ins.ins_codigo        = mta.ins_codigo
-AND    mta.aud_eliminado     = 'N'
-AND    mta.mat_anulado       = 'N'
-AND    mta.mat_pagado        = 'S'
-AND    pre.pre_numero        = malp.pre_numero
-AND    ins.ins_codigo        = calp.ins_codigo(+)
-AND    malp.mal_codigo       = calp.mal_codigo(+)
-AND    pre.pre_numero        = calp.pre_numero(+)
+AND    dep.dep_codigo         = cdd.dep_codigo
+AND    cde.cde_codigo         = cdd.cde_codigo
+AND    ctt.cct_codigo         = cde.cct_codigo
+AND    cac.cac_codigo         = ctt.cac_codigo
+AND    cac.cac_codigo_padre   = cac2.cac_codigo
+AND    tit.tit_codigo         = ctt.tit_codigo
+AND    tit.ned_codigo         = 2
+AND    trg.tdg_codigo         = acg.tdg_codigo
+AND    ipa.ipa_codigo         = trg.ipa_codigo
+and    prm.met_codigo         = met.met_codigo
+and    prm.prm_codigo         = trg.prm_codigo
+AND    ins.ins_codigo         = mta.ins_codigo
+AND    mta.aud_eliminado      = 'N'
+AND    mta.mat_anulado        = 'N'
+AND   mta.mat_pagado          = 'S'
+AND   pre.pre_numero          = malp.pre_numero
+AND   ins.ins_codigo          = calp.ins_codigo(+)
+AND   malp.mal_codigo         = calp.mal_codigo(+)
+AND   pre.pre_numero          = calp.pre_numero(+)
 ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 	</queryString>
 	<field name="ALU_CODIGO" class="java.math.BigDecimal"/>
@@ -284,8 +281,8 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 	<field name="ESTUDIANTE" class="java.lang.String"/>
 	<field name="PROYECTO" class="java.lang.String"/>
 	<field name="PROGRAMA" class="java.lang.String"/>
-	<field name="FECHA_INICIO_POSGRADO" class="java.lang.String"/>
-	<field name="FECHA_FIN_POSGRADO" class="java.lang.String"/>
+	<field name="FECHA_INICIO_POSGRADO" class="java.sql.Timestamp"/>
+	<field name="FECHA_FIN_POSGRADO" class="java.sql.Timestamp"/>
 	<field name="MODALIDAD" class="java.lang.String"/>
 	<field name="FECHA_ACTUAL" class="java.lang.String"/>
 	<field name="COHORTE" class="java.lang.String"/>
@@ -313,6 +310,12 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 	<field name="PARA_PROMEDIAR" class="java.math.BigDecimal"/>
 	<field name="RESOLUCION" class="java.lang.String"/>
 	<field name="TITULO" class="java.lang.String"/>
+	<field name="PROMEDIO_ACADEMICO" class="java.math.BigDecimal"/>
+	<field name="TRABAJO_GRADO" class="java.math.BigDecimal"/>
+	<field name="NOTA_DEFINITIVA_GRADO" class="java.math.BigDecimal"/>
+	<field name="EQUIVALENCIA" class="java.math.BigDecimal"/>
+	<field name="APRECIACION" class="java.lang.String"/>
+	<field name="MECANISMO_GRADUACION" class="java.lang.String"/>
 	<variable name="contador" class="java.lang.Integer" calculation="Count">
 		<variableExpression><![CDATA[$V{REPORT_COUNT}]]></variableExpression>
 		<initialValueExpression><![CDATA[]]></initialValueExpression>
@@ -353,103 +356,109 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 	<variable name="componentes_pendientes" class="java.lang.Integer">
 		<variableExpression><![CDATA[($V{Total_componente_aca}+$V{Total_componente_men})-$V{para_contar_aprobadas}]]></variableExpression>
 	</variable>
+	<variable name="promedioAcademico70" class="java.lang.Double">
+		<variableExpression><![CDATA[$F{PROMEDIO_ACADEMICO}]]></variableExpression>
+	</variable>
+	<variable name="TrabajoTitulacion" class="java.lang.String">
+		<variableExpression><![CDATA["2. TRABAJO DE TITULACIÓN ("+$F{MECANISMO_GRADUACION}+")"]]></variableExpression>
+	</variable>
 	<group name="estudiante_grup">
 		<groupExpression><![CDATA[$F{CEDULA}]]></groupExpression>
 		<groupHeader>
 			<band height="135">
 				<textField isBlankWhenNull="true">
-					<reportElement style="Estilo_contenido7" isPrintRepeatedValues="false" x="165" y="56" width="386" height="14" uuid="10943c12-7dd7-41b0-bcb5-47e3d7830f17"/>
+					<reportElement style="Estilo_contenido7" isPrintRepeatedValues="false" x="166" y="56" width="385" height="14" uuid="10943c12-7dd7-41b0-bcb5-47e3d7830f17"/>
 					<textElement>
 						<font size="7"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{ESTUDIANTE}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement style="Estilo_contenido7" isPrintRepeatedValues="false" x="165" y="69" width="386" height="14" uuid="a429ec97-d639-457f-bca1-28f0cbfb959e"/>
+					<reportElement style="Estilo_contenido7" isPrintRepeatedValues="false" x="166" y="69" width="385" height="14" uuid="a429ec97-d639-457f-bca1-28f0cbfb959e"/>
 					<textElement>
 						<font size="7"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{CEDULA}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement style="Estilo_contenido7" x="165" y="81" width="386" height="14" uuid="c4c94785-8d8c-40a8-ac2d-622f14e1af58"/>
+					<reportElement style="Estilo_contenido7" x="166" y="82" width="385" height="14" uuid="c4c94785-8d8c-40a8-ac2d-622f14e1af58"/>
 					<textElement>
 						<font size="7"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{PROGRAMA}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Estilo_contenido7" x="165" y="120" width="386" height="14" isPrintWhenDetailOverflows="true" uuid="8548e313-d898-405a-97f1-f6de03f68317"/>
+					<reportElement style="Estilo_contenido7" x="166" y="121" width="385" height="14" isPrintWhenDetailOverflows="true" uuid="8548e313-d898-405a-97f1-f6de03f68317"/>
 					<textElement>
 						<font size="7"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{MODALIDAD}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement style="Estilo_contenido7" x="165" y="107" width="386" height="14" uuid="e2d2f370-bb0a-4ee4-a6c1-a65c027bf1f2"/>
+					<reportElement style="Estilo_contenido7" x="166" y="108" width="385" height="14" uuid="e2d2f370-bb0a-4ee4-a6c1-a65c027bf1f2"/>
 					<textElement>
 						<font size="7"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{COHORTE}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement style="Estilo_titulo7" x="10" y="56" width="87" height="14" uuid="936ef9bc-d96f-48f2-bc09-15796e276372"/>
+					<reportElement style="Estilo_titulo7" x="11" y="55" width="78" height="14" uuid="936ef9bc-d96f-48f2-bc09-15796e276372"/>
 					<textElement>
 						<font size="7"/>
 					</textElement>
 					<text><![CDATA[ESTUDIANTE:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_titulo7" x="10" y="69" width="145" height="14" uuid="8cfbb603-b1f2-4880-be35-ea0265fd0161"/>
+					<reportElement style="Estilo_titulo7" x="11" y="69" width="136" height="14" uuid="8cfbb603-b1f2-4880-be35-ea0265fd0161"/>
 					<textElement>
 						<font size="7"/>
 					</textElement>
 					<text><![CDATA[DOCUMENTO DE IDENTIFICACIÓN:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_titulo7" x="10" y="82" width="145" height="14" uuid="8f74e038-daf9-41db-a872-1c1c9ddf3df4"/>
+					<reportElement style="Estilo_titulo7" x="11" y="82" width="136" height="14" uuid="8f74e038-daf9-41db-a872-1c1c9ddf3df4"/>
 					<textElement>
 						<font size="7"/>
 					</textElement>
 					<text><![CDATA[PROGRAMA DE POSGRADO:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_titulo7" x="10" y="95" width="145" height="14" uuid="430e49ea-29e6-4517-8db8-48ff1c7a7a04"/>
+					<reportElement style="Estilo_titulo7" x="11" y="95" width="136" height="14" uuid="430e49ea-29e6-4517-8db8-48ff1c7a7a04"/>
 					<textElement>
 						<font size="7"/>
 					</textElement>
 					<text><![CDATA[TOTAL DE HORAS DEL PROGRAMA:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_titulo7" x="10" y="108" width="145" height="14" uuid="efae9265-f0a8-495c-b032-cea5115d740e"/>
+					<reportElement style="Estilo_titulo7" x="11" y="108" width="136" height="14" uuid="efae9265-f0a8-495c-b032-cea5115d740e"/>
 					<textElement>
 						<font size="7"/>
 					</textElement>
 					<text><![CDATA[COHORTE:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_titulo7" x="10" y="121" width="145" height="14" isPrintWhenDetailOverflows="true" uuid="63e95af2-eeb9-4b28-a5b7-052ca89e5259"/>
+					<reportElement style="Estilo_titulo7" x="11" y="121" width="136" height="14" isPrintWhenDetailOverflows="true" uuid="63e95af2-eeb9-4b28-a5b7-052ca89e5259"/>
 					<textElement>
 						<font size="7"/>
 					</textElement>
 					<text><![CDATA[MODALIDAD:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_contenido" x="10" y="29" width="541" height="27" isPrintWhenDetailOverflows="true" uuid="272f37f3-9ece-4da0-a912-bf3aa6c2ebee"/>
+					<reportElement style="Estilo_contenido" x="11" y="29" width="540" height="27" isPrintWhenDetailOverflows="true" uuid="272f37f3-9ece-4da0-a912-bf3aa6c2ebee"/>
 					<textElement verticalAlignment="Top">
 						<font fontName="SansSerif" size="8" isBold="false"/>
 					</textElement>
 					<text><![CDATA[La Secretaria General de la Universidad Politécnica Salesiana, certifica que el RÉCORD ACADÉMICO corresponde a:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement isPrintRepeatedValues="false" x="10" y="0" width="540" height="18" isPrintInFirstWholeBand="true" uuid="8ea67fb7-87ca-4929-97fd-e721c62bc85f"/>
+					<reportElement isPrintRepeatedValues="false" x="11" y="0" width="540" height="18" isPrintInFirstWholeBand="true" uuid="8ea67fb7-87ca-4929-97fd-e721c62bc85f"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="SansSerif" size="13" isBold="true"/>
 					</textElement>
 					<text><![CDATA[UNIVERSIDAD POLITÉCNICA SALESIANA]]></text>
 				</staticText>
 				<textField isBlankWhenNull="true">
-					<reportElement style="Estilo_contenido7" x="165" y="94" width="385" height="14" uuid="95f0b462-211e-44c9-9277-bc3b70ce183b"/>
+					<reportElement style="Estilo_contenido7" x="166" y="95" width="384" height="14" uuid="95f0b462-211e-44c9-9277-bc3b70ce183b"/>
 					<textFieldExpression><![CDATA[$F{TOTAL_HORAS}]]></textFieldExpression>
 				</textField>
 			</band>
@@ -457,7 +466,7 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 		<groupFooter>
 			<band height="35">
 				<subreport>
-					<reportElement isPrintRepeatedValues="false" x="10" y="4" width="541" height="31" uuid="5432252b-4d20-4e6b-9e63-b68584aa5a5e"/>
+					<reportElement isPrintRepeatedValues="false" x="12" y="4" width="530" height="31" uuid="5432252b-4d20-4e6b-9e63-b68584aa5a5e"/>
 					<subreportParameter name="pn_seg_codigo">
 						<subreportParameterExpression><![CDATA[$P{pn_seg_codigo}]]></subreportParameterExpression>
 					</subreportParameter>
@@ -468,7 +477,7 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 						<subreportParameterExpression><![CDATA[$P{pn_campus}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					<subreportExpression><![CDATA["POSREP-CER-0002_subreport2.jasper"]]></subreportExpression>
+					<subreportExpression><![CDATA["POSREP-CER-0003_subreport2.jasper"]]></subreportExpression>
 				</subreport>
 			</band>
 		</groupFooter>
@@ -476,69 +485,147 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 	<group name="identificacion_grup">
 		<groupExpression><![CDATA[$F{CEDULA}]]></groupExpression>
 		<groupFooter>
-			<band height="164">
+			<band height="321">
 				<staticText>
-					<reportElement style="Estilo_titulo7" x="11" y="27" width="238" height="15" isPrintWhenDetailOverflows="true" uuid="2fe67126-d320-4b19-ad52-f56fffba1c8f"/>
+					<reportElement style="Estilo_titulo7" x="12" y="27" width="238" height="15" uuid="2fe67126-d320-4b19-ad52-f56fffba1c8f"/>
 					<text><![CDATA[TOTAL COMPONENTES MENCIÓN:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_titulo7" x="11" y="41" width="238" height="15" isPrintWhenDetailOverflows="true" uuid="6702f2e6-ceb7-4974-91ac-cc978aa6e3e7"/>
+					<reportElement style="Estilo_titulo7" x="12" y="41" width="238" height="15" uuid="6702f2e6-ceb7-4974-91ac-cc978aa6e3e7"/>
 					<text><![CDATA[PROMEDIO GENERAL:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_titulo7" x="11" y="55" width="238" height="15" isPrintWhenDetailOverflows="true" uuid="eda184d5-15b3-47e3-b0b2-a9543cff6367"/>
+					<reportElement style="Estilo_titulo7" x="12" y="55" width="238" height="15" uuid="eda184d5-15b3-47e3-b0b2-a9543cff6367"/>
 					<text><![CDATA[COMPONENTES APROBADOS:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_titulo7" x="11" y="69" width="238" height="15" isPrintWhenDetailOverflows="true" uuid="15a98c86-1c8b-4799-a354-3a078bbad209"/>
+					<reportElement style="Estilo_titulo7" x="12" y="69" width="238" height="15" uuid="15a98c86-1c8b-4799-a354-3a078bbad209"/>
 					<text><![CDATA[PORCENTAJE COMPONENTES APROBADOS:]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="true" pattern="###0.00;-###0.00" isBlankWhenNull="true">
-					<reportElement style="Estilo_contenido7" x="275" y="40" width="39" height="15" isPrintWhenDetailOverflows="true" uuid="31569ad4-7e50-4631-aea5-d2446f15cee6"/>
+				<textField isStretchWithOverflow="true" pattern="###0.00;-###0.00">
+					<reportElement style="Estilo_contenido7" x="363" y="40" width="39" height="15" uuid="31569ad4-7e50-4631-aea5-d2446f15cee6"/>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$V{Promedio_general}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement style="Estilo_contenido7" x="275" y="54" width="39" height="15" isPrintWhenDetailOverflows="true" uuid="a7a98391-6d19-4a88-8821-29bce93cd2a3"/>
+					<reportElement style="Estilo_contenido7" x="363" y="54" width="39" height="15" uuid="a7a98391-6d19-4a88-8821-29bce93cd2a3"/>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$V{para_contar_aprobadas}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement style="Estilo_titulo7" x="11" y="13" width="238" height="15" isPrintWhenDetailOverflows="true" uuid="43ee5348-db61-4bee-8aea-d5f8f16a91dd"/>
+					<reportElement style="Estilo_titulo7" x="12" y="13" width="238" height="15" uuid="43ee5348-db61-4bee-8aea-d5f8f16a91dd"/>
 					<text><![CDATA[TOTAL COMPONENTES ACADÉMICOS:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_titulo7" x="11" y="83" width="238" height="15" isPrintWhenDetailOverflows="true" uuid="57232d6c-5a10-4766-b1be-ca5fd58f4bf3"/>
+					<reportElement style="Estilo_titulo7" x="12" y="83" width="238" height="15" uuid="57232d6c-5a10-4766-b1be-ca5fd58f4bf3"/>
 					<text><![CDATA[NRO COMPONENTES PENDIENTES:]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true">
-					<reportElement style="Estilo_contenido7" x="275" y="12" width="39" height="15" isPrintWhenDetailOverflows="true" uuid="5a828fd4-bece-4b7a-8315-6bab1f2cda3f"/>
+					<reportElement style="Estilo_contenido7" x="363" y="12" width="39" height="15" uuid="5a828fd4-bece-4b7a-8315-6bab1f2cda3f"/>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$V{Total_componente_aca}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement style="Estilo_contenido7" x="275" y="82" width="39" height="15" isPrintWhenDetailOverflows="true" uuid="2c4a8547-3c32-4b4f-8155-13a9e4590d68"/>
+					<reportElement style="Estilo_contenido7" x="363" y="82" width="39" height="15" uuid="2c4a8547-3c32-4b4f-8155-13a9e4590d68"/>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$V{componentes_pendientes}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0.00 %">
-					<reportElement style="Estilo_contenido7" x="275" y="68" width="39" height="15" isPrintWhenDetailOverflows="true" uuid="f6e9f562-4469-4a73-ae6a-11538d7cd46b"/>
+					<reportElement style="Estilo_contenido7" x="363" y="68" width="39" height="15" uuid="f6e9f562-4469-4a73-ae6a-11538d7cd46b"/>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$V{Porcentaje}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="false">
-					<reportElement style="Estilo_contenido7" x="275" y="26" width="39" height="15" isPrintWhenDetailOverflows="true" uuid="172c65a6-0876-4128-8b6d-9624014f7088"/>
+					<reportElement style="Estilo_contenido7" x="363" y="26" width="39" height="15" uuid="172c65a6-0876-4128-8b6d-9624014f7088"/>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$V{Total_componente_men}]]></textFieldExpression>
 				</textField>
 				<subreport>
-					<reportElement isPrintRepeatedValues="false" x="10" y="113" width="541" height="51" isPrintWhenDetailOverflows="true" uuid="8219549d-b531-4cc3-90e9-67d7603f920e"/>
+					<reportElement isPrintRepeatedValues="false" x="12" y="270" width="530" height="51" isPrintWhenDetailOverflows="true" uuid="8219549d-b531-4cc3-90e9-67d7603f920e"/>
 					<subreportParameter name="pn_campus">
 						<subreportParameterExpression><![CDATA[$P{pn_campus}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					<subreportExpression><![CDATA["POSREP-CER-0002_subreport1.jasper"]]></subreportExpression>
+					<subreportExpression><![CDATA["POSREP-CER-0003_subreport1.jasper"]]></subreportExpression>
 				</subreport>
+				<staticText>
+					<reportElement style="Estilo_titulo7" x="12" y="115" width="164" height="20" uuid="4392f53d-0882-4643-bf82-91572501be26"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[CÓMPUTOS DE GRADUACIÓN:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Estilo_contenido7" x="20" y="134" width="164" height="16" uuid="aa7d4e5a-da53-4dd0-afc3-298ac11adb7d"/>
+					<text><![CDATA[1.  PROMEDIO ACADÉMICO:]]></text>
+				</staticText>
+				<textField pattern="###0.00;-###0.00" isBlankWhenNull="true">
+					<reportElement style="Estilo_contenido7" x="348" y="149" width="39" height="16" uuid="b8b286f5-3b9f-4aa4-8b16-b8c48351be7a"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{TRABAJO_GRADO}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="Estilo_titulo7" x="12" y="189" width="100" height="20" uuid="5689674f-4de1-4d72-aaa6-0813cd257b35"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[NOTA FINAL:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Estilo_contenido7" x="20" y="238" width="182" height="16" uuid="c0c5b476-96b5-4326-8c38-574e3195ed5d"/>
+					<text><![CDATA[3.  APRECIACIÓN:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Estilo_contenido7" x="20" y="208" width="182" height="16" uuid="695133d9-9442-4653-8066-44b1aa5edf4b"/>
+					<textElement>
+						<font isBold="false"/>
+					</textElement>
+					<text><![CDATA[1.  NOTA DEFINITIVA DE GRADO:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Estilo_contenido7" x="20" y="223" width="182" height="16" uuid="9370d2b8-91fe-4a1c-9202-b352bd01234e"/>
+					<text><![CDATA[2.  EQUIVALENCIA:]]></text>
+				</staticText>
+				<textField pattern="###0.00;-###0.00" isBlankWhenNull="true">
+					<reportElement style="Estilo_contenido7" x="348" y="207" width="39" height="16" uuid="f0158e44-acad-414d-b265-ded6406c8d8b"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{NOTA_DEFINITIVA_GRADO}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Estilo_titulo7" x="303" y="237" width="103" height="16" uuid="d809d288-64a3-4094-8c1a-8a133563dfac"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{APRECIACION}]]></textFieldExpression>
+				</textField>
+				<textField pattern="###0.00;-###0.00" isBlankWhenNull="true">
+					<reportElement style="Estilo_contenido7" x="348" y="222" width="39" height="16" uuid="7a67fc57-cc06-4eb8-8be9-311a84c609b1"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{EQUIVALENCIA}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="Estilo_contenido7" x="389" y="207" width="35" height="16" uuid="221f9aa5-b8d8-45e4-9c9b-9b92127fc897"/>
+					<text><![CDATA[/ 100]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Estilo_contenido7" x="389" y="222" width="35" height="16" uuid="0e371e25-4a08-4538-b865-01e267fffe2f"/>
+					<text><![CDATA[/ 100]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Estilo_contenido7" x="389" y="134" width="35" height="16" uuid="78c7f8f5-39be-4e62-9424-814f381217f2"/>
+					<text><![CDATA[/ 70]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Estilo_contenido7" x="389" y="149" width="35" height="16" uuid="aca7bc38-b71e-492c-ba77-1772825bfeb6"/>
+					<text><![CDATA[/ 30]]></text>
+				</staticText>
+				<textField pattern="###0.00;-###0.00" isBlankWhenNull="true">
+					<reportElement style="Estilo_contenido7" x="348" y="134" width="39" height="16" uuid="da4b8c3b-40ef-4aa3-9455-4556a7df5588"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{PROMEDIO_ACADEMICO}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement style="Estilo_contenido7" x="20" y="149" width="328" height="16" uuid="55f43e7b-8d32-4a17-ac34-fcf176397841"/>
+					<textFieldExpression><![CDATA[$V{TrabajoTitulacion}]]></textFieldExpression>
+				</textField>
 			</band>
 		</groupFooter>
 	</group>
@@ -548,7 +635,7 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 			<band height="14">
 				<printWhenExpression><![CDATA[$P{pn_imprimeTitulo}.equals( 1 )]]></printWhenExpression>
 				<staticText>
-					<reportElement style="Estilo_titulo7" x="10" y="0" width="145" height="14" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="697a802a-eeae-43b3-aa2e-9e1804387a2a">
+					<reportElement style="Estilo_titulo7" x="11" y="0" width="136" height="14" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="697a802a-eeae-43b3-aa2e-9e1804387a2a">
 						<printWhenExpression><![CDATA[$P{pn_imprimeTitulo}.equals( 1 )]]></printWhenExpression>
 					</reportElement>
 					<textElement>
@@ -557,7 +644,7 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 					<text><![CDATA[TÍTULO A OBTENER:]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Estilo_contenido7" isPrintRepeatedValues="false" x="165" y="0" width="385" height="14" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="531a3d88-4544-42bb-86a7-edbf13f25b0a"/>
+					<reportElement style="Estilo_contenido7" isPrintRepeatedValues="false" x="166" y="0" width="384" height="14" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="531a3d88-4544-42bb-86a7-edbf13f25b0a"/>
 					<textFieldExpression><![CDATA[$F{TITULO}]]></textFieldExpression>
 				</textField>
 			</band>
@@ -568,25 +655,25 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 		<groupHeader>
 			<band height="27">
 				<staticText>
-					<reportElement style="Estilo_titulo7" x="10" y="13" width="155" height="14" uuid="5803d1e6-1b2f-4923-aa3b-2cd15c4caafe"/>
+					<reportElement style="Estilo_titulo7" x="11" y="13" width="155" height="14" uuid="5803d1e6-1b2f-4923-aa3b-2cd15c4caafe"/>
 					<textElement>
 						<font size="7"/>
 					</textElement>
 					<text><![CDATA[FECHA CONCLUSIÓN DE ESTUDIOS:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_titulo7" x="10" y="0" width="145" height="14" uuid="cc1299ae-aca9-4eaf-95f5-4b9da30022a8"/>
+					<reportElement style="Estilo_titulo7" x="11" y="0" width="136" height="14" uuid="cc1299ae-aca9-4eaf-95f5-4b9da30022a8"/>
 					<textElement>
 						<font size="7"/>
 					</textElement>
 					<text><![CDATA[FECHA INICIO DE ESTUDIOS:]]></text>
 				</staticText>
-				<textField isBlankWhenNull="true">
-					<reportElement style="Estilo_contenido7" x="165" y="0" width="385" height="14" uuid="1c2dfde0-53e8-45b9-960c-1ccb50c30e13"/>
+				<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+					<reportElement style="Estilo_contenido7" x="166" y="0" width="384" height="14" uuid="91922345-2bfa-4d9c-8fe2-a28886ed2ef0"/>
 					<textFieldExpression><![CDATA[$F{FECHA_INICIO_POSGRADO}]]></textFieldExpression>
 				</textField>
 				<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
-					<reportElement style="Estilo_contenido7" x="165" y="13" width="385" height="14" uuid="ece1eef8-cc14-47ff-a7b8-40e07735daa6"/>
+					<reportElement style="Estilo_contenido7" x="166" y="13" width="384" height="14" uuid="4a510a4b-ca80-4e14-8cb3-8c3892cacb0d"/>
 					<textFieldExpression><![CDATA[$F{FECHA_FIN_POSGRADO}]]></textFieldExpression>
 				</textField>
 			</band>
@@ -597,63 +684,63 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 		<groupHeader>
 			<band height="51">
 				<textField>
-					<reportElement style="Estilo_contenido7" x="10" y="0" width="101" height="25" uuid="82c062e0-3cab-44e6-8bd0-a4adadccb44f"/>
+					<reportElement style="Estilo_contenido" x="12" y="0" width="95" height="25" uuid="82c062e0-3cab-44e6-8bd0-a4adadccb44f"/>
 					<textElement verticalAlignment="Bottom">
-						<font size="8" isBold="true"/>
+						<font size="7" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{SEMESTRE}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement style="Estilo_titulo7" x="11" y="28" width="40" height="23" uuid="d7969667-1b86-4446-8b43-a637166f2a7c"/>
+					<reportElement style="Estilo_titulo" x="12" y="28" width="40" height="23" uuid="d7969667-1b86-4446-8b43-a637166f2a7c"/>
 					<textElement verticalAlignment="Middle">
 						<font size="7" isBold="true"/>
 					</textElement>
 					<text><![CDATA[CÓDIGO]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_titulo7" x="52" y="28" width="230" height="23" uuid="f684f95a-764e-4171-addc-e1723c66b9ba"/>
+					<reportElement style="Estilo_titulo" x="53" y="28" width="225" height="23" uuid="f684f95a-764e-4171-addc-e1723c66b9ba"/>
 					<textElement verticalAlignment="Middle">
 						<font size="7" isBold="true"/>
 					</textElement>
 					<text><![CDATA[COMPONENTE ACADÉMICO]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_titulo7" x="285" y="18" width="28" height="33" uuid="b7fb510c-a0d8-4e6c-99b7-95f45a96980a"/>
+					<reportElement style="Estilo_titulo" x="282" y="18" width="29" height="33" uuid="b7fb510c-a0d8-4e6c-99b7-95f45a96980a"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="7" isBold="true"/>
 					</textElement>
 					<text><![CDATA[N° HORAS]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_titulo7" x="353" y="18" width="29" height="33" uuid="50004440-b2e2-4206-aeda-566181a7e7a4"/>
+					<reportElement style="Estilo_titulo" x="361" y="18" width="29" height="33" uuid="50004440-b2e2-4206-aeda-566181a7e7a4"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="7" isBold="true"/>
 					</textElement>
 					<text><![CDATA[N° VECES]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_titulo7" x="382" y="28" width="31" height="23" uuid="3634e5ad-4bce-42d1-8a67-be4ed27319c0"/>
+					<reportElement style="Estilo_titulo" x="390" y="28" width="31" height="23" uuid="3634e5ad-4bce-42d1-8a67-be4ed27319c0"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="7" isBold="true"/>
 					</textElement>
 					<text><![CDATA[CALIF.]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_titulo7" x="413" y="28" width="53" height="23" uuid="4c717dba-d044-4143-862c-807f7a1293db"/>
+					<reportElement style="Estilo_titulo" x="421" y="28" width="44" height="23" uuid="4c717dba-d044-4143-862c-807f7a1293db"/>
 					<textElement verticalAlignment="Middle">
 						<font size="7" isBold="true"/>
 					</textElement>
 					<text><![CDATA[ESTADO]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_titulo7" x="467" y="28" width="84" height="23" uuid="5a877f57-463a-4946-a756-634caf5f24c9"/>
+					<reportElement style="Estilo_titulo" x="466" y="28" width="85" height="23" uuid="5a877f57-463a-4946-a756-634caf5f24c9"/>
 					<textElement verticalAlignment="Middle">
 						<font size="7" isBold="true"/>
 					</textElement>
 					<text><![CDATA[TIPO APROBACIÓN]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_titulo7" x="313" y="28" width="40" height="23" uuid="87ca3136-26ee-48e3-a506-2e8a2f02f58b"/>
+					<reportElement style="Estilo_titulo" x="312" y="28" width="42" height="23" uuid="87ca3136-26ee-48e3-a506-2e8a2f02f58b"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="7" isBold="true"/>
 					</textElement>
@@ -667,7 +754,7 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 		<groupHeader>
 			<band height="16">
 				<textField isBlankWhenNull="true">
-					<reportElement style="Estilo_titulo7" x="11" y="2" width="540" height="14" isRemoveLineWhenBlank="true" uuid="fc706ccc-7c78-4c6d-9293-edd91a1465e7"/>
+					<reportElement style="Estilo_titulo7" x="12" y="2" width="539" height="14" isRemoveLineWhenBlank="true" uuid="fc706ccc-7c78-4c6d-9293-edd91a1465e7"/>
 					<textFieldExpression><![CDATA[$F{MENCION}]]></textFieldExpression>
 				</textField>
 			</band>
@@ -696,42 +783,42 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 	<detail>
 		<band height="16" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido7" x="51" y="0" width="230" height="16" isPrintWhenDetailOverflows="true" uuid="2f60d821-a089-43b0-b680-ae221cca79e6"/>
+				<reportElement style="Estilo_contenido7" x="52" y="0" width="230" height="16" isPrintWhenDetailOverflows="true" uuid="2f60d821-a089-43b0-b680-ae221cca79e6"/>
 				<textElement>
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{MODULO}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido7" x="353" y="0" width="29" height="16" isPrintWhenDetailOverflows="true" uuid="c2e26674-7dd8-4746-bd67-70a08e834b9d"/>
+				<reportElement style="Estilo_contenido7" x="361" y="0" width="29" height="16" isPrintWhenDetailOverflows="true" uuid="c2e26674-7dd8-4746-bd67-70a08e834b9d"/>
 				<textElement textAlignment="Center">
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{NUMERO_VECES}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido7" x="382" y="0" width="31" height="16" isPrintWhenDetailOverflows="true" uuid="453b0179-8507-4c29-a3b4-9f2fd4299c7d"/>
+				<reportElement style="Estilo_contenido7" x="390" y="0" width="31" height="16" isPrintWhenDetailOverflows="true" uuid="453b0179-8507-4c29-a3b4-9f2fd4299c7d"/>
 				<textElement textAlignment="Center">
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{NOTA_FINAL}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido7" x="467" y="0" width="84" height="16" isPrintWhenDetailOverflows="true" uuid="d3ddbae6-41b8-4993-bbb6-ea7130d1f998"/>
+				<reportElement style="Estilo_contenido7" x="466" y="0" width="85" height="16" isPrintWhenDetailOverflows="true" uuid="d3ddbae6-41b8-4993-bbb6-ea7130d1f998"/>
 				<textElement>
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{TIPO_APROBACION}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido7" x="311" y="0" width="42" height="16" isPrintWhenDetailOverflows="true" uuid="617e9b77-3844-4d45-b406-16db4ee2ae94"/>
+				<reportElement style="Estilo_contenido7" x="312" y="0" width="42" height="16" isPrintWhenDetailOverflows="true" uuid="617e9b77-3844-4d45-b406-16db4ee2ae94"/>
 				<textElement textAlignment="Center">
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{FECHA_SEMESTRE}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="Estilo_contenido7" x="10" y="0" width="40" height="16" isPrintWhenDetailOverflows="true" uuid="2ad53e89-b063-4663-9d4d-0ef89e277b8e"/>
+				<reportElement style="Estilo_contenido7" x="12" y="0" width="40" height="16" isPrintWhenDetailOverflows="true" uuid="2ad53e89-b063-4663-9d4d-0ef89e277b8e"/>
 				<textElement>
 					<font size="7"/>
 				</textElement>
@@ -745,7 +832,7 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 				<textFieldExpression><![CDATA[$F{MAL_NRO_HORAS}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido7" x="413" y="0" width="53" height="16" isPrintWhenDetailOverflows="true" uuid="b8acae1d-dc19-4065-b60d-0621dfeccc4c"/>
+				<reportElement style="Estilo_contenido7" x="421" y="0" width="44" height="16" isPrintWhenDetailOverflows="true" uuid="b8acae1d-dc19-4065-b60d-0621dfeccc4c"/>
 				<textElement>
 					<font size="7"/>
 				</textElement>
@@ -756,7 +843,7 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 	<columnFooter>
 		<band height="37">
 			<rectangle>
-				<reportElement x="10" y="0" width="541" height="37" uuid="28a4906c-e509-4d18-bce5-fd4473cff572"/>
+				<reportElement x="11" y="0" width="540" height="37" uuid="28a4906c-e509-4d18-bce5-fd4473cff572"/>
 				<graphicElement>
 					<pen lineWidth="0.25"/>
 				</graphicElement>
@@ -769,35 +856,35 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 				<textFieldExpression><![CDATA[$F{FECHA_ACTUAL}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="304" y="19" width="246" height="9" uuid="3ed1bb62-47d9-4439-a3f0-367570df8c64"/>
+				<reportElement x="303" y="19" width="246" height="9" uuid="3ed1bb62-47d9-4439-a3f0-367570df8c64"/>
 				<textElement textAlignment="Right">
 					<font size="6"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}.equals(1) ? " ":$F{ESTUDIANTE}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="12" y="1" width="535" height="9" uuid="6aba5f2c-2934-4b6b-8bbe-0e24eb874310"/>
+				<reportElement x="13" y="1" width="536" height="9" uuid="6aba5f2c-2934-4b6b-8bbe-0e24eb874310"/>
 				<textElement>
 					<font size="6"/>
 				</textElement>
 				<text><![CDATA[El puntaje de calificación final corresponde a la escala de 0 a 100, la calificación mínima de aprobación es de 70 puntos.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Estilo_contenido6" x="12" y="10" width="535" height="9" uuid="848af7ae-8efa-4716-9712-2961485cbf68"/>
+				<reportElement style="Estilo_contenido6" x="13" y="10" width="538" height="9" uuid="848af7ae-8efa-4716-9712-2961485cbf68"/>
 				<textElement>
 					<font size="6"/>
 				</textElement>
 				<text><![CDATA[Escala de valoración de los Aprendizajes: 0-69 Deficiente    70-74 Regular    75-79 Buena    80-90 Muy Buena    91-100 Excelente]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="12" y="26" width="49" height="9" uuid="cabeeea7-c189-4dcb-a3cd-8c5099da07a7"/>
+				<reportElement x="13" y="26" width="49" height="9" uuid="cabeeea7-c189-4dcb-a3cd-8c5099da07a7"/>
 				<textElement>
 					<font size="6"/>
 				</textElement>
 				<text><![CDATA[Factura Nro.:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="60" y="26" width="246" height="9" uuid="f535a63a-3190-4242-846d-8da119d2c78e"/>
+				<reportElement x="61" y="26" width="246" height="9" uuid="f535a63a-3190-4242-846d-8da119d2c78e"/>
 				<textElement>
 					<font size="6"/>
 				</textElement>
@@ -815,7 +902,7 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 	<pageFooter>
 		<band height="64" splitType="Stretch">
 			<textField>
-				<reportElement x="12" y="-19" width="264" height="9" uuid="561d4da4-7c95-4462-91b0-4b0d2da5ef37"/>
+				<reportElement x="13" y="-19" width="264" height="9" uuid="561d4da4-7c95-4462-91b0-4b0d2da5ef37"/>
 				<textElement>
 					<font size="6" isBold="false"/>
 				</textElement>
