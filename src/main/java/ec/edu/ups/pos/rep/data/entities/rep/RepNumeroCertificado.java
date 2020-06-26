@@ -46,6 +46,9 @@ public class RepNumeroCertificado extends EntitySuperclass{
     @NotNull
     @Column(name = "NCE_NUMERO_CERTIFICADO", nullable = false)
     private Long nceNumeroCertificado;
+    @Column(name = "NCE_ANIO", nullable = true)
+    private Long nceAnio;
+
 
     public RepNumeroCertificado() {
     }
@@ -53,6 +56,7 @@ public class RepNumeroCertificado extends EntitySuperclass{
     public RepNumeroCertificado(Long nceCodigo) {
         this.nceCodigo = nceCodigo;
     }
+    
    public RepNumeroCertificado(Long nceCodigo, Long estCodigo, Long pelCodigo, Long ticCodigo, Long nceNumeroCertificado) {
         this.nceCodigo = nceCodigo;
         this.estCodigo = estCodigo;
@@ -101,6 +105,15 @@ public class RepNumeroCertificado extends EntitySuperclass{
         this.nceNumeroCertificado = nceNumeroCertificado;
     }
 
+    public Long getNceAnio() {
+        return nceAnio;
+    }
+
+    public void setNceAnio(Long nceAnio) {
+        this.nceAnio = nceAnio;
+    }
+
+    
     @Override
     public int hashCode() {
         int hash = 0;

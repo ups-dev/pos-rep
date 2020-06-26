@@ -34,8 +34,11 @@ public class PosgradoAlumnoWrapper implements Serializable {
     private String tieneMencionEst;
     private Long   totalMenciones;
     private String titulo;
-    private Long    preCodigo;
-    private String  codMencionEstudiante;
+    private Long   preCodigo;
+    private String codMencionEstudiante;
+    private String proyecto;
+    private String vigencia;
+    private String actaGrado;
    
 
     public PosgradoAlumnoWrapper() {
@@ -45,7 +48,7 @@ public class PosgradoAlumnoWrapper implements Serializable {
         this.aluCodigo = aluCodigo;
     }
 
-    public PosgradoAlumnoWrapper(String identificador, Long aluCodigo, String sede, String campus, String posgrado, String estSede, String estCampus, String estPosgrado, String modalidad, String periodo, Long codPeriodo, String cohorte, String tieneMencion, String tieneMencionEst, Long totalMenciones, String titulo, Long preCodigo, String codMencionEstudiante) {
+    public PosgradoAlumnoWrapper(String identificador, Long aluCodigo, String sede, String campus, String posgrado, String estSede, String estCampus, String estPosgrado, String modalidad, String periodo, Long codPeriodo, String cohorte, String tieneMencion, String tieneMencionEst, Long totalMenciones, String titulo, Long preCodigo, String codMencionEstudiante, String proyecto, String vigencia, String actaGrado) {
         this.identificador = identificador;
         this.aluCodigo = aluCodigo;
         this.sede = sede;
@@ -64,6 +67,9 @@ public class PosgradoAlumnoWrapper implements Serializable {
         this.titulo = titulo;
         this.preCodigo = preCodigo;
         this.codMencionEstudiante = codMencionEstudiante;
+        this.proyecto = proyecto;
+        this.vigencia = vigencia;
+        this.actaGrado = actaGrado;
     }     
 
     public Long getAluCodigo() {
@@ -211,8 +217,32 @@ public class PosgradoAlumnoWrapper implements Serializable {
         this.codMencionEstudiante = codMencionEstudiante;
     }
 
+    public String getProyecto() {
+        return proyecto;
+    }
 
-   
+    public void setProyecto(String proyecto) {
+        this.proyecto = proyecto;
+    }
+
+    public String getVigencia() {
+        return vigencia;
+    }
+
+    public void setVigencia(String vigencia) {
+        this.vigencia = vigencia;
+    }
+
+    public String getActaGrado() {
+        return actaGrado;
+    }
+
+    public void setActaGrado(String actaGrado) {
+        this.actaGrado = actaGrado;
+    }
+    
+    
+    
     
     @Override
     public int hashCode() {

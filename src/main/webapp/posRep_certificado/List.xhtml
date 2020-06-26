@@ -126,10 +126,10 @@
                             </ui:define>
 
                             <ui:define name="ups-search-param-content">
-                                <p:selectOneMenu id="posRepFiltrarNivel" value="#{posRepPosgradosController.matNivelPeriodoEstructura}" 
-                                                 required="true" requiredMessage="Seleccione el Semestre."                                     
-                                                      filter="true" filterMatchMode="contains" var="filtro" 
-                                                      >                            
+                                <p:selectOneMenu id="posRepFiltrarNivel" value="#{posRepPosgradosController.matNivelPeriodoEstructura}" filter="true" filterMatchMode="contains" var="filtro" 
+                                                      > 
+<!--                                                 required="true" requiredMessage="Seleccione el Semestre."                                     -->
+                                                                                 
                                          <!--<f:selectItem itemLabel="#{posRepBundle['Todos']}" itemValue=""/>-->
                                          <f:selectItem itemLabel="#{posRepBundle['SelectOneMessage']}" itemValue=""/>
                                          <f:selectItems value="#{posRepPosgradosController.matNivelPeriodoEstructuraList}"
@@ -165,7 +165,7 @@
                          emptyMessage="#{posRepBundle['TableEmpty']}"
                          rendered="#{posRepPosgradosController.insAlumnoWrapper ne null}"
                     >          
-              <p:ajax event="rowSelect" listener="#{posRepPosgradosController.cargarNiveles()}" update=":PosReportesCerForm:semestre,:PosReportesCerForm:PosRepFiltroPanel2,:PosReportesCerForm:PosRepCerExportToolbar" />
+              <p:ajax event="rowSelect" listener="#{posRepPosgradosController.cargarValidaciones(repReportesSistemaController.selected)}" update=":PosReportesCerForm:semestre,:PosReportesCerForm:PosRepFiltroPanel2,:PosReportesCerForm:PosRepCerExportToolbar, :PosReportesCerForm:messagePanel" />
               
                <p:column>
                     <f:facet name="header">
@@ -180,11 +180,17 @@
                     <h:outputText value="#{item.campus}" />
                     
                 </p:column>
-              <p:column width="29%">
+              <p:column width="20%">
                     <f:facet name="header">
                         <h:outputText value="Programa"/>
                     </f:facet>
                     <h:outputText value="#{item.posgrado}" />
+                </p:column>
+                 <p:column width="20%">
+                    <f:facet name="header">
+                        <h:outputText value="Proyecto"/>
+                    </f:facet>
+                    <h:outputText value="#{item.proyecto}" />
                 </p:column>
                   <p:column>
                     <f:facet name="header">
@@ -192,19 +198,24 @@
                     </f:facet>
                     <h:outputText value="#{item.modalidad}" />
                 </p:column>
-                <p:column width="16%">
+                <p:column width="14%">
                     <f:facet name="header">               
                         <h:outputText value="Cohorte"/>
                     </f:facet>
                     <h:outputText value="#{item.cohorte}" />
                 </p:column>
-                <p:column width="29%">
+                <p:column width="20%">
                     <f:facet name="header">
                         <h:outputText value="Título"/>
                     </f:facet>
                     <h:outputText value="#{item.titulo}" />
                 </p:column>
-                                        
+                 <p:column width="5%">
+                    <f:facet name="header">
+                        <h:outputText value="Vigencia"/>
+                    </f:facet>
+                    <h:outputText value="#{item.vigencia}" />
+                </p:column>                        
             </p:dataTable>       
            <br/>       
          </h:panelGrid> 
@@ -213,7 +224,11 @@
 
 <!--CERTIFICACIÓN -->    
 <p:panel id="PosRepFiltroPanel2" header="Certificación de Rúbricas" >    
-         <h:panelGrid id="datosfactura" columns="3" cellpadding="5" rendered="#{not empty posRepPosgradosController.insAlumnoWrapper and not empty posRepPosgradosController.posgradoAlumnoWrapper and posRepPosgradosController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_CERTIFICACION)}" >  
+         <h:panelGrid id="datosfactura" columns="3" cellpadding="5" rendered="#{not empty posRepPosgradosController.insAlumnoWrapper 
+                                                                                and not empty posRepPosgradosController.posgradoAlumnoWrapper 
+                                                                                and ( (posRepPosgradosController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_CERTIFICACION) and repReportesSistemaController.selected.resCodigo ne PosRepConstants.REPORTE_SISTEMA_RECORD_ACADEMICO_GRADUADOS) 
+                                                                                or (repReportesSistemaController.selected.resCodigo eq PosRepConstants.REPORTE_SISTEMA_RECORD_ACADEMICO_GRADUADOS and posRepPosgradosController.posgradoAlumnoWrapper.actaGrado eq 'S' ))
+                                                                                }" >  
              <p:outputLabel value="#{posRepBundle['PosRepSede']}:"  for="sedeFacturacion"/> 
              <p:outputLabel value="#{posRepBundle['PosRepPuntoFac']}:" for="puntoFacturacion"/>
              <p:outputLabel value="#{posRepBundle['PosRepNumFac']}:" for="numFactura"/>
@@ -223,7 +238,10 @@
              <p:inputText id="numFactura" value="#{posRepPosgradosController.numFactura}" required="true" style=" text-align: right; width: 80%" requiredMessage="Ingrese el número de Factura."/>
         </h:panelGrid> 
          <br/> 
-        <h:panelGrid id="certificacionPanel" columns="2" rendered="#{not empty posRepPosgradosController.insAlumnoWrapper and not empty posRepPosgradosController.posgradoAlumnoWrapper and posRepPosgradosController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_CERTIFICACION)}" >   
+        <h:panelGrid id="certificacionPanel" columns="2" rendered="#{not empty posRepPosgradosController.insAlumnoWrapper and not empty posRepPosgradosController.posgradoAlumnoWrapper 
+                                                                     and ((posRepPosgradosController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_CERTIFICACION) and repReportesSistemaController.selected.resCodigo ne PosRepConstants.REPORTE_SISTEMA_RECORD_ACADEMICO_GRADUADOS) 
+                                                                     or (repReportesSistemaController.selected.resCodigo eq PosRepConstants.REPORTE_SISTEMA_RECORD_ACADEMICO_GRADUADOS and posRepPosgradosController.posgradoAlumnoWrapper.actaGrado eq 'S' ))
+                                                                     }" >   
               <p:outputLabel value="#{posRepBundle['PosRepCertificar']} " />
               <p:selectBooleanCheckbox value="#{posRepPosgradosController.certificacion}" >
                   <p:ajax update="PosCertificar" listener="#{repSecretarioGeneralController.obtenerListSecretariaCert()}" />
@@ -232,9 +250,14 @@
         </h:panelGrid>        
     
              <!--Filtro SECRETARIA GENERAL-->
-          <h:panelGrid columns="2" id="PosCertificar" >
+          <h:panelGrid columns="2" id="PosCertificar"  >
                                  
-                      <ui:fragment rendered="#{posRepPosgradosController.certificacion eq true}">
+                      <ui:fragment rendered="#{posRepPosgradosController.certificacion eq true  
+                                               and not empty posRepPosgradosController.insAlumnoWrapper 
+                                               and not empty posRepPosgradosController.posgradoAlumnoWrapper 
+                                               and ( (posRepPosgradosController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_CERTIFICACION) and repReportesSistemaController.selected.resCodigo ne PosRepConstants.REPORTE_SISTEMA_RECORD_ACADEMICO_GRADUADOS) 
+                                               or (repReportesSistemaController.selected.resCodigo eq PosRepConstants.REPORTE_SISTEMA_RECORD_ACADEMICO_GRADUADOS and posRepPosgradosController.posgradoAlumnoWrapper.actaGrado eq 'S' ))                             
+                                               }" >
                           <ui:decorate template="/WEB-INF/templates/decorators/search/ups-search-param.xhtml">
                             <ui:define name="ups-search-param-title">  
                                 <p:outputLabel value="#{posRepBundle['PosRepFirma']}:"  />   
@@ -266,7 +289,7 @@
         <p:toolbar id="PosRepCerExportToolbar">
             <us:auth permissions="{'operations':['GENERAR']}">
                 
-                <p:toolbarGroup align="center">           
+                <p:toolbarGroup align="center" >           
                     
                     <p:commandLink id="nonAjaxExcel"                                    
                                    ajax="false"
@@ -284,9 +307,13 @@
                     <p:commandLink id="nonAjaxPdf"                                    
                                    ajax="false" 
                                    update="messagePanel"
-                                   process="@this" 
+                                   process="@this"    
                                    onclick="PrimeFaces.monitorDownload(start, stop);"
-                                   disabled="#{repReportesSistemaController.selected.resFormato eq null or (repReportesSistemaController.selected.resFormato ne 'PDF' and repReportesSistemaController.selected.resFormato ne 'PDF - EXCEL')}">
+                                   disabled="#{repReportesSistemaController.selected.resFormato eq null or (repReportesSistemaController.selected.resFormato ne 'PDF' and repReportesSistemaController.selected.resFormato ne 'PDF - EXCEL')  
+                                               or empty posRepPosgradosController.insAlumnoWrapper 
+                                               or empty posRepPosgradosController.posgradoAlumnoWrapper 
+                                               or (repReportesSistemaController.selected.resCodigo eq PosRepConstants.REPORTE_SISTEMA_RECORD_ACADEMICO_GRADUADOS and posRepPosgradosController.posgradoAlumnoWrapper.actaGrado eq 'N')
+                                               }"   >
                         <p:graphicImage library="ups-template" 
                                         name="images/icons/apps/pdf.png" 
                                         alt="#{posRepBundle['ExportPdf']}" 
@@ -294,6 +321,7 @@
                         <p:fileDownload value="#{posRepGeneralController.generar_reporte_certificado('pdf',posRepPosgradosController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_CERTIFICACION))}" />
                     </p:commandLink>                                        
                     
+                              
                 </p:toolbarGroup>
 
             </us:auth>

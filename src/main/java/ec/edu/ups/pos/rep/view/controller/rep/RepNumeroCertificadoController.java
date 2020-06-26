@@ -8,6 +8,8 @@ package ec.edu.ups.pos.rep.view.controller.rep;
 import ec.edu.ups.pos.rep.data.entities.rep.RepNumeroCertificado;
 import ec.edu.ups.pos.rep.logic.sessions.rep.RepNumeroCertificadoFacade;
 import ec.edu.ups.pos.rep.view.controllers.AbstractController;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import javax.inject.Inject;
 
 /**
@@ -25,9 +27,21 @@ public class RepNumeroCertificadoController extends AbstractController<RepNumero
     }
     
     public Integer obtieneSecuenciaCertificado(Long estCodigo, Long pelCodigo, Long ticCodigo){
-           
-    RepNumeroCertificado secuencia = repNumeroCertificadoFacade.consultaSecuenciaCertificado(estCodigo, pelCodigo, ticCodigo);
-    
+        RepNumeroCertificado secuencia; 
+        Long anio = 0L;
+     if (ticCodigo <= 2) {
+     
+           secuencia = repNumeroCertificadoFacade.consultaSecuenciaCertificado(estCodigo, pelCodigo, ticCodigo);
+     
+     }else{
+     
+        Calendar c = new GregorianCalendar();
+        String annio = Integer.toString(c.get(Calendar.YEAR));
+          anio = Long.valueOf(annio);
+          secuencia = repNumeroCertificadoFacade.consultaSecuenciaCertificadoAnio(estCodigo, pelCodigo, ticCodigo, anio);
+     
+     }
+                  
         if (secuencia == null) {
 
             RepNumeroCertificado numCertificado = new RepNumeroCertificado();
@@ -36,6 +50,7 @@ public class RepNumeroCertificadoController extends AbstractController<RepNumero
             numCertificado.setPelCodigo(pelCodigo);
             numCertificado.setEstCodigo(estCodigo);
             numCertificado.setTicCodigo(ticCodigo);
+            numCertificado.setNceAnio(anio);
             repNumeroCertificadoFacade.createRecord(numCertificado);
             return Integer.valueOf(String.valueOf(numCertificado.getNceNumeroCertificado()));
                     

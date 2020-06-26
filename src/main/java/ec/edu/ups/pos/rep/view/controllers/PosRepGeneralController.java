@@ -198,7 +198,7 @@ public class PosRepGeneralController implements Serializable{
      */
     public StreamedContent generar_reporte_certificado(String formato,boolean certificacion){ 
        StreamedContent result = null;
-       //System.out.println("generar_reporte_certificado");
+       System.out.println("generar_reporte_certificado");
                 
        RepReportesSistema repReportesSistema=repReportesSistemaController.getSelected();   
         
@@ -219,7 +219,7 @@ public class PosRepGeneralController implements Serializable{
             //Definición de nombre de: reporte y archivo
             String nombreReporte = "/WEB-INF/reportes/posRep_certificado/"+nombre;        
             String nombreArchivo = repReportesSistema.getResReporte();             
-            //System.out.println("nombreArchivo   "+nombreArchivo);
+            System.out.println("nombreArchivo   "+nombreArchivo);
         
             //Parámetro Alumno
             InsAlumnoWrapper insAlumnoWrapper=posRepPosgradosController.getInsAlumnoWrapper();

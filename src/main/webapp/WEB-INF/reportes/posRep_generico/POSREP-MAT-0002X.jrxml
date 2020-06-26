@@ -75,6 +75,7 @@ AND     mat.aud_eliminado = 'N'
 AND     mat.mat_anulado = 'N'
 AND     paf.tip_codigo  = 4
 AND     fof.ins_codigo(+) = mat.ins_codigo
+AND     fof.aud_eliminado = 'N' --Modificado por: Myriam Yunga --Se agrega condición 26-05-2020
 AND     mat.cllc_cdg    = cli.cllc_cdg
 AND     alu.cllc_cdg    = cli.cllc_cdg
 AND     dep.dep_codigo  = mat.dep_codigo

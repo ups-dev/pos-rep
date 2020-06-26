@@ -9,6 +9,7 @@ import ec.edu.ups.pos.rep.data.entities.rep.RepParametroReporte;
 import ec.edu.ups.pos.rep.data.entities.rep.RepReportesSistema;
 import ec.edu.ups.pos.rep.data.entities.wrapper.InsAlumnoWrapper;
 import ec.edu.ups.pos.rep.data.entities.wrapper.PosgradoAlumnoWrapper;
+import ec.edu.ups.pos.rep.data.utils.PosRepConstants;
 import ec.edu.ups.pos.rep.logic.sessions.ins.InsAlumnoFacade;
 import ec.edu.ups.pos.rep.logic.sessions.mat.MatMatriculaFacade;
 import ec.edu.ups.pos.rep.logic.sessions.rep.PosRepPosgradosFacade;
@@ -19,6 +20,7 @@ import java.util.List;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.omnifaces.util.Messages;
 import org.omnifaces.util.Utils;
 import org.primefaces.PrimeFaces;
 import org.primefaces.context.RequestContext;
@@ -81,10 +83,37 @@ public class PosRepPosgradosController implements Serializable{
             
     }
     
-    public void cargarNiveles(){
-
-        matNivelPeriodoEstructuraList= matMatriculaFacade.obtieneSemestre(insAlumnoWrapper.getAluCodigo());
+//    public void cargarNiveles(){
+//
+//        matNivelPeriodoEstructuraList= matMatriculaFacade.obtieneSemestre(insAlumnoWrapper.getAluCodigo());
+//        //System.out.println("insAlumnoWrapper.getAluCodigo()" + insAlumnoWrapper.getAluCodigo());
+//        actualizaCamposFac();
+//
+//    }
+    
+    public void cargarValidaciones(RepReportesSistema repReportesSistema){
+        
+        
+        //System.out.println("repReportesSistema.getResCodigo() " + repReportesSistema.getResCodigo());
+        // System.out.println("PosRepConstants.REPORTE_SISTEMA_RECORD_ACADEMICO_GRADUADOS" + PosRepConstants.REPORTE_SISTEMA_RECORD_ACADEMICO_GRADUADOS);
+       
+        if(repReportesSistema.getResCodigo().equals(PosRepConstants.REPORTE_SISTEMA_CALIFICACIONES_SEMESTRE)) {
+            
+         matNivelPeriodoEstructuraList= matMatriculaFacade.obtieneSemestre(insAlumnoWrapper.getAluCodigo());
         //System.out.println("insAlumnoWrapper.getAluCodigo()" + insAlumnoWrapper.getAluCodigo());
+        
+        
+        }else if (repReportesSistema.getResCodigo().equals(PosRepConstants.REPORTE_SISTEMA_RECORD_ACADEMICO_GRADUADOS)){
+         
+            if(getPosgradoAlumnoWrapper().getActaGrado().equalsIgnoreCase("N") ){
+                
+                    Messages.addGlobalWarn("El estudiante no posee Acta de Grado en el Programa y Proyecto seleccionado.");
+
+            
+            }
+        
+        }
+       
         actualizaCamposFac();
 
     }
@@ -125,7 +154,6 @@ public class PosRepPosgradosController implements Serializable{
         setNumFactura(null);
         setPuntoFacturacion(null);
         setSedeFactura(null);
-    
     }  
     public void actualizaFiltros(){
        
@@ -138,7 +166,7 @@ public class PosRepPosgradosController implements Serializable{
         setNumFactura(null);
         setPuntoFacturacion(null);
         setSedeFactura(null);
-       
+
     }  
  
   public void actualizaCamposFac(){

@@ -14,8 +14,8 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT 'Que, la firma y rúbricas estampadas en el presente documento corresponden a '||INITCAP(ned.ned_abreviatura)||' '||INITCAP(per.per_nombres||' '||per.per_apellidos)||
-       ' Secretaria del Campus '||INITCAP(dca.dee_descripcion)||' de la Universidad Politécnica Salesiana, Sede '||INITCAP(dse.dee_descripcion)||'.' leyenda,
+		<![CDATA[SELECT 'Que, la firma y rúbricas estampadas en el presente documento corresponden a '||ned.ned_abreviatura||' '||per.per_nombres||' '||per.per_apellidos||
+       ', Secretaria del Campus '||INITCAP(dca.dee_descripcion)||' de la Universidad Politécnica Salesiana, Sede '||INITCAP(dse.dee_descripcion)||'.' leyenda,
        initcap (seg.seg_lugar_certifica)||', '||TO_CHAR(sysdate, 'DD')|| ' de '||
         DECODE(TO_CHAR(sysdate, 'MM'), '01', 'Enero', '02', 'Febrero', '03', 'Marzo', '04', 'Abril', '05', 'Mayo', '06', 'Junio',
                                        '07', 'Julio', '08', 'Agosto', '09', 'Septiembre', '10', 'Octubre', '11', 'Noviembre',
@@ -60,7 +60,7 @@ AND    rownum             = 1]]>
 		<band height="125" splitType="Stretch">
 			<printWhenExpression><![CDATA[$P{pn_certificacion}.equals(1)]]></printWhenExpression>
 			<rectangle>
-				<reportElement isPrintRepeatedValues="false" x="0" y="0" width="555" height="125" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="cfdf95ce-9c35-4843-9aea-37a929894382">
+				<reportElement isPrintRepeatedValues="false" x="0" y="0" width="536" height="125" isRemoveLineWhenBlank="true" uuid="cfdf95ce-9c35-4843-9aea-37a929894382">
 					<printWhenExpression><![CDATA[$P{pn_certificacion}.equals(1)]]></printWhenExpression>
 				</reportElement>
 				<graphicElement>
@@ -68,35 +68,36 @@ AND    rownum             = 1]]>
 				</graphicElement>
 			</rectangle>
 			<staticText>
-				<reportElement style="Estilo_titulo" x="1" y="2" width="100" height="20" isPrintWhenDetailOverflows="true" uuid="04a148bd-324d-4cec-9c98-7acc12343af7">
+				<reportElement style="Estilo_titulo7" x="3" y="2" width="100" height="20" isPrintWhenDetailOverflows="true" uuid="04a148bd-324d-4cec-9c98-7acc12343af7">
 					<printWhenExpression><![CDATA[$P{pn_certificacion}.equals( 1 )]]></printWhenExpression>
 				</reportElement>
 				<text><![CDATA[CERTIFICO:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido" x="1" y="22" width="554" height="20" isPrintWhenDetailOverflows="true" uuid="51bdef29-902c-4cec-a4df-1131bd0d12ca">
+				<reportElement style="Estilo_contenido7" x="3" y="22" width="529" height="20" isPrintWhenDetailOverflows="true" uuid="51bdef29-902c-4cec-a4df-1131bd0d12ca">
 					<printWhenExpression><![CDATA[$P{pn_certificacion}.equals( 1 )]]></printWhenExpression>
 				</reportElement>
+				<textElement textAlignment="Justified"/>
 				<textFieldExpression><![CDATA[$F{LEYENDA}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="Estilo_contenido" x="1" y="44" width="314" height="16" isPrintWhenDetailOverflows="true" uuid="9239e415-5572-4268-8c16-21821d390a19">
+				<reportElement style="Estilo_contenido7" x="3" y="44" width="312" height="16" isPrintWhenDetailOverflows="true" uuid="9239e415-5572-4268-8c16-21821d390a19">
 					<printWhenExpression><![CDATA[$P{pn_certificacion}.equals( 1 )]]></printWhenExpression>
 				</reportElement>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{FECHA}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="Estilo_contenido" x="1" y="94" width="554" height="12" isPrintWhenDetailOverflows="true" uuid="d3d4dadb-7863-49a8-8425-2be3921dc164">
+				<reportElement style="Estilo_contenido7" x="3" y="94" width="529" height="12" isPrintWhenDetailOverflows="true" uuid="d3d4dadb-7863-49a8-8425-2be3921dc164">
 					<printWhenExpression><![CDATA[$P{pn_certificacion}.equals( 1 )]]></printWhenExpression>
 				</reportElement>
 				<textElement>
-					<font isBold="true"/>
+					<font isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{SECRE_GENERAL}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="Estilo_titulo" x="1" y="106" width="554" height="12" isPrintWhenDetailOverflows="true" uuid="eeece3a7-2f7b-4e94-a0bf-429cb9e5fbaa">
+				<reportElement style="Estilo_titulo7" x="3" y="106" width="529" height="12" isPrintWhenDetailOverflows="true" uuid="eeece3a7-2f7b-4e94-a0bf-429cb9e5fbaa">
 					<printWhenExpression><![CDATA[$P{pn_certificacion}.equals( 1 )]]></printWhenExpression>
 				</reportElement>
 				<textElement>
