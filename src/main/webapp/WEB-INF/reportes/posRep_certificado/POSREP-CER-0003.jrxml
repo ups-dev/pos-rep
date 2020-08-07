@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-CER-0003" pageWidth="595" pageHeight="842" columnWidth="551" leftMargin="22" rightMargin="22" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
 	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="912"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_alu_codigo" class="java.lang.Integer">
@@ -198,7 +198,7 @@ SELECT  distinct alu.alu_codigo,cli.cllc_cdg,cli.cllc_ruc cedula,
          round((acg.acg_trabajo_grado*30)/100,2) trabajo_grado,
          acg.acg_nota_definitiva_grado nota_definitiva_grado,
          acg.acg_equivalencia equivalencia,
-         DECODE(acg.acg_apreciacion,'E','EXCELENTE') apreciacion,
+         DECODE(acg.acg_apreciacion,'E','EXCELENTE','M','MUY BUENA','B','BUENA','R','REGULAR','D','DEFICIENTE') apreciacion,
          met.met_descripcion mecanismo_graduacion
 FROM    ins.ins_inscripcion             ins,
         fac.fac_pago_factura            paf,
@@ -502,12 +502,12 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 					<reportElement style="Estilo_titulo7" x="12" y="69" width="238" height="15" uuid="15a98c86-1c8b-4799-a354-3a078bbad209"/>
 					<text><![CDATA[PORCENTAJE COMPONENTES APROBADOS:]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="true" pattern="###0.00;-###0.00">
+				<textField isStretchWithOverflow="true" pattern="###0.00;-###0.00" isBlankWhenNull="true">
 					<reportElement style="Estilo_contenido7" x="363" y="40" width="39" height="15" uuid="31569ad4-7e50-4631-aea5-d2446f15cee6"/>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$V{Promedio_general}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="Estilo_contenido7" x="363" y="54" width="39" height="15" uuid="a7a98391-6d19-4a88-8821-29bce93cd2a3"/>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$V{para_contar_aprobadas}]]></textFieldExpression>
@@ -520,22 +520,22 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 					<reportElement style="Estilo_titulo7" x="12" y="83" width="238" height="15" uuid="57232d6c-5a10-4766-b1be-ca5fd58f4bf3"/>
 					<text><![CDATA[NRO COMPONENTES PENDIENTES:]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="Estilo_contenido7" x="363" y="12" width="39" height="15" uuid="5a828fd4-bece-4b7a-8315-6bab1f2cda3f"/>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$V{Total_componente_aca}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="Estilo_contenido7" x="363" y="82" width="39" height="15" uuid="2c4a8547-3c32-4b4f-8155-13a9e4590d68"/>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$V{componentes_pendientes}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="#,##0.00 %">
+				<textField isStretchWithOverflow="true" pattern="#,##0.00 %" isBlankWhenNull="true">
 					<reportElement style="Estilo_contenido7" x="363" y="68" width="39" height="15" uuid="f6e9f562-4469-4a73-ae6a-11538d7cd46b"/>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$V{Porcentaje}]]></textFieldExpression>
 				</textField>
-				<textField isBlankWhenNull="false">
+				<textField isBlankWhenNull="true">
 					<reportElement style="Estilo_contenido7" x="363" y="26" width="39" height="15" uuid="172c65a6-0876-4128-8b6d-9624014f7088"/>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$V{Total_componente_men}]]></textFieldExpression>
@@ -591,7 +591,7 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$F{NOTA_DEFINITIVA_GRADO}]]></textFieldExpression>
 				</textField>
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement style="Estilo_titulo7" x="303" y="237" width="103" height="16" uuid="d809d288-64a3-4094-8c1a-8a133563dfac"/>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$F{APRECIACION}]]></textFieldExpression>
