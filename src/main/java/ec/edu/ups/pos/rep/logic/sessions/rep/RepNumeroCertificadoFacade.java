@@ -8,8 +8,10 @@ package ec.edu.ups.pos.rep.logic.sessions.rep;
 import ec.edu.ups.pos.rep.data.entities.rep.RepNumeroCertificado;
 import ec.edu.ups.pos.rep.logic.sessions.AbstractFacade;
 import ec.edu.ups.util.exceptions.UPSDataEditException;
+import ec.edu.ups.util.jpa.search.param.CacheStoreModeParam;
 import java.util.List;
 import javax.ejb.Stateless;
+import javax.persistence.CacheStoreMode;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
@@ -70,7 +72,7 @@ public class RepNumeroCertificadoFacade extends AbstractFacade<RepNumeroCertific
                                                     .setParameter(2, pelCodigo)
                                                     .setParameter(3, ticCodigo);
 
-        //(new CacheStoreModeParam(CacheStoreMode.REFRESH)).processParam(q);
+        (new CacheStoreModeParam(CacheStoreMode.REFRESH)).processParam(q);
 
         List<RepNumeroCertificado> result = q.getResultList();
 
@@ -89,7 +91,7 @@ public class RepNumeroCertificadoFacade extends AbstractFacade<RepNumeroCertific
                                                     .setParameter(2, ticCodigo)
                                                     .setParameter(3, anio);
 
-        //(new CacheStoreModeParam(CacheStoreMode.REFRESH)).processParam(q);
+        (new CacheStoreModeParam(CacheStoreMode.REFRESH)).processParam(q);
 
         List<RepNumeroCertificado> result = q.getResultList();
 
