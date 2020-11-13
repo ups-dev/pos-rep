@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-REC-0001" pageWidth="595" pageHeight="842" columnWidth="551" leftMargin="22" rightMargin="22" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="165"/>
+	<property name="ireport.y" value="360"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_alu_codigo" class="java.lang.Integer">
@@ -181,8 +181,14 @@ SELECT  distinct alu.alu_codigo,cli.cllc_cdg,cli.cllc_ruc cedula,
                       where pee.pel_codigo = pel.pel_codigo
                       and   pee.est_codigo = pos.est_codigo))||') ' cohorte,
 
-        malp.semestre, malp.mal_nivel, malp.mal_nro_horas, malp.mat_codigo,malp.mat_descripcion modulo,malp.total_horas,malp.mencion,
-        decode(malp.materia_mencion,'S',1,0 ) cont_modulos_men_est,decode(malp.materia_mencion,'SIN',1,0 ) cont_modulos_mencion, decode(malp.materia_mencion,'N',1,0) cont_modulos,malp.total_menciones,
+        malp.semestre, malp.mal_nivel, malp.mal_nro_horas, malp.mat_codigo,malp.mat_descripcion modulo,malp.total_horas,
+DECODE(malp.total_menciones,1,null,malp.mencion) mencion,
+       /* decode(malp.materia_mencion,'S',1,0 ) cont_modulos_men_est,decode(malp.materia_mencion,'SIN',1,0 ) cont_modulos_mencion, decode(malp.materia_mencion,'N',1,0) cont_modulos,*/
+decode(malp.materia_mencion,'S',decode(malp.total_menciones,1,0,1),0) cont_modulos_men_est,
+        decode(malp.materia_mencion,'SIN',decode(malp.total_menciones,1,0,1),0 ) cont_modulos_mencion,
+        decode(malp.materia_mencion,'N',1,decode(malp.total_menciones,1,1,0)) cont_modulos,
+
+malp.total_menciones,
         calp.numero_veces, calp.nota_final, NVL(calp.estado,malp.estado) estado_modulo,calp.tap_codigo,calp.tipo_aprobacion,observaciones_matricula,
         calp.pel_codigo, calp.pel_descripcion,calp.fecha_semestre,calp.para_contar,calp.para_promediar,calp.resolucion,
         DECODE(malp.tiene_mencion_pro,'S',decode(malp.total_menciones,1,cac2.cac_descripcion||', '||'MENCIÓN '||UPPER(cdd.cdd_mencion),
@@ -422,78 +428,97 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="107">
+			<band height="57">
 				<staticText>
-					<reportElement style="Estilo_titulo7" x="4" y="36" width="238" height="15" uuid="2fe67126-d320-4b19-ad52-f56fffba1c8f"/>
-					<textElement>
-						<font size="7"/>
-					</textElement>
-					<text><![CDATA[TOTAL COMPONENTES MENCIÓN:]]></text>
-				</staticText>
-				<staticText>
-					<reportElement style="Estilo_titulo7" x="4" y="50" width="238" height="15" uuid="6702f2e6-ceb7-4974-91ac-cc978aa6e3e7"/>
+					<reportElement style="Estilo_titulo7" x="4" y="0" width="238" height="15" uuid="6702f2e6-ceb7-4974-91ac-cc978aa6e3e7"/>
 					<textElement>
 						<font size="7"/>
 					</textElement>
 					<text><![CDATA[PROMEDIO GENERAL:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_titulo7" x="4" y="64" width="238" height="15" uuid="eda184d5-15b3-47e3-b0b2-a9543cff6367"/>
+					<reportElement style="Estilo_titulo7" x="4" y="14" width="238" height="15" uuid="eda184d5-15b3-47e3-b0b2-a9543cff6367"/>
 					<textElement>
 						<font size="7"/>
 					</textElement>
 					<text><![CDATA[COMPONENTES APROBADOS:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Estilo_titulo7" x="4" y="78" width="238" height="15" uuid="15a98c86-1c8b-4799-a354-3a078bbad209"/>
+					<reportElement style="Estilo_titulo7" x="4" y="28" width="238" height="15" uuid="15a98c86-1c8b-4799-a354-3a078bbad209"/>
 					<textElement>
 						<font size="7"/>
 					</textElement>
 					<text><![CDATA[PORCENTAJE COMPONENTES APROBADOS:]]></text>
 				</staticText>
 				<textField pattern="###0.00;-###0.00" isBlankWhenNull="true">
-					<reportElement style="Estilo_contenido7" x="265" y="49" width="38" height="15" uuid="31569ad4-7e50-4631-aea5-d2446f15cee6"/>
+					<reportElement style="Estilo_contenido7" x="265" y="0" width="38" height="15" uuid="31569ad4-7e50-4631-aea5-d2446f15cee6"/>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$V{Promedio_general}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement style="Estilo_titulo7" x="4" y="92" width="238" height="15" uuid="57232d6c-5a10-4766-b1be-ca5fd58f4bf3"/>
+					<reportElement style="Estilo_titulo7" x="4" y="42" width="238" height="15" uuid="57232d6c-5a10-4766-b1be-ca5fd58f4bf3"/>
 					<textElement>
 						<font size="7"/>
 					</textElement>
 					<text><![CDATA[NRO COMPONENTES PENDIENTES:]]></text>
 				</staticText>
+				<textField pattern="#,##0.00 %" isBlankWhenNull="true">
+					<reportElement style="Estilo_contenido7" x="265" y="28" width="38" height="15" uuid="b12a509f-e3b4-4d2b-b4e6-ce134677eebc"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$V{porcentaje}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement style="Estilo_contenido7" x="265" y="14" width="38" height="15" uuid="ea43bbd8-9bf8-4e3a-9dd2-0011d546397e"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$V{para_contar_aprobadas}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement style="Estilo_contenido7" x="265" y="42" width="38" height="15" uuid="72fbfa7e-a098-4aa6-a028-20ad391d25b3"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$V{componentes_pendientes}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="comp_mencion_grup">
+		<groupExpression><![CDATA[$F{CEDULA}]]></groupExpression>
+		<groupFooter>
+			<band height="15">
+				<printWhenExpression><![CDATA[$V{Total_componente_men}.intValue()>= 1]]></printWhenExpression>
 				<staticText>
-					<reportElement style="Estilo_titulo7" x="4" y="22" width="238" height="15" uuid="05f1a884-a1d6-413b-a82f-985d5edca869"/>
+					<reportElement style="Estilo_titulo7" x="4" y="0" width="238" height="15" isPrintWhenDetailOverflows="true" uuid="2fe67126-d320-4b19-ad52-f56fffba1c8f">
+						<printWhenExpression><![CDATA[$V{Total_componente_men}.intValue()>= 1]]></printWhenExpression>
+					</reportElement>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[TOTAL COMPONENTES MENCIÓN:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Estilo_contenido7" x="265" y="0" width="38" height="15" isPrintWhenDetailOverflows="true" uuid="b473d1b7-31d3-4a84-b21c-f58baace3c4f">
+						<printWhenExpression><![CDATA[$V{Total_componente_men}.intValue()>= 1]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$V{Total_componente_men}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="comp_academicos_grup">
+		<groupExpression><![CDATA[$F{ESTUDIANTE}]]></groupExpression>
+		<groupFooter>
+			<band height="37">
+				<staticText>
+					<reportElement style="Estilo_titulo7" isPrintRepeatedValues="false" x="4" y="22" width="238" height="15" isPrintWhenDetailOverflows="true" printWhenGroupChanges="estudiante_grup" uuid="05f1a884-a1d6-413b-a82f-985d5edca869"/>
 					<textElement>
 						<font size="7"/>
 					</textElement>
 					<text><![CDATA[TOTAL COMPONENTES ACADÉMICOS:]]></text>
 				</staticText>
 				<textField isBlankWhenNull="true">
-					<reportElement style="Estilo_contenido7" x="265" y="22" width="38" height="15" uuid="12f0444d-60b6-4da2-b3ab-34af720960ba"/>
+					<reportElement style="Estilo_contenido7" isPrintRepeatedValues="false" x="265" y="22" width="38" height="15" isPrintWhenDetailOverflows="true" uuid="12f0444d-60b6-4da2-b3ab-34af720960ba"/>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$V{Total_componente_aca}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement style="Estilo_contenido7" x="265" y="36" width="38" height="15" uuid="b473d1b7-31d3-4a84-b21c-f58baace3c4f"/>
-					<textElement textAlignment="Right"/>
-					<textFieldExpression><![CDATA[$V{Total_componente_men}]]></textFieldExpression>
-				</textField>
-				<textField pattern="#,##0.00 %" isBlankWhenNull="true">
-					<reportElement style="Estilo_contenido7" x="265" y="78" width="38" height="15" uuid="b12a509f-e3b4-4d2b-b4e6-ce134677eebc"/>
-					<textElement textAlignment="Right"/>
-					<textFieldExpression><![CDATA[$V{porcentaje}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement style="Estilo_contenido7" x="265" y="64" width="38" height="15" uuid="ea43bbd8-9bf8-4e3a-9dd2-0011d546397e"/>
-					<textElement textAlignment="Right"/>
-					<textFieldExpression><![CDATA[$V{para_contar_aprobadas}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement style="Estilo_contenido7" x="265" y="92" width="38" height="15" uuid="72fbfa7e-a098-4aa6-a028-20ad391d25b3"/>
-					<textElement textAlignment="Right"/>
-					<textFieldExpression><![CDATA[$V{componentes_pendientes}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
