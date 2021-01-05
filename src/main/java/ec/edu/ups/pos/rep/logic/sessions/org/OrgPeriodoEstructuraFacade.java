@@ -44,23 +44,24 @@ public class OrgPeriodoEstructuraFacade extends AbstractFacade<OrgPeriodoEstruct
         return q.getResultList();
     }*/
     
-    public List<OrgPeriodoLectivo> obtieneCohortePorPrograma(OrgEstructura orgEstructuraPrograma){
-        System.out.println("programa "+orgEstructuraPrograma);
+   /* public List<OrgPeriodoLectivo> obtieneCohortePorPrograma(OrgEstructura orgEstructuraPrograma){
+        System.out.println("programa111 "+orgEstructuraPrograma);
         Query q = getEntityManager().createQuery("SELECT distinct pee.orgPeriodoLectivo FROM OrgPeriodoEstructura pee WHERE pee.orgEstructura = :orgEstructuraPrograma AND pee.orgPeriodoLectivo.pelTipo= 'P' AND pee.audEliminado= 'N' ORDER BY pee.orgPeriodoLectivo.pelCodigo DESC")
                 .setParameter("orgEstructuraPrograma", orgEstructuraPrograma);                
         (new CacheStoreModeParam(CacheStoreMode.REFRESH)).processParam(q);
         System.out.println("periodos "+q.getResultList().size());
         return q.getResultList();
-    }
+    }*/
     
     public List<OrgPeriodoLectivo> obtieneCohortePorEstructura(OrgEstructura orgEstructura){
-        System.out.println("programa "+orgEstructura);
+     //   System.out.println("programa 222 "+orgEstructura);
         
        Query q = getEntityManager().createNativeQuery(" Select distinct pel.* " +
                         " from org.org_periodo_estructura pee, " +
                         "     org.org_periodo_lectivo    pel, " +
                         "     org.org_estructura         est " +
                         " where est.est_codigo = pee.est_codigo " +
+                        " and   pee.pel_codigo = pel.pel_codigo " +
                         " and   pee.est_codigo  IN (SELECT est_codigo e " +
                         "                            FROM   org.org_estructura e " +
                         "                            WHERE  e.est_nivel  = 4 " +
@@ -75,6 +76,7 @@ public class OrgPeriodoEstructuraFacade extends AbstractFacade<OrgPeriodoEstruct
         (new CacheStoreModeParam(CacheStoreMode.REFRESH)).processParam(q);
         return q.getResultList();
     }  
+    
       
     /**
      * Lista Periodos Vigentes.         
@@ -84,5 +86,24 @@ public class OrgPeriodoEstructuraFacade extends AbstractFacade<OrgPeriodoEstruct
         Query q = getEntityManager().createQuery("SELECT pel FROM OrgPeriodoLectivo pel WHERE pel.pelTipo= 'P' AND pel.audEliminado= 'N' ORDER BY pel.pelCodigo DESC");                
         (new CacheStoreModeParam(CacheStoreMode.REFRESH)).processParam(q);
         return q.getResultList();
+    }
+    
+    ///Método Nuevo 
+    public OrgPeriodoEstructura obtieneCohorteEstructura(Long estCodigoPrograma, Long pelCodigo) {
+
+        Query q = getEntityManager().createNativeQuery("  Select distinct pee.* "
+                + " from org.org_periodo_estructura pee  "
+                + " where  pee.est_codigo = ?1 "
+                + " and    pee.pel_codigo = ?2 "                
+                + " and    pee.pee_fecha_inicial_cohorte IS NOT NULL "
+                + " and    pee.pee_fecha_final_cohorte IS NOT NULL "
+                + " and    pee.aud_eliminado = 'N' "
+                + " order by 1 DESC", OrgPeriodoEstructura.class)
+                .setParameter(1, estCodigoPrograma)
+                .setParameter(2, pelCodigo);
+
+        (new CacheStoreModeParam(CacheStoreMode.REFRESH)).processParam(q);
+        List<OrgPeriodoEstructura> lista = q.getResultList();
+        return lista.isEmpty()?null:lista.get(0);
     }
 }
