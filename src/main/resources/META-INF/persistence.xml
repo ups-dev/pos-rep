@@ -24,7 +24,6 @@
     <class>ec.edu.ups.org.common.data.entities.OrgEstructura</class>
     <class>ec.edu.ups.org.common.data.entities.OrgParametro</class>
     <class>ec.edu.ups.org.common.data.entities.OrgParametroEstructura</class>
-    <class>ec.edu.ups.org.common.data.entities.OrgPeriodoEstructura</class>
     <class>ec.edu.ups.org.common.data.entities.OrgPeriodoLectivo</class>
     <class>ec.edu.ups.org.common.data.entities.OrgTipoAreaGeografica</class>
     <class>ec.edu.ups.org.common.data.entities.OrgTipoEspacioFisico</class>
@@ -262,6 +261,11 @@
     <class>ec.edu.ups.pos.rep.data.entities.rep.RepNumeroCertificado</class>
     <class>ec.edu.ups.pos.rep.data.entities.rep.RepEmisionCertificado</class>
     <class>ec.edu.ups.pos.rep.data.entities.rep.RepTipCerRepSis</class>
+    <class>ec.edu.ups.org.common.data.entities.OrgPeriodoEstructura</class>
+    <class>ec.edu.ups.org.common.data.entities.OrgAutorizacion</class>
+    <class>ec.edu.ups.org.common.data.entities.OrgDesignacion</class>
+    <class>ec.edu.ups.org.common.data.entities.OrgMotivoSalida</class>
+    <class>ec.edu.ups.org.common.data.entities.OrgTipoDesignacion</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties/>
   </persistence-unit>

@@ -104,7 +104,7 @@ public class PedMallaFacade extends AbstractFacade<PedMalla> {
     
     public List<Integer> obtieneNivelMalla(Long orgEstructura, Long pelCodigo){
           
-        System.err.println("orgEstructuraaaa "+orgEstructura+pelCodigo);
+       // System.err.println("orgEstructuraaaa "+orgEstructura+pelCodigo);
                   
              Query q = getEntityManager().createNativeQuery(" SELECT distinct mal.mal_Nivel " +
                                                             " FROM   ped.Ped_Malla mal, " +
