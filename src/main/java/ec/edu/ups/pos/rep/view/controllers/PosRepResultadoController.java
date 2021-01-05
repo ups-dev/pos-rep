@@ -17,6 +17,7 @@ import ec.edu.ups.pos.rep.view.controller.rep.RepReportesSistemaController;
 import ec.edu.ups.jsf.security.ups.util.TipoEstructura;
 import ec.edu.ups.jsf.security.ups.web.session.SecOrgEstructuraController;
 import ec.edu.ups.org.common.data.entities.OrgEstructura;
+import ec.edu.ups.org.common.data.entities.OrgPeriodoEstructura;
 import ec.edu.ups.org.common.data.entities.OrgPeriodoLectivo;
 import ec.edu.ups.ped.common.data.entities.PedMalla;
 import ec.edu.ups.ped.common.data.entities.PedModalidad;
@@ -98,7 +99,7 @@ public class PosRepResultadoController implements Serializable{
     
     @Inject
     private InsAlumnoFacade insAlumnoFacade; 
- 
+    
              
           
     
@@ -174,14 +175,17 @@ public class PosRepResultadoController implements Serializable{
                 orgEstructuraCampusList = orgEstructuraFacade.listaEstructuraCampusActivo(getOrgEstructuraSede());
             }            
         }  
+        
+        setOrgEstructuraCarrera(null);
+        setOrgEstructuraCarreraList(null);
         updateCarreraList();
-  
+      
     }
 
     public void updateCarreraList() {
         
-        setOrgEstructuraCarrera(null);
-        setOrgEstructuraCarreraList(null);
+       // setOrgEstructuraCarrera(null);
+      //  setOrgEstructuraCarreraList(null);
         updateAsignaturaList();
         setGthPersona(null);
         
@@ -213,10 +217,13 @@ public class PosRepResultadoController implements Serializable{
         if (obtenerEstructura() != null) { 
              
              setOrgPeriodoLectivoList(orgPeriodoEstructuraFacade.obtieneCohortePorEstructura(obtenerEstructura()));
+          //   System.out.println("Cohorte por Estructura");
       
         }else{
     
             setOrgPeriodoLectivoList(orgPeriodoEstructuraFacade.obtienePeriodoLectivo());
+            //System.out.println("Cohorte sin Estructura");
+      
         }
                
             updateNivelMallaList();
@@ -590,13 +597,16 @@ public class PosRepResultadoController implements Serializable{
         OrgEstructura estructuraSeleccionada = null;
         
         if( getOrgEstructuraCarrera() != null){
+            //System.out.println("getOrgEstructuraCarrerarrrrrrrrrr");
             
             estructuraSeleccionada = getOrgEstructuraCarrera();
             
         
         }else {
         
-           if (getOrgEstructuraCampus()!=null){            
+           if (getOrgEstructuraCampus()!=null){   
+               
+             //  System.out.println("getOrgEstructuraCampusss");
            estructuraSeleccionada = getOrgEstructuraCampus();
             
             }else 
@@ -613,15 +623,43 @@ public class PosRepResultadoController implements Serializable{
 
     }
     
-    public String obtenerAnioPosgrado(Date fechaInicio, Date fechaFin ){
-       
-        Calendar fecha1 = Calendar.getInstance();
-        fecha1.setTime(fechaInicio); 
-        Calendar fecha2 = Calendar.getInstance();
-        fecha2.setTime(fechaFin);
-        int anioIni = fecha1.get(Calendar.YEAR);
-        int anioFin = fecha2.get(Calendar.YEAR);
-        String anio_posgrado = Integer.toString(anioIni)+" - " +Integer.toString(anioFin);
+    //public String obtenerAnioPosgrado(Date fechaInicio, Date fechaFin ){
+        // nuevo cambio en metodo en PosREPResultadoControler
+         public String obtenerAnioPosgrado(OrgPeriodoLectivo periodoLec){
+             
+             Date fechaInicio= new Date();
+             Date fechaFin = new Date();
+             
+             if (getOrgEstructuraCarrera()!= null){
+                 
+                  OrgPeriodoEstructura periodoEst=orgPeriodoEstructuraFacade.obtieneCohorteEstructura(getOrgEstructuraCarrera().getEstCodigo(), periodoLec.getPelCodigo());
+                 
+                  fechaInicio = periodoEst.getPeeFechaInicialCohorte();  //.getPeeFechaInicial();// getFechaa Inicial Cohorte EStructura; -- campo hay que subir
+                      
+                 //  System.out.println("fechaInicio"+fechaInicio);
+             
+                  fechaFin = periodoEst.getPeeFechaFinalCohorte();// ---falta
+                  
+                 //  System.out.println("fechaFin"+fechaFin);
+             }
+              else{
+             fechaInicio = periodoLec.getPelFechaInicio();
+             
+             fechaFin = periodoLec.getPelFechaFin();
+             
+             }
+                          
+                  Calendar fecha1 = Calendar.getInstance();
+                    fecha1.setTime(fechaInicio); 
+                    
+                
+                    Calendar fecha2 = Calendar.getInstance();
+                    fecha2.setTime(fechaFin);
+                    int anioIni = fecha1.get(Calendar.YEAR);
+                    int anioFin = fecha2.get(Calendar.YEAR);
+                    String anio_posgrado = Integer.toString(anioIni)+" - " +Integer.toString(anioFin);
+             
+                  
        
     return anio_posgrado;
     }

@@ -232,10 +232,10 @@
                                     <f:selectItems value="#{posRepResultadoController.orgPeriodoLectivoList}"
                                                    var="periodoLectivoItem"
                                                    itemValue="#{periodoLectivoItem}"
-                                                   itemLabel="#{periodoLectivoItem.pelDescripcion.toString()} (#{posRepResultadoController.obtenerAnioPosgrado(periodoLectivoItem.pelFechaInicio,periodoLectivoItem.pelFechaFin)})"
+                                                   itemLabel="#{periodoLectivoItem.pelDescripcion.toString()} (#{posRepResultadoController.obtenerAnioPosgrado(periodoLectivoItem)})"
                                                    />
                                     <p:column>
-                                        <h:outputText value="#{filtro.pelDescripcion} (#{posRepResultadoController.obtenerAnioPosgrado(filtro.pelFechaInicio,filtro.pelFechaFin)})" />  
+                                        <h:outputText value="#{filtro.pelDescripcion} (#{posRepResultadoController.obtenerAnioPosgrado(filtro)})" />  
                                     </p:column>                 
                                     <p:ajax update="posRepFiltrarNivel,posRepFiltrarGrupo,posRepFiltrarDocente,"                                    
                                             listener="#{posRepResultadoController.updateNivelMallaList()}" 
