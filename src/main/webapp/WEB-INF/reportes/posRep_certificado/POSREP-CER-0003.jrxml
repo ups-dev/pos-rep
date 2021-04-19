@@ -9,7 +9,7 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["C:\\Users\\UPS\\Documents\\Proyectos_Nuevos\\pos-rep\\src\\main\\webapp\\WEB-INF\\reportes\\posRep_certificado\\"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["/WEB-INF/reportes/posRep_certificado"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="pn_campus" class="java.lang.Integer">
 		<parameterDescription><![CDATA[]]></parameterDescription>
@@ -64,7 +64,8 @@
               TO_CHAR(mal.mal_nivel, 'FMRN')||' '||'SEMESTRE' semestre,
               mal.mal_nro_horas,
               'N' materia_mencion,
-              null mencion
+              null mencion,
+              mal.mal_obligatorio
       from    ped.ped_des_est_pro_edu    dep,
               ped.ped_proyecto_educacion pre,
               ped.ped_malla              mal,
@@ -86,7 +87,8 @@
               TO_CHAR(mal.mal_nivel, 'FMRN')||' '||'SEMESTRE' semestre,
               mal.mal_nro_horas,
               decode(($P{pv_cdd_codigo}),null,'SIN','S') materia_mencion,
-              'MENCIÓN '||UPPER(cdd.cdd_mencion)
+              'MENCIÓN '||UPPER(cdd.cdd_mencion),
+              mal.mal_obligatorio
       from    ped.ped_des_est_pro_edu    dep,
               ped.ped_proyecto_educacion pre,
               ped.ped_malla              mal,
@@ -111,6 +113,8 @@
                     mtr.mat_codigo,
                     mtr.mat_descripcion         modulo,
                     mal.mal_nro_horas,
+                    mal.mal_nivel,
+                    mal.mal_obligatorio,
                     cal.cal_nota_final          nota_final,
                     cal.cal_numero_veces        numero_veces,
                     cal.tap_codigo,
@@ -180,7 +184,7 @@ SELECT  distinct alu.alu_codigo,cli.cllc_cdg,cli.cllc_ruc cedula,
                       where pee.pel_codigo = pel.pel_codigo
                       and   pee.est_codigo = pos.est_codigo))||') ' cohorte,
 
-        malp.semestre, malp.mal_nivel, malp.mal_nro_horas, malp.mat_codigo,malp.mat_descripcion modulo,malp.total_horas,
+        malp.semestre, malp.mal_nivel, malp.mal_nro_horas, malp.mat_codigo,malp.mat_descripcion modulo, malp.mal_obligatorio,malp.total_horas,
 DECODE(malp.total_menciones,1,null,malp.mencion) mencion,
 decode(malp.materia_mencion,'S',decode(malp.total_menciones,1,0,1),0) cont_modulos_men_est,
 decode(malp.materia_mencion,'SIN',decode(malp.total_menciones,1,0,1),0 ) cont_modulos_mencion,
@@ -202,6 +206,10 @@ malp.total_menciones,
                 and    iic.aud_eliminado  = 'N'
                 and    ipa.ins_codigo     = ins.ins_codigo
                 and    cdd.dep_codigo     = dep.dep_codigo)),0)),'N',decode(cac2.cac_descripcion,'OTRO',cde.cde_des_tit_opcional,cac2.cac_descripcion))TITULO,
+				(select decode(count(*),0,'S','N') from CALIFICACIONPOS calp2 where ins.ins_codigo         = calp2.ins_codigo
+AND    pre.pre_numero         = calp2.pre_numero
+and malp.mal_nivel=calp2.mal_nivel
+and calp2.mal_obligatorio='N') imprime,
          round((acg.acg_promedio_academico*70)/100,2) promedio_academico,
          round((acg.acg_trabajo_grado*30)/100,2) trabajo_grado,
          acg.acg_nota_definitiva_grado nota_definitiva_grado,
@@ -299,6 +307,7 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 	<field name="MAL_NRO_HORAS" class="java.math.BigDecimal"/>
 	<field name="MAT_CODIGO" class="java.math.BigDecimal"/>
 	<field name="MODULO" class="java.lang.String"/>
+	<field name="MAL_OBLIGATORIO" class="java.lang.String"/>
 	<field name="TOTAL_HORAS" class="java.math.BigDecimal"/>
 	<field name="MENCION" class="java.lang.String"/>
 	<field name="CONT_MODULOS_MEN_EST" class="java.math.BigDecimal"/>
@@ -318,6 +327,7 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 	<field name="PARA_PROMEDIAR" class="java.math.BigDecimal"/>
 	<field name="RESOLUCION" class="java.lang.String"/>
 	<field name="TITULO" class="java.lang.String"/>
+	<field name="IMPRIME" class="java.lang.String"/>
 	<field name="PROMEDIO_ACADEMICO" class="java.math.BigDecimal"/>
 	<field name="TRABAJO_GRADO" class="java.math.BigDecimal"/>
 	<field name="NOTA_DEFINITIVA_GRADO" class="java.math.BigDecimal"/>
@@ -474,7 +484,7 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 		<groupFooter>
 			<band height="35">
 				<subreport>
-					<reportElement isPrintRepeatedValues="false" x="12" y="4" width="530" height="31" uuid="5432252b-4d20-4e6b-9e63-b68584aa5a5e"/>
+					<reportElement style="Estilo_contenido7" isPrintRepeatedValues="false" x="12" y="4" width="530" height="31" uuid="5432252b-4d20-4e6b-9e63-b68584aa5a5e"/>
 					<subreportParameter name="pn_seg_codigo">
 						<subreportParameterExpression><![CDATA[$P{pn_seg_codigo}]]></subreportParameterExpression>
 					</subreportParameter>
@@ -817,56 +827,72 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 	<detail>
 		<band height="16" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido7" x="52" y="0" width="230" height="16" isPrintWhenDetailOverflows="true" uuid="2f60d821-a089-43b0-b680-ae221cca79e6"/>
+				<reportElement style="Estilo_contenido7" x="52" y="0" width="230" height="16" isPrintWhenDetailOverflows="true" uuid="2f60d821-a089-43b0-b680-ae221cca79e6">
+					<printWhenExpression><![CDATA[$F{MAL_OBLIGATORIO}.equals( "S" ) || ($F{IMPRIME}.equals( "S" )) || ($F{MAL_OBLIGATORIO}.equals( "N" )&&$F{NOTA_FINAL}!=null)]]></printWhenExpression>
+				</reportElement>
 				<textElement>
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{MODULO}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido7" x="361" y="0" width="29" height="16" isPrintWhenDetailOverflows="true" uuid="c2e26674-7dd8-4746-bd67-70a08e834b9d"/>
+				<reportElement style="Estilo_contenido7" x="361" y="0" width="29" height="16" isPrintWhenDetailOverflows="true" uuid="c2e26674-7dd8-4746-bd67-70a08e834b9d">
+					<printWhenExpression><![CDATA[$F{MAL_OBLIGATORIO}.equals( "S" ) || ($F{IMPRIME}.equals( "S" )) || ($F{MAL_OBLIGATORIO}.equals( "N" )&&$F{NOTA_FINAL}!=null)]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Center">
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{NUMERO_VECES}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido7" x="390" y="0" width="31" height="16" isPrintWhenDetailOverflows="true" uuid="453b0179-8507-4c29-a3b4-9f2fd4299c7d"/>
+				<reportElement style="Estilo_contenido7" x="390" y="0" width="31" height="16" isPrintWhenDetailOverflows="true" uuid="453b0179-8507-4c29-a3b4-9f2fd4299c7d">
+					<printWhenExpression><![CDATA[$F{MAL_OBLIGATORIO}.equals( "S" ) || ($F{IMPRIME}.equals( "S" )) || ($F{MAL_OBLIGATORIO}.equals( "N" )&&$F{NOTA_FINAL}!=null)]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Center">
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{NOTA_FINAL}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido7" x="466" y="0" width="85" height="16" isPrintWhenDetailOverflows="true" uuid="d3ddbae6-41b8-4993-bbb6-ea7130d1f998"/>
+				<reportElement style="Estilo_contenido7" x="466" y="0" width="85" height="16" isPrintWhenDetailOverflows="true" uuid="d3ddbae6-41b8-4993-bbb6-ea7130d1f998">
+					<printWhenExpression><![CDATA[$F{MAL_OBLIGATORIO}.equals( "S" ) || ($F{IMPRIME}.equals( "S" )) || ($F{MAL_OBLIGATORIO}.equals( "N" )&&$F{NOTA_FINAL}!=null)]]></printWhenExpression>
+				</reportElement>
 				<textElement>
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{TIPO_APROBACION}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido7" x="312" y="0" width="42" height="16" isPrintWhenDetailOverflows="true" uuid="617e9b77-3844-4d45-b406-16db4ee2ae94"/>
+				<reportElement style="Estilo_contenido7" x="312" y="0" width="42" height="16" isPrintWhenDetailOverflows="true" uuid="617e9b77-3844-4d45-b406-16db4ee2ae94">
+					<printWhenExpression><![CDATA[$F{MAL_OBLIGATORIO}.equals( "S" ) || ($F{IMPRIME}.equals( "S" )) || ($F{MAL_OBLIGATORIO}.equals( "N" )&&$F{NOTA_FINAL}!=null)]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Center">
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{FECHA_SEMESTRE}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="Estilo_contenido7" x="12" y="0" width="40" height="16" isPrintWhenDetailOverflows="true" uuid="2ad53e89-b063-4663-9d4d-0ef89e277b8e"/>
+				<reportElement style="Estilo_contenido7" x="12" y="0" width="40" height="16" isPrintWhenDetailOverflows="true" uuid="2ad53e89-b063-4663-9d4d-0ef89e277b8e">
+					<printWhenExpression><![CDATA[$F{MAL_OBLIGATORIO}.equals( "S" ) || ($F{IMPRIME}.equals( "S" )) || ($F{MAL_OBLIGATORIO}.equals( "N" )&&$F{NOTA_FINAL}!=null)]]></printWhenExpression>
+				</reportElement>
 				<textElement>
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{MAT_CODIGO}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="Estilo_contenido7" x="283" y="0" width="29" height="16" isPrintWhenDetailOverflows="true" uuid="fe378887-f2ef-46fe-ba5f-709fc7cd8504"/>
+				<reportElement style="Estilo_contenido7" x="283" y="0" width="29" height="16" isPrintWhenDetailOverflows="true" uuid="fe378887-f2ef-46fe-ba5f-709fc7cd8504">
+					<printWhenExpression><![CDATA[$F{MAL_OBLIGATORIO}.equals( "S" ) || ($F{IMPRIME}.equals( "S" )) || ($F{MAL_OBLIGATORIO}.equals( "N" )&&$F{NOTA_FINAL}!=null)]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Center">
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{MAL_NRO_HORAS}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido7" x="421" y="0" width="44" height="16" isPrintWhenDetailOverflows="true" uuid="b8acae1d-dc19-4065-b60d-0621dfeccc4c"/>
+				<reportElement style="Estilo_contenido7" x="421" y="0" width="44" height="16" isPrintWhenDetailOverflows="true" uuid="b8acae1d-dc19-4065-b60d-0621dfeccc4c">
+					<printWhenExpression><![CDATA[$F{MAL_OBLIGATORIO}.equals( "S" ) || ($F{IMPRIME}.equals( "S" )) || ($F{MAL_OBLIGATORIO}.equals( "N" )&&$F{NOTA_FINAL}!=null)]]></printWhenExpression>
+				</reportElement>
 				<textElement>
 					<font size="7"/>
 				</textElement>
