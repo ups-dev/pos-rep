@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-CER-0001" pageWidth="595" pageHeight="842" columnWidth="551" leftMargin="22" rightMargin="22" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="393"/>
+	<property name="ireport.y" value="57"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_pel_codigo" class="java.lang.Integer">
@@ -64,9 +64,10 @@
 
 from
 
-(select distinct dse.dee_descripcion        sede,
+(select distinct inc.alu_codigo,inc.ins_codigo, dse.dee_descripcion        sede,
         dcm.dee_descripcion        campus,
         pos.est_codigo,
+        sed.est_codigo est_codigo_sed,
         dpos.dee_descripcion        posgrado,
         mod.mod_descripcion         modalidad,
         pel.pel_descripcion,        pel.pel_codigo,
@@ -95,7 +96,7 @@ from
                                        '12', 'Diciembre')||' de '||
                TO_CHAR(sysdate, 'YYYY')||'.' fecha_actual,
 
-        cal.caa_observaciones_leg observaciones,
+         cal.caa_observaciones_leg observaciones,
         ( select ppe.PPE_DESCRIPCION_NUMERO
           from PED.PED_PAR_PRO_EDU ppe,
                PED.PED_TIP_PAR_TIP_PRO_EDU tpt
@@ -184,7 +185,9 @@ and   pre.pre_numero    = dep.pre_numero
 and   pre.pre_numero    = mpe.pre_numero
 and   mod.mod_codigo    = mpe.mod_codigo
 and   mpe.mpe_codigo    = emp.mpe_codigo
-and   pos.est_codigo    = oii.est_codigo
+and   emp.emp_codigo    =mta.emp_codigo
+and   dep.dep_codigo    = mta.dep_codigo
+and   dep.dee_codigo      = dpos.dee_codigo
 and   pos.dee_codigo    = dpos.dee_codigo
 and   pos.est_codigo_padre = cam.est_codigo
 and   cam.dee_codigo       = dcm.dee_codigo
@@ -202,11 +205,7 @@ and   cac.cac_codigo_padre = cac2.cac_codigo
 and   tit.tit_codigo       = ctt.tit_codigo
 and   tit.ned_codigo       = 2
 and   pee.pel_codigo  = $P{pn_pel_codigo}
-and   pos.est_codigo  IN (SELECT est_codigo e
-                            FROM   org.org_estructura e
-                            WHERE  e.est_nivel  = 4
-                            START WITH e.est_codigo = $P{pn_est_codigo}
-                            CONNECT BY PRIOR e.est_codigo = e.est_codigo_padre )
+
 and   pee.pee_nivel  = $P{pv_nivel}
 and  inc.alu_codigo  = $P{pn_alu_codigo}
 ) p
