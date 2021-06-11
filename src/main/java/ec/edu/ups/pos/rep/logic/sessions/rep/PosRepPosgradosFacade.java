@@ -37,7 +37,7 @@ public class PosRepPosgradosFacade extends AbstractFacade<PosgradoAlumnoWrapper>
     public List<PosgradoAlumnoWrapper> listaPosgrados(Long aluCodigo) {
         
       //  System.out.println("aluCodigoo: "+aluCodigo);
-      /*  Query q = getEntityManager().createNativeQuery( "   select distinct aluCodigo,   " +
+        Query q = getEntityManager().createNativeQuery( "   select distinct aluCodigo,   " +
                                                     "       aluCodigo||'-'||decode( tieneMencion,'N',codMencionProyecto,'S',(decode(totalMenciones,1,codMencionProyecto,decode(codMencionEstudiante,null,null,codMencionEstudiante)))) identificador,   " +
                                                     "       sede, campus, " +
                                                     "       posgrado,   " +
@@ -185,8 +185,8 @@ public class PosRepPosgradosFacade extends AbstractFacade<PosgradoAlumnoWrapper>
                                                     "              and   paf.tip_codigo         = 8  " +                                                       
                                                     "              and   inc.alu_codigo         = ?1  " +
                                                     "  )order by  estsede,estcampus,estposgrado,codperiodo " , PosgradoAlumnoWrapper.class) 
-                                                                  .setParameter(1, aluCodigo); */
-      
+                                                                  .setParameter(1, aluCodigo); 
+      /*
           Query q = getEntityManager().createNativeQuery( "   select distinct aluCodigo,   " +
                                                         "      aluCodigo||'-'||decode( tieneMencion,'N',codMencionProyecto,'S',(decode(totalMenciones,1,codMencionProyecto,decode(codMencionEstudiante,null,null,codMencionEstudiante)))) identificador,    " +
                                                         "      sede, campus,  " +
@@ -354,7 +354,7 @@ public class PosRepPosgradosFacade extends AbstractFacade<PosgradoAlumnoWrapper>
                                                         "                                                          )   " +
                                                         "            and   inc.alu_codigo         = ?1 " +
                                                         "  )order by  estsede,estcampus,estposgrado,codperiodo " , PosgradoAlumnoWrapper.class) 
-                                                                  .setParameter(1, aluCodigo); 
+                                                                  .setParameter(1, aluCodigo); */
 
         (new CacheStoreModeParam(CacheStoreMode.REFRESH)).processParam(q);
         return q.getResultList();

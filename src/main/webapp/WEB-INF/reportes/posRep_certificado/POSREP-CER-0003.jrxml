@@ -369,7 +369,7 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 		<variableExpression><![CDATA[$F{CONT_MODULOS}.intValue()]]></variableExpression>
 	</variable>
 	<variable name="Porcentaje" class="java.lang.Double" resetType="None">
-		<variableExpression><![CDATA[$V{para_contar_aprobadas}.doubleValue()/($V{Total_componente_aca}.doubleValue() + $V{Total_componente_men}.doubleValue())]]></variableExpression>
+		<variableExpression><![CDATA[$V{para_contar_aprobadas}.doubleValue()/($V{Total_componente_aca}.doubleValue() + $V{Total_componente_men}.doubleValue()-$V{electivas}.doubleValue())]]></variableExpression>
 	</variable>
 	<variable name="componentes_pendientes" class="java.lang.Integer">
 		<variableExpression><![CDATA[($V{Total_componente_aca}+$V{Total_componente_men})-$V{para_contar_aprobadas}]]></variableExpression>
@@ -379,6 +379,10 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 	</variable>
 	<variable name="TrabajoTitulacion" class="java.lang.String">
 		<variableExpression><![CDATA["2. TRABAJO DE TITULACIÓN ("+$F{MECANISMO_GRADUACION}+")"]]></variableExpression>
+	</variable>
+	<variable name="electivas" class="java.lang.Integer" resetType="Group" resetGroup="estudiante_grup" calculation="Sum">
+		<variableExpression><![CDATA[($F{IMPRIME}.equals( "N" )&&$F{NOTA_FINAL}==null)?1:0;]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
 	</variable>
 	<group name="estudiante_grup">
 		<groupExpression><![CDATA[$F{CEDULA}]]></groupExpression>
@@ -631,7 +635,7 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="Estilo_contenido7" x="363" y="42" width="39" height="15" uuid="2c4a8547-3c32-4b4f-8155-13a9e4590d68"/>
 					<textElement textAlignment="Right"/>
-					<textFieldExpression><![CDATA[$V{componentes_pendientes}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{componentes_pendientes}-$V{electivas}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -668,7 +672,7 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="Estilo_contenido7" x="363" y="16" width="39" height="15" uuid="5a828fd4-bece-4b7a-8315-6bab1f2cda3f"/>
 					<textElement textAlignment="Right"/>
-					<textFieldExpression><![CDATA[$V{Total_componente_aca}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{Total_componente_aca}-$V{electivas}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
