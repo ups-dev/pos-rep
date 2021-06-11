@@ -10,7 +10,7 @@
     
     <groupId>ec.edu.ups.rep.pos</groupId>
     <artifactId>pos-rep</artifactId>
-    <version>1.7.0-SNAPSHOT</version>
+    <version>1.7.0</version>
     <packaging>war</packaging>
 
     <name>pos-rep</name>
