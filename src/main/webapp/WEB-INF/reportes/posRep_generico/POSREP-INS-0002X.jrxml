@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-INS-0002X" pageWidth="2170" pageHeight="842" columnWidth="2130" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a5610fb4-cc29-46b5-b47b-735f7e78b38b">
-	<property name="ireport.zoom" value="5.0"/>
-	<property name="ireport.x" value="6655"/>
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="2128"/>
 	<property name="ireport.y" value="0"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String">
@@ -31,12 +31,15 @@
        cli.cllc_fono                            telefono,
        cli.cllc_celular                         celular,
        NVL((select distinct 'SI'
-           from sna.sna_acta_grado acg,
-                sna.sna_titulo     tit
-            where acg.acg_eliminado = 'N'
-            and   acg.cllc_cdg = alu.cllc_cdg
-            and   tit.tit_codigo = acg.tit_codigo
-            and   tit.tit_nivel_titulo = 'T'
+           from sna.sna_acta_grado            ag,
+                sna.sna_titulo_proyecto_academico tp
+            where tp.pra_numero = ag.pra_numero
+            AND tp.fac_codigo = ag.fac_codigo
+            AND tp.car_codigo = ag.car_codigo
+            AND tp.tit_codigo = ag.tit_codigo
+            AND tp.tpa_titulo_terminal = 'S'
+            and ag.acg_eliminado = 'N'
+            AND ag.cllc_cdg = cli.cllc_cdg
             UNION
             select distinct 'SI'
             from ins.ins_ins_pro_aca ipa,
