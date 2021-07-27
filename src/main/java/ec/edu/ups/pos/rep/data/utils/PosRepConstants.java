@@ -61,6 +61,10 @@ public class PosRepConstants {
     public static final Long REP_PARAMETRO_PAGADO = 17L;          //Parámetro de Pagado SI/NO
     public static final Long REPORTE_SISTEMA_CALIFICACIONES_SEMESTRE = 24L;
     public static final Long REPORTE_SISTEMA_RECORD_ACADEMICO_GRADUADOS = 38L;
+    public static final Long REP_PARAMETRO_COHORTE_TODOS = 19L;          //Parámetro Cohorte con opción Todos
+    public static final Long REP_PARAMETRO_MODALIDAD_TODOS = 20L;          //Parámetro Modalidad con opción Todos
+    
+    
     
     static {
 //        EMAIL_TO_ERROR.add("mpinedav@ups.edu.ec");        

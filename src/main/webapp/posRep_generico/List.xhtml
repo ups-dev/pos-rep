@@ -43,6 +43,8 @@
                                                   :PosReportesForm:campus, 
                                                   :PosReportesForm:programa,
                                                   :PosReportesForm:cohorte,
+                                                  :PosReportesForm:cohorteT,
+                                                  :PosReportesForm:modalidad,
                                                   :PosReportesForm:nivel,
                                                   :PosReportesForm:docente, 
                                                   :PosReportesForm:asignatura, 
@@ -53,7 +55,9 @@
                                                   :PosReportesForm:sede, 
                                                   :PosReportesForm:campus, 
                                                   :PosReportesForm:programa, 
-                                                  :PosReportesForm:cohorte,  
+                                                  :PosReportesForm:cohorte, 
+                                                  :PosReportesForm:cohorteT,
+                                                  :PosReportesForm:modalidad,
                                                   :PosReportesForm:nivel,
                                                   :PosReportesForm:docente, 
                                                   :PosReportesForm:asignatura, 
@@ -145,7 +149,7 @@
                                         <h:outputText value="#{filtro.orgDescripcionEstructura.deeDescripcion}" />  
                                     </p:column>
                                     <p:ajax listener="#{posRepResultadoController.updateCampusList()}" 
-                                            update="posRepFiltrarEstructuraCampus, posRepFiltrarEstructuraCarrera, posRepFiltrarPeriodoInicial, posRepFiltrarNivel, posRepFiltrarAsignatura, posRepFiltrarGrupo, posRepFiltrarDocente"/>
+                                            update="posRepFiltrarEstructuraCampus, posRepFiltrarEstructuraCarrera, posRepFiltrarPeriodoInicial,posRepFiltrarCohorteT, posRepFiltrarNivel, posRepFiltrarAsignatura, posRepFiltrarGrupo, posRepFiltrarDocente,modalidad "/>
                                 </p:selectOneMenu>
                             </ui:define>
                         </ui:decorate>
@@ -173,7 +177,7 @@
                                     <p:column>
                                         <h:outputText value="#{filtro.orgDescripcionEstructura.deeDescripcion}" />  
                                     </p:column>   
-                                    <p:ajax update="posRepFiltrarEstructuraCarrera, posRepFiltrarPeriodoInicial, posRepFiltrarNivel, posRepFiltrarAsignatura, posRepFiltrarGrupo, posRepFiltrarDocente"                                    
+                                    <p:ajax update="posRepFiltrarEstructuraCarrera, posRepFiltrarPeriodoInicial,posRepFiltrarCohorteT, posRepFiltrarNivel, posRepFiltrarAsignatura, posRepFiltrarGrupo, posRepFiltrarDocente,modalidad "                                    
                                             listener="#{posRepResultadoController.updateCarreraList()}" 
                                             
                                             
@@ -206,7 +210,7 @@
                                     <p:column>
                                         <h:outputText value="#{filtro.orgDescripcionEstructura.deeDescripcion}" />  
                                     </p:column>    
-                                    <p:ajax update=" posRepFiltrarPeriodoInicial, posRepFiltrarNivel,posRepFiltrarAsignatura, posRepFiltrarGrupo, posRepFiltrarDocente"                                    
+                                    <p:ajax update=" posRepFiltrarPeriodoInicial, posRepFiltrarCohorteT,posRepFiltrarNivel,posRepFiltrarAsignatura, posRepFiltrarGrupo, posRepFiltrarDocente,modalidad "                                    
                                             listener="#{posRepResultadoController.updateCarreraList()}" 
                                             />
                                 </p:selectOneMenu>
@@ -227,7 +231,7 @@
 
                             <ui:define name="ups-search-param-content">
                                 <p:selectOneMenu id="posRepFiltrarPeriodoInicial" value="#{posRepResultadoController.orgPeriodoInicial}"                                         
-                                                 filter="true" filterMatchMode="contains" var="filtro" required="true" requiredMessage="Seleccione un Periodo Lectivo" >                            
+                                                 filter="true" filterMatchMode="contains" var="filtro" required="true" requiredMessage="Seleccione una Cohorte" >                            
                                     <f:selectItem itemLabel="#{posRepBundle['SelectOneMessage']}" itemValue=""/>
                                     <f:selectItems value="#{posRepResultadoController.orgPeriodoLectivoList}"
                                                    var="periodoLectivoItem"
@@ -236,6 +240,75 @@
                                                    />
                                     <p:column>
                                         <h:outputText value="#{filtro.pelDescripcion} (#{posRepResultadoController.obtenerAnioPosgrado(filtro)})" />  
+                                    </p:column>                 
+                                    <p:ajax update="posRepFiltrarNivel,posRepFiltrarGrupo,posRepFiltrarDocente,posRepFiltrarModalidad"                                    
+                                            listener="#{posRepResultadoController.updateNivelMallaList()}" 
+                                             
+                                    />
+                                </p:selectOneMenu>                        
+                            </ui:define>
+                        </ui:decorate>
+                    </ui:fragment>
+                </h:panelGroup>
+                  
+                  <h:panelGroup id="cohorteT">
+                    <ui:fragment rendered="#{repReportesSistemaController.selected ne null 
+                                             and posRepResultadoController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_COHORTE_TODOS)}">
+                        <!--Filtro Cohorte-->
+                        <ui:decorate template="/WEB-INF/templates/decorators/search/ups-search-param.xhtml">
+                            <ui:define name="ups-search-param-title">  
+                                <p:outputLabel value="#{posRepBundle['PosRepCohorteT']}:" />                        
+                            </ui:define>
+
+                            <ui:define name="ups-search-param-content">
+                                <p:selectOneMenu id="posRepFiltrarCohorteT" value="#{posRepResultadoController.orgPeriodoInicial}"                                         
+                                                 filter="true" filterMatchMode="contains" var="filtro" >                            
+                                    <f:selectItem itemLabel="#{posRepBundle['Todos']}" itemValue=""/>
+                                    
+                                    <f:selectItems value="#{posRepResultadoController.orgPeriodoLectivoList}"
+                                                   var="periodoLectivoItem"
+                                                   itemValue="#{periodoLectivoItem}"
+                                                   itemLabel="#{periodoLectivoItem.pelDescripcion.toString()} (#{posRepResultadoController.obtenerAnioPosgrado(periodoLectivoItem)})"
+                                                   />
+                                    <p:column>
+                                        <h:outputText value="#{filtro.pelDescripcion} (#{posRepResultadoController.obtenerAnioPosgrado(filtro)})" />  
+                                    </p:column>                 
+                                    <p:ajax update="posRepFiltrarNivel,posRepFiltrarGrupo,posRepFiltrarDocente,posRepFiltrarModalidad"                                    
+                                            listener="#{posRepResultadoController.updateNivelMallaList()}" 
+                                             
+                                    />
+                                </p:selectOneMenu>                        
+                            </ui:define>
+                        </ui:decorate>
+                    </ui:fragment>
+                </h:panelGroup>
+                
+                
+                  <h:panelGroup id="modalidad">
+                    <ui:fragment rendered="#{repReportesSistemaController.selected ne null 
+                                             and posRepResultadoController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_MODALIDAD_TODOS)}">
+                        <!--Filtro Modalidad-->
+                        <ui:decorate template="/WEB-INF/templates/decorators/search/ups-search-param.xhtml">
+                            <ui:define name="ups-search-param-title">  
+                                <p:outputLabel value="#{posRepBundle['PosRepModalidad']}:" />                        
+                            </ui:define>
+
+                            <ui:define name="ups-search-param-content">
+                                                           
+                                <!--p:selectOneMenu id="posRepFiltrarModalidad" value="#{posRepResultadoController.pedModalidad}"                                         
+                                                 filter="true" filterMatchMode="contains" var="filtro" required="true" requiredMessage="Seleccione una Modalidad" >                            
+                                    <f:selectItem itemLabel="#{posRepBundle['SelectOneMessage']}" itemValue=""/|-->
+                                
+                                <p:selectOneMenu id="posRepFiltrarModalidad" value="#{posRepResultadoController.pedModalidad}"                                         
+                                                 filter="true" filterMatchMode="contains" var="filtro">   
+                                    <f:selectItem itemLabel="#{posRepBundle['Todos']}" itemValue="" />
+                                    <f:selectItems value="#{posRepResultadoController.pedModalidadList}"
+                                                   var="modalidadItem"
+                                                   itemValue="#{modalidadItem}"
+                                                   itemLabel="#{modalidadItem.modDescripcion.toString()} "
+                                                   />
+                                    <p:column>
+                                        <h:outputText value="#{filtro.modDescripcion}" />  
                                     </p:column>                 
                                     <p:ajax update="posRepFiltrarNivel,posRepFiltrarGrupo,posRepFiltrarDocente,"                                    
                                             listener="#{posRepResultadoController.updateNivelMallaList()}" 
@@ -247,10 +320,10 @@
                     </ui:fragment>
                 </h:panelGroup>
                             
-<!--                 <h:panelGroup id="modalidad">
+     <!--           <h:panelGroup id="modalidad">
                     <ui:fragment rendered="#{repReportesSistemaController.selected ne null 
                                              and posRepResultadoController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_MODALIDAD)}">
-                      Filtro Modalidad 
+                Filtro Modalidad
                         <ui:decorate template="/WEB-INF/templates/decorators/search/ups-search-param.xhtml">
                             <ui:define name="ups-search-param-title">  
                                 <p:outputLabel value="#{posRepBundle['PosRepModalidad']}:" />                        
@@ -269,14 +342,14 @@
                                     <p:column>
                                         <h:outputText value="#{filtro.modDescripcion}" />  
                                     </p:column>    
-                                   <p:ajax update="evaRepFiltrarCuestionario, evaRepFiltrarInformante"                                    
-                                            listener="#{posRepResultadoController.updateEvaluacionCuestionarioList()}" 
+                                   <p:ajax update="posRepFiltrarNivel,posRepFiltrarGrupo,posRepFiltrarDocente,"                                    
+                                            listener="#{posRepResultadoController.updateNivelMallaList()}" 
                                             /> 
                                 </p:selectOneMenu>                        
                             </ui:define>
                         </ui:decorate>
                     </ui:fragment>
-                </h:panelGroup>                  -->
+                </h:panelGroup>    -->              
                                 
                  <h:panelGroup id="nivel">
                     <ui:fragment rendered="#{repReportesSistemaController.selected ne null 
