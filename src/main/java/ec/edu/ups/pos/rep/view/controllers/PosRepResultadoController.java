@@ -64,6 +64,7 @@ public class PosRepResultadoController implements Serializable{
     private List<OrgEstructura> orgEstructuraCarreraList;
   
     private List<OrgPeriodoLectivo> orgPeriodoLectivoList;
+    private List<PedModalidad> pedModalidadList;
     private List<RepReportesSistema> repReportesSistemaList;
     private List<GthPersona> gthPersonaList;
     private List<PedMalla> pedMallaList;
@@ -157,6 +158,7 @@ public class PosRepResultadoController implements Serializable{
             }            
         }
         updateCampusList();
+        updateModalidadPorProgramaList();
     }
 
     public void updateCampusList() {
@@ -178,7 +180,10 @@ public class PosRepResultadoController implements Serializable{
         
         setOrgEstructuraCarrera(null);
         setOrgEstructuraCarreraList(null);
+        setPedModalidad(null);
+        setPedModalidadList(null);
         updateCarreraList();
+        updateModalidadPorProgramaList();
       
     }
 
@@ -203,8 +208,11 @@ public class PosRepResultadoController implements Serializable{
                     }
                 }
             }
-        }                   
+        }    
+        setPedModalidad(null);
+        setPedModalidadList(null);
          updatePeriodoPorCampusList();
+         updateModalidadPorProgramaList();
     }
 
     
@@ -230,6 +238,30 @@ public class PosRepResultadoController implements Serializable{
         
        }          
     
+       public void updateModalidadPorProgramaList() {
+        setPedModalidadList(null);
+      //   updateGrupoList();
+        
+        if (obtenerEstructura() != null) { 
+             
+            setPedModalidadList(pedModalidadFacade.obtieneModalidadPorEstructura(obtenerEstructura())); 
+             System.out.println("Cohorte por Estructura");
+      
+        }else{
+        
+           setPedModalidadList(pedModalidadFacade.obtieneModalidad()); 
+            System.out.println("Cohorte sin Estructura");
+      
+        }
+               
+            updateNivelMallaList();
+        
+       }          
+       
+       
+       
+       
+       
     /**
      * Actualizar lista de Asignaturas por Carrera
      */
@@ -495,6 +527,7 @@ public class PosRepResultadoController implements Serializable{
         setOrgPeriodoFinal(null);
         setOrgPeriodoLectivoList(null);
         setPedModalidad(null);
+        setPedModalidadList(null);
         setPedMallaNivelList(null);
         setPedNivelMalla(null);
         setGthPersona(null);
@@ -708,6 +741,13 @@ public class PosRepResultadoController implements Serializable{
 
     public void setPafPagado(String pafPagado) {
         this.pafPagado = pafPagado;
+    }
+    public List<PedModalidad> getPedModalidadList() {
+        return pedModalidadList;
+    }
+
+    public void setPedModalidadList(List<PedModalidad> pedModalidadList) {
+        this.pedModalidadList = pedModalidadList;
     }
    
 }

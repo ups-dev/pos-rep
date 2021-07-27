@@ -8,6 +8,7 @@ import ec.edu.ups.pos.rep.view.controller.ins.InsAlumnoController;
 import ec.edu.ups.pos.rep.view.controller.rep.RepReportesSistemaController;
 import ec.edu.ups.org.common.data.entities.OrgPeriodoLectivo;
 import ec.edu.ups.ped.common.data.entities.PedMalla;
+import ec.edu.ups.ped.common.data.entities.PedModalidad;
 import ec.edu.ups.pos.rep.data.entities.rep.RepSecretarioGeneral;
 import ec.edu.ups.pos.rep.data.entities.rep.RepTipCerRepSis;
 import ec.edu.ups.pos.rep.data.entities.wrapper.InsAlumnoWrapper;
@@ -117,12 +118,19 @@ public class PosRepGeneralController implements Serializable{
             if(orgPeriodoFinal!=null){
                 codigoPeriodoFin=Integer.valueOf(String.valueOf(orgPeriodoFinal.getPelCodigo()));
             }            
+             //Parámetro Periodo Final
+            OrgPeriodoLectivo orgCohorteT=posRepResultadoController.getOrgPeriodoInicial();
+            String codigoPeriodCohorte="%";
+            if(orgCohorteT!=null){
+                codigoPeriodCohorte=String.valueOf(String.valueOf(orgPeriodoInicial.getPelCodigo()));
+            } 
+            
             //Parámetro Modalidad
-        /*    PedModalidad pedModalidad=posRepResultadoController.getPedModalidad();
+            PedModalidad pedModalidad=posRepResultadoController.getPedModalidad();
             String codigoModalidad="%";
             if(pedModalidad!=null){
                 codigoModalidad=String.valueOf(String.valueOf(pedModalidad.getModCodigo()));
-            }*/
+            }
          
         
            //Parámetro Nivel
@@ -163,7 +171,8 @@ public class PosRepGeneralController implements Serializable{
             rpb.add("pn_est_codigo", codigoEstructura);            
             rpb.add("pn_pel_codigo", codigoPeriodo);
             rpb.add("pn_pel_codigo_fin", codigoPeriodoFin);
-          //  rpb.add("pv_mod_codigo", codigoModalidad);   
+            rpb.add("pv_pel_codigo", codigoPeriodCohorte);
+            rpb.add("pv_mod_codigo", codigoModalidad);   
             rpb.add("pv_per_codigo", codigoPersona);  
             rpb.add("pv_mal_codigo", malCodigo);
             rpb.add("pv_gru_codigo", gruCodigo);
