@@ -44,7 +44,9 @@
                                                   :PosReportesCerForm:alumno,                                                  
                                                   :PosReportesCerForm:semestre
                                                   :PosReportesCerForm:panelDataTable,
-                                                  :PosReportesCerForm:PosRepFiltroPanel2"
+                                                  :PosReportesCerForm:PosRepFiltroPanel2,
+                                                  :PosReportesCerForm:posRepFiltrarCampusEmision,
+                                                  :PosReportesCerForm:posRepFiltrarSedeEmision"
                                                   listener="#{posRepPosgradosController.limpiarFiltros()}"/>
                 
                 <p:ajax event="filter" update=":PosReportesCerForm:PosRepCerExportToolbar,
@@ -53,7 +55,9 @@
                                                   :PosReportesCerForm:alumno,
                                                   :PosReportesCerForm:semestre,
                                                   :PosReportesCerForm:panelDataTable,
-                                                  :PosReportesCerForm:PosRepFiltroPanel2" listener="#{repReportesSistemaController.setSelected(null)}"/>                 
+                                                  :PosReportesCerForm:PosRepFiltroPanel2
+                                                  :PosReportesCerForm:posRepFiltrarCampusEmision,
+                                                  :PosReportesCerForm:posRepFiltrarSedeEmision" listener="#{repReportesSistemaController.setSelected(null)}"/>                 
                 
                 <p:column sortBy="#{item.resReporte}" filterBy="#{item.resReporte}" filterMatchMode="contains">
                     <f:facet name="header">
@@ -101,9 +105,9 @@
                                            <p:column>
                                                <h:outputText value="#{p.aluNombres}"/>
                                            </p:column>                                                     
-                                        <p:ajax event=  "itemSelect" update="panelDataTable,semestre,PosRepFiltroPanel2, messagePanel"  
+                                        <p:ajax event=  "itemSelect" update="panelDataTable,semestre,PosRepFiltroPanel2, messagePanel,posRepFiltrarCampusEmision, posRepFiltrarSedeEmision"  
                                                  listener="#{posRepPosgradosController.cargarLista()}"/>
-                                        <p:ajax event=  "change" update="panelDataTable,semestre,PosRepFiltroPanel2, messagePanel"  
+                                        <p:ajax event=  "change" update="panelDataTable,semestre,PosRepFiltroPanel2, messagePanel,posRepFiltrarCampusEmision, posRepFiltrarSedeEmision"  
                                                  listener="#{posRepPosgradosController.cargarLista()}"/>
                                          
                                     </p:autoComplete>   
@@ -165,7 +169,8 @@
                          emptyMessage="#{posRepBundle['TableEmpty']}"
                          rendered="#{posRepPosgradosController.insAlumnoWrapper ne null}"
                     >          
-              <p:ajax event="rowSelect" listener="#{posRepPosgradosController.cargarValidaciones(repReportesSistemaController.selected)}" update=":PosReportesCerForm:semestre,:PosReportesCerForm:PosRepFiltroPanel2,:PosReportesCerForm:PosRepCerExportToolbar, :PosReportesCerForm:messagePanel" />
+              <p:ajax event="rowSelect" listener="#{posRepPosgradosController.cargarValidaciones(repReportesSistemaController.selected)}" update=":PosReportesCerForm:semestre,:PosReportesCerForm:PosRepFiltroPanel2,:PosReportesCerForm:PosRepCerExportToolbar, 
+                                                                                                                                                    :PosReportesCerForm:messagePanel, :PosReportesCerForm:posRepFiltrarCampusEmision,:PosReportesCerForm:posRepFiltrarSedeEmision" />
               
                <p:column>
                     <f:facet name="header">
@@ -219,8 +224,7 @@
             </p:dataTable>       
            <br/>       
          </h:panelGrid> 
-       </p:panel>                  
-       	
+       </p:panel>                       	
 
 <!--CERTIFICACIÓN -->    
 <p:panel id="PosRepFiltroPanel2" header="Certificación de Rúbricas" >    
@@ -229,13 +233,75 @@
                                                                                 and ( (posRepPosgradosController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_CERTIFICACION) and repReportesSistemaController.selected.resCodigo ne PosRepConstants.REPORTE_SISTEMA_RECORD_ACADEMICO_GRADUADOS) 
                                                                                 or (repReportesSistemaController.selected.resCodigo eq PosRepConstants.REPORTE_SISTEMA_RECORD_ACADEMICO_GRADUADOS and posRepPosgradosController.posgradoAlumnoWrapper.actaGrado eq 'S' ))
                                                                                 }" >  
-             <p:outputLabel value="#{posRepBundle['PosRepSede']}:"  for="sedeFacturacion"/> 
-             <p:outputLabel value="#{posRepBundle['PosRepPuntoFac']}:" for="puntoFacturacion"/>
-             <p:outputLabel value="#{posRepBundle['PosRepNumFac']}:" for="numFactura"/>
-             
-             <p:inputText id="sedeFacturacion" value="#{posRepPosgradosController.sedeFactura}" required="true" style=" text-align: right; width: 80%" requiredMessage="Ingrese la sede de Facturación."/>
-             <p:inputText id="puntoFacturacion" value="#{posRepPosgradosController.puntoFacturacion}" required="true" style=" text-align: right; width: 80%; " requiredMessage="Ingrese el punto de Facturación."/>
-             <p:inputText id="numFactura" value="#{posRepPosgradosController.numFactura}" required="true" style=" text-align: right; width: 80%" requiredMessage="Ingrese el número de Factura."/>
+
+              <p:outputLabel value="#{posRepBundle['PosRepSede']}:"  for="sedeFacturacion" /> 
+              <p:outputLabel value="#{posRepBundle['PosRepPuntoFac']}:" for="puntoFacturacion"/>
+              <p:outputLabel value="#{posRepBundle['PosRepNumFac']}:" for="numFactura"/>
+              
+              <p:inputText id="sedeFacturacion" value="#{posRepPosgradosController.sedeFactura}" required="true" style=" text-align: right; width: 80%"   requiredMessage="Ingrese la sede de Facturación."/>
+              <p:inputText id="puntoFacturacion" value="#{posRepPosgradosController.puntoFacturacion}" required="true" style=" text-align: right; width: 80%"   requiredMessage="Ingrese el punto de Facturación."/>
+              <p:inputText id="numFactura" value="#{posRepPosgradosController.numFactura}" required="true" style=" text-align: right; width: 80%"   requiredMessage="Ingrese el número de Factura."/>
+           
+            
+             <h:panelGroup id="sedeEmision">
+                    <ui:fragment rendered="#{repReportesSistemaController.selected ne null }">
+                        <!--Filtro Sede-->
+                        <ui:decorate template="/WEB-INF/templates/decorators/search/ups-search-param.xhtml">
+                            <ui:define name="ups-search-param-title">
+                                <p:outputLabel value="#{posRepBundle['PosRepSedeEmision']}:" />                        
+                           </ui:define>
+                            <ui:define name="ups-search-param-content">                       
+                                <p:selectOneMenu id="posRepFiltrarSedeEmision" 
+                                                 value="#{posRepResultadoController.orgEstructuraSedeEmision}"                                         
+                                                 filter="true" filterMatchMode="contains" var="filtro">                                                        
+                                    <!-- <f:selectItem itemLabel="#{posRepBundle['Todos']}" itemValue="" itemDisabled="#{posRepResultadoController.validaSeleccionEstructuraSeguridadSede}"/> -->
+                                    <f:selectItem itemLabel="#{posRepBundle['Todos']}" itemValue="" itemDisabled="#{posRepResultadoController.validaSeleccionEstructuraSeguridadSede}"/>
+                                    <f:selectItems value="#{posRepResultadoController.orgEstructuraSedeEmisionList}"
+                                                   var="orgEstructuraSedeEmisionItem"
+                                                   itemValue="#{orgEstructuraSedeEmisionItem}"
+                                                   itemLabel="#{orgEstructuraSedeEmisionItem.orgDescripcionEstructura.deeDescripcion.toString()}"
+                                                   />
+                                    <p:column>
+                                        <h:outputText value="#{filtro.orgDescripcionEstructura.deeDescripcion}" />  
+                                    </p:column>
+                                    <p:ajax listener="#{posRepResultadoController.updateCampusEmisionList()}" 
+                                            update="posRepFiltrarCampusEmision"/>
+                                </p:selectOneMenu>
+                            </ui:define>
+                        </ui:decorate>  
+                    </ui:fragment>
+                </h:panelGroup>
+                
+                <h:panelGroup id="campusEmision">
+                    <ui:fragment rendered="#{repReportesSistemaController.selected ne null }">
+                        <!--Filtro Campus-->
+                        <ui:decorate template="/WEB-INF/templates/decorators/search/ups-search-param.xhtml">
+                            <ui:define name="ups-search-param-title">
+                                <p:outputLabel value="#{posRepBundle['PosRepCampusEmision']}:" />                        
+                            </ui:define>
+                            <ui:define name="ups-search-param-content">
+                                <p:selectOneMenu id="posRepFiltrarCampusEmision" 
+                                                 value="#{posRepResultadoController.orgEstructuraCampusEmision}" 
+                                                 filter="true" filterMatchMode="contains" var="filtro" >                                                        
+                                    <f:selectItem itemLabel="#{posRepBundle['Todos']}" itemValue="" itemDisabled="#{posRepResultadoController.validaSeleccionEstructuraSeguridadCampus}"/>
+                                    <f:selectItems value="#{posRepResultadoController.orgEstructuraCampusEmisionList}"
+                                                   var="orgEstructuraCampusEmisionItem"
+                                                   itemValue="#{orgEstructuraCampusEmisionItem}"
+                                                   itemLabel="#{orgEstructuraCampusEmisionItem.orgDescripcionEstructura.deeDescripcion.toString()}"
+                                                   />
+                                    <p:column>
+                                        <h:outputText value="#{filtro.orgDescripcionEstructura.deeDescripcion}" />  
+                                    </p:column>   
+                                    <p:ajax update=""                                    
+                                            listener="#{posRepResultadoController.updateCampusEmisionList()}" 
+                                            
+                                            
+                                            /><!--  -->
+                                </p:selectOneMenu>
+                            </ui:define>
+                        </ui:decorate>
+                    </ui:fragment>
+                </h:panelGroup>    
         </h:panelGrid> 
          <br/> 
         <h:panelGrid id="certificacionPanel" columns="2" rendered="#{not empty posRepPosgradosController.insAlumnoWrapper and not empty posRepPosgradosController.posgradoAlumnoWrapper 
@@ -246,11 +312,11 @@
               <p:selectBooleanCheckbox value="#{posRepPosgradosController.certificacion}" >
                   <p:ajax update="PosCertificar" listener="#{repSecretarioGeneralController.obtenerListSecretariaCert()}" />
               </p:selectBooleanCheckbox>
-   
+              
         </h:panelGrid>        
     
-             <!--Filtro SECRETARIA GENERAL-->
-          <h:panelGrid columns="2" id="PosCertificar"  >
+            <!--Filtro SECRETARIA GENERAL-->
+        <h:panelGrid columns="2" id="PosCertificar"  >
                                  
                       <ui:fragment rendered="#{posRepPosgradosController.certificacion eq true  
                                                and not empty posRepPosgradosController.insAlumnoWrapper 
@@ -282,7 +348,8 @@
                                  </ui:define>
                         </ui:decorate>
                     </ui:fragment>      
-            </h:panelGrid>            
+            </h:panelGrid>   
+             
        </p:panel> <!--certificación-->           
        </p:panel>
         

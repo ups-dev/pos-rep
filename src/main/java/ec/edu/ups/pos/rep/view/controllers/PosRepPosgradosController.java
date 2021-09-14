@@ -5,6 +5,7 @@
  */
 package ec.edu.ups.pos.rep.view.controllers;
 
+import ec.edu.ups.org.common.data.entities.OrgEstructura;
 import ec.edu.ups.pos.rep.data.entities.rep.RepParametroReporte;
 import ec.edu.ups.pos.rep.data.entities.rep.RepReportesSistema;
 import ec.edu.ups.pos.rep.data.entities.wrapper.InsAlumnoWrapper;
@@ -12,6 +13,7 @@ import ec.edu.ups.pos.rep.data.entities.wrapper.PosgradoAlumnoWrapper;
 import ec.edu.ups.pos.rep.data.utils.PosRepConstants;
 import ec.edu.ups.pos.rep.logic.sessions.ins.InsAlumnoFacade;
 import ec.edu.ups.pos.rep.logic.sessions.mat.MatMatriculaFacade;
+import ec.edu.ups.pos.rep.logic.sessions.org.OrgEstructuraFacade;
 import ec.edu.ups.pos.rep.logic.sessions.rep.PosRepPosgradosFacade;
 import ec.edu.ups.pos.rep.logic.sessions.rep.RepParametroReporteFacade;
 import java.io.Serializable;
@@ -43,6 +45,13 @@ public class PosRepPosgradosController implements Serializable{
     private RepParametroReporteFacade repParametroReporteFacade;
     @Inject
     private MatMatriculaFacade matMatriculaFacade;
+    
+    @Inject
+    private OrgEstructuraFacade orgEstructuraFacade; 
+    @Inject
+    private PosRepResultadoController posRepResultadoController; 
+    
+    
    
     private List<PosgradoAlumnoWrapper> listadoPosgrados;
     private PosgradoAlumnoWrapper posgradoAlumnoWrapper;
@@ -64,6 +73,10 @@ public class PosRepPosgradosController implements Serializable{
     private String filtro = "";
     private int maxResult = 10;
     
+    OrgEstructura posgrado;
+    OrgEstructura campus;
+    OrgEstructura sede ;
+      
     /**
      * Devuelve el objeto usado por PrimeFaces con opciones para poder modificar
      * la respuesta de una solicitud.
@@ -80,6 +93,7 @@ public class PosRepPosgradosController implements Serializable{
         PrimeFaces.current().ajax().update("PosReportesCerForm:PosReportesCerSistemaDataTable");
         PrimeFaces.current().ajax().update("PosReportesCerForm:PosRepCerExportToolbar");
         PrimeFaces.current().ajax().update("PosReportesCerForm:PosRepCerFiltroPanel"); 
+        
             
     }
     
@@ -111,6 +125,10 @@ public class PosRepPosgradosController implements Serializable{
         
         } 
         actualizaCamposFac();
+        
+        //aqui se va a cargar valores por defecto para sede y campus emision
+        cargarEstructuraEmisionDefecto();
+        System.out.println("Carga por defecto");
 
     }
       public boolean validarParametros(RepReportesSistema repReportesSistema){
@@ -149,10 +167,12 @@ public class PosRepPosgradosController implements Serializable{
         actualizaFiltros();
         
        if(insAlumnoWrapper!=null){
-            listadoPosgrados=posRepPosgradosFacade.listaPosgrados(insAlumnoWrapper.getAluCodigo());
+            listadoPosgrados=posRepPosgradosFacade.listaPosgrados(insAlumnoWrapper.getAluCodigo());   
+            
             
        }      
-        
+       
+       
     }
      public void limpiarFiltros(){
          
@@ -178,6 +198,11 @@ public class PosRepPosgradosController implements Serializable{
         setNumFactura(null);
         setPuntoFacturacion(null);
         setSedeFactura(null);
+        
+        posgrado = null;
+        campus = null;
+        sede  =  null;
+        
 
     }  
  
@@ -188,8 +213,46 @@ public class PosRepPosgradosController implements Serializable{
         setNumFactura(null);
         setPuntoFacturacion(null);
         setSedeFactura(null);
+        posgrado = null;
+        campus = null;
+        sede  =  null;
+        
        
-    }  
+    } 
+  /////
+  public void cargarEstructuraEmisionDefecto(){
+     /* OrgEstructura posgrado = null;
+      OrgEstructura campus =null;
+      OrgEstructura sede  =     null; */
+     posRepResultadoController.setOrgEstructuraCampusEmisionList(null);
+     posRepResultadoController.setOrgEstructuraSedeEmisionList(null);
+     
+             System.out.println("insAlumnoWrapper" + insAlumnoWrapper);
+     
+      if (insAlumnoWrapper != null){
+          List <OrgEstructura> estructuraEmision = orgEstructuraFacade.obtenerEstructuraPosgradoAlumno(insAlumnoWrapper.getAluCodigo().toString());
+      
+          
+        /*   OrgEstructura posgrado= estructuraEmision.get(0);
+           OrgEstructura campus = posgrado.getOrgEstructuraPadre();
+           OrgEstructura sede = posgrado.getOrgEstructuraPadre().getOrgEstructuraPadre();*/
+          
+            posgrado= estructuraEmision.get(0);
+            campus = posgrado.getOrgEstructuraPadre();
+            sede = posgrado.getOrgEstructuraPadre().getOrgEstructuraPadre();
+           
+           posRepResultadoController.setOrgEstructuraSedeEmision(sede);
+          System.out.println("sede inscripcion :"+sede);
+           
+           posRepResultadoController.setOrgEstructuraCampusEmision(campus);
+           System.out.println("campus inscripcion :"+campus);
+           
+           
+      }
+          
+       
+    } 
+  
 
     public boolean compruebaParametro(RepReportesSistema repReportesSistema, Long codigoParametro){
         List<RepParametroReporte> parametroReporteList=repParametroReporteFacade.obtieneParametroPorReporte(codigoParametro, repReportesSistema);

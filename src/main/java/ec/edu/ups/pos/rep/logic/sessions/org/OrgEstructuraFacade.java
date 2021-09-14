@@ -75,4 +75,30 @@ public class OrgEstructuraFacade extends AbstractFacade<OrgEstructura> {
         return q.getResultList();
     }
     
+    public List<OrgEstructura> obtenerEstructuraPosgradoAlumno(String alu_codigo){
+       /* String sql = " SELECT estCarrera.*" +                     
+                     " FROM INS.INS_ALUMNO alu " +
+                     "     inner join INS.INS_INSCRIPCION insc on alu.ALU_CODIGO = insc.ALU_CODIGO" +
+                     "     inner join INS.INS_OFERTA_INSCRIPCION_INICIAL oii on insc.OII_CODIGO = oii.OII_CODIGO" +
+                     "     inner join ORG.ORG_ESTRUCTURA estCarrera on estCarrera.EST_CODIGO = oii.EST_CODIGO" +
+                     "     inner join ORG.ORG_DESCRIPCION_ESTRUCTURA deeCarrera on deeCarrera.DEE_CODIGO = estCarrera.DEE_CODIGO" +
+                     " WHERE alu.ALU_CODIGO = "+alu_codigo;     */
+       
+       String sql = " SELECT distinct pos.*  " +
+                        " FROM ins.ins_inscripcion inc, " +
+                        "     ins.ins_oferta_inscripcion_inicial oii, " +
+                        "     mat.mat_matricula   mta, " +
+                        "     org.org_estructura  pos " +
+                        " WHERE inc.oii_codigo = oii.oii_codigo " +
+                        " AND   inc.ins_codigo = mta.ins_codigo " +
+                        " AND   mta.mat_tipo_proceso = 'M' " +
+                        " AND   mta.aud_eliminado = 'N' " +
+                        " AND   mta.mat_pagado = 'S' " +
+                        " AND   oii.est_codigo = pos.est_codigo " +
+                        " AND   inc.alu_codigo = "+alu_codigo;  
+       
+        Query q = em.createNativeQuery(sql, OrgEstructura.class);                       
+        return q.getResultList();
+    }
+    
 }
