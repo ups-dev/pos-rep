@@ -108,7 +108,22 @@
           (SELECT   pre.pre_numero,
                     mat.ins_codigo,
                     pel.pel_descripcion, pel.pel_codigo,
-                    extract (year from pee.pee_fecha_inicial)||' - '||extract (year from pee.pee_fecha_final) fecha_semestre,
+                    CASE when res.res_fecha IS NOT NULL AND cal.cal_numero_veces >=2 THEN
+                     (SELECT PEL2.PEL_DESCRIPCION
+                      FROM ORG.ORG_PERIODO_ESTRUCTURA pee2
+                      INNER JOIN ORG.ORG_PERIODO_LECTIVO pel2
+                      ON pee2.pel_codigo=pel2.pel_codigo
+                      WHERE RES.RES_FECHA BETWEEN PEE2.PEE_FECHA_INICIAL AND PEE2.PEE_FECHA_FINAL
+                      AND PEL2.PEL_TIPO ='O'
+                      AND PEE2.EST_CODIGO IN
+                      (SELECT EST.EST_CODIGO
+                      FROM ORG.ORG_ESTRUCTURA est
+                      START WITH est.est_codigo = pee.est_codigo
+                      CONNECT BY PRIOR EST.EST_CODIGO_PADRE=EST.EST_CODIGO
+                      and pee2.aud_eliminado = 'N'
+                      ))
+                   ELSE
+                     extract (year from pee.pee_fecha_inicial)||' - '||extract (year from pee.pee_fecha_final) END fecha_semestre,
                     mal.mal_codigo,
                     mtr.mat_codigo,
                     mtr.mat_descripcion         modulo,
