@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-CER-0002" pageWidth="595" pageHeight="842" columnWidth="551" leftMargin="22" rightMargin="22" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
 	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="509"/>
+	<property name="ireport.y" value="144"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_alu_codigo" class="java.lang.Integer">
@@ -108,7 +108,7 @@
           (SELECT   pre.pre_numero,
                     mat.ins_codigo,
                     pel.pel_descripcion, pel.pel_codigo,
-                    CASE when res.res_fecha IS NOT NULL AND cal.cal_numero_veces >=2 THEN
+                    CASE when res.res_fecha IS NOT NULL AND ((cal.cal_numero_veces >=2 AND cal.tap_codigo = 1) OR (cal.TAP_CODIGO IN (4,5,7))) THEN
                      (SELECT PEL2.PEL_DESCRIPCION
                       FROM ORG.ORG_PERIODO_ESTRUCTURA pee2
                       INNER JOIN ORG.ORG_PERIODO_LECTIVO pel2
@@ -184,11 +184,11 @@
                                                      GROUP BY cal.mal_codigo,mat.ins_codigo) )
 
 SELECT  distinct alu.alu_codigo,cli.cllc_cdg,cli.cllc_ruc cedula,
-         alu.alu_apellidos||' '||alu.alu_nombres estudiante,
-         pre.pre_titulo_proyecto proyecto,
-         dpos.dee_descripcion_visual programa,
-  NVL( (select TO_CHAR(MIN(icd.iic_fecha_inicio),'dd/mm/yyyy')
-          from ins.ins_ipa_cdd   icd
+      alu.alu_apellidos||' '||alu.alu_nombres estudiante,
+      pre.pre_titulo_proyecto proyecto,
+      dpos.dee_descripcion_visual programa,
+      NVL( (select TO_CHAR(MIN(icd.iic_fecha_inicio),'dd/mm/yyyy')
+            from ins.ins_ipa_cdd   icd
           where icd.ipa_codigo = ipa.ipa_codigo
           and   icd.aud_eliminado = 'N'
           ),(SELECT TO_CHAR(MIN(pee.pee_fecha_inicio_clase),'dd/mm/yyyy')
@@ -213,11 +213,7 @@ SELECT  distinct alu.alu_codigo,cli.cllc_cdg,cli.cllc_ruc cedula,
          decode(dsed.dee_descripcion,'MATRIZ CUENCA','Cuenca',INITCAP(dsed.dee_descripcion))||', '||TO_CHAR(sysdate, 'DD')|| ' de '||DECODE(TO_CHAR(sysdate, 'MM'), '01', 'Enero', '02', 'Febrero', '03', 'Marzo', '04', 'Abril', '05', 'Mayo', '06', 'Junio',
                                        '07', 'Julio', '08', 'Agosto', '09', 'Septiembre', '10', 'Octubre', '11', 'Noviembre',
                                        '12', 'Diciembre')||' de '||TO_CHAR(sysdate, 'YYYY') fecha_actual,
-        pel.pel_descripcion ||' ('||extract (year from (select min(pee.pee_fecha_inicial_cohorte) from org.org_periodo_estructura pee
-                      where pee.pel_codigo = pel.pel_codigo
-                      and   pee.est_codigo = pos.est_codigo))||' - '||extract (year from (select min(pee.pee_fecha_final_cohorte) from org.org_periodo_estructura pee
-                      where pee.pel_codigo = pel.pel_codigo
-                      and   pee.est_codigo = pos.est_codigo))||') ' cohorte,
+       pel.pel_descripcion cohorte,
         malp.semestre, malp.mal_nivel, malp.mal_nro_horas, malp.mat_codigo,malp.mat_descripcion modulo, malp.mal_obligatorio,malp.total_horas,
 DECODE(malp.total_menciones,1,null,malp.mencion) mencion,
 
@@ -592,7 +588,7 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 					<reportElement style="Estilo_titulo7" x="11" y="14" width="238" height="15" isPrintWhenDetailOverflows="true" uuid="43ee5348-db61-4bee-8aea-d5f8f16a91dd"/>
 					<text><![CDATA[TOTAL COMPONENTES ACADÉMICOS:]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="Estilo_contenido7" x="275" y="14" width="39" height="15" isPrintWhenDetailOverflows="true" uuid="5a828fd4-bece-4b7a-8315-6bab1f2cda3f"/>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$V{Total_componente_aca}-$V{electivas}]]></textFieldExpression>
@@ -603,7 +599,7 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 	<group name="tituloMencion_grup">
 		<groupExpression><![CDATA[$F{TITULO}]]></groupExpression>
 		<groupHeader>
-			<band height="15">
+			<band height="14">
 				<printWhenExpression><![CDATA[$P{pn_imprimeTitulo}.equals( 1 )]]></printWhenExpression>
 				<staticText>
 					<reportElement style="Estilo_titulo7" x="10" y="0" width="145" height="14" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="697a802a-eeae-43b3-aa2e-9e1804387a2a">
