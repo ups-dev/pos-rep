@@ -89,7 +89,7 @@
           (SELECT   pre.pre_numero,
                     mat.ins_codigo,
                     pel.pel_descripcion, pel.pel_codigo,
-                   CASE when res.res_fecha IS NOT NULL AND cal.cal_numero_veces >=2 THEN
+                   CASE when res.res_fecha IS NOT NULL AND ((cal.cal_numero_veces >=2 AND cal.tap_codigo = 1) OR (cal.TAP_CODIGO IN (4,5,7))) THEN
                      (SELECT PEL2.PEL_DESCRIPCION
                       FROM ORG.ORG_PERIODO_ESTRUCTURA pee2
                       INNER JOIN ORG.ORG_PERIODO_LECTIVO pel2
