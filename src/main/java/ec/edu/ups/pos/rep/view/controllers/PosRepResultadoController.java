@@ -52,6 +52,8 @@ public class PosRepResultadoController implements Serializable{
     private OrgEstructura orgEstructuraSede;
     private OrgEstructura orgEstructuraCampus;
     private OrgEstructura orgEstructuraCarrera;
+    private OrgEstructura orgEstructuraSedeEmision;
+    private OrgEstructura orgEstructuraCampusEmision;
      
     private OrgPeriodoLectivo orgPeriodoInicial;
     private OrgPeriodoLectivo orgPeriodoFinal;
@@ -62,6 +64,8 @@ public class PosRepResultadoController implements Serializable{
     private List<OrgEstructura> orgEstructuraSedeList;
     private List<OrgEstructura> orgEstructuraCampusList;
     private List<OrgEstructura> orgEstructuraCarreraList;
+    private List<OrgEstructura> orgEstructuraSedeEmisionList;
+    private List<OrgEstructura> orgEstructuraCampusEmisionList;
   
     private List<OrgPeriodoLectivo> orgPeriodoLectivoList;
     private List<PedModalidad> pedModalidadList;
@@ -101,8 +105,7 @@ public class PosRepResultadoController implements Serializable{
     @Inject
     private InsAlumnoFacade insAlumnoFacade; 
     
-             
-          
+ 
     
     
     private String filtro = "";
@@ -257,10 +260,6 @@ public class PosRepResultadoController implements Serializable{
             updateNivelMallaList();
         
        }          
-       
-       
-       
-       
        
     /**
      * Actualizar lista de Asignaturas por Carrera
@@ -518,7 +517,7 @@ public class PosRepResultadoController implements Serializable{
     
     public void actualizaFiltros(){
         setOrgEstructuraSede(null);
-        setOrgEstructuraCampusList(null);
+        setOrgEstructuraSedeList(null);
         setOrgEstructuraCampus(null);
         setOrgEstructuraCampusList(null);
         setOrgEstructuraCarrera(null);
@@ -538,6 +537,7 @@ public class PosRepResultadoController implements Serializable{
         setOfeGrupoList(null);
         updateSedeList();
         setInsAlumnoWrapper(null);
+
         
     }
 
@@ -630,7 +630,7 @@ public class PosRepResultadoController implements Serializable{
         OrgEstructura estructuraSeleccionada = null;
         
         if( getOrgEstructuraCarrera() != null){
-            //System.out.println("getOrgEstructuraCarrerarrrrrrrrrr");
+            //System.out.println("getOrgEstructuraCarreraaaaa");
             
             estructuraSeleccionada = getOrgEstructuraCarrera();
             
@@ -639,8 +639,8 @@ public class PosRepResultadoController implements Serializable{
         
            if (getOrgEstructuraCampus()!=null){   
                
-             //  System.out.println("getOrgEstructuraCampusss");
-           estructuraSeleccionada = getOrgEstructuraCampus();
+             //  System.out.println("getOrgEstructuraCampusssss");
+                estructuraSeleccionada = getOrgEstructuraCampus();
             
             }else 
            {
@@ -705,8 +705,7 @@ public class PosRepResultadoController implements Serializable{
         this.insAlumnoFacade = insAlumnoFacade;
     }
     
-    //Metodo controller
-
+  //Metodo controller
     public List<InsAlumnoWrapper> getListadoAlumnos() {
         return listadoAlumnos;
     }
@@ -748,6 +747,89 @@ public class PosRepResultadoController implements Serializable{
 
     public void setPedModalidadList(List<PedModalidad> pedModalidadList) {
         this.pedModalidadList = pedModalidadList;
+    }
+    
+   // Sede de Emision
+    public void updateSedeEmisionList() {    
+        
+       if (secOrgEstructuraController.getEstructuraSede().getEstCodigo().equals(PosRepConstants.TODAS_SEDES)) {
+            setValidaSeleccionEstructuraSeguridadSede(false);
+            orgEstructuraSedeEmisionList = orgEstructuraFacade.listaEstructuraSedeActivo();
+         
+            
+        } 
+    
+         else {
+            setValidaSeleccionEstructuraSeguridadSede(true);
+            setOrgEstructuraSedeEmisionList(Arrays.asList(orgEstructuraFacade.find(secOrgEstructuraController.getEstructuraSede().getEstCodigo(), true)));
+            if(!orgEstructuraSedeEmisionList.isEmpty()){
+                setOrgEstructuraSedeEmision(getOrgEstructuraSedeEmisionList().get(0));
+              
+            }
+        }
+        updateCampusEmisionList();
+      
+    }
+     
+   // Campus de Emision  
+     public void updateCampusEmisionList() {
+            
+        
+        if (getOrgEstructuraSedeEmision() != null) {
+           // System.out.println("campus Emision diferente de null");
+            
+            if (!Objects.equals(secOrgEstructuraController.getEstructuraCampus().getEstCodigo(), PosRepConstants.TODOS_CAMPUS)
+                    && !Objects.equals(secOrgEstructuraController.getEstructuraSede().getEstCodigo(), PosRepConstants.TODAS_SEDES)) {
+                validaSeleccionEstructuraSeguridadCampus=true;
+                setOrgEstructuraCampusEmisionList(Arrays.asList(orgEstructuraFacade.find(secOrgEstructuraController.getEstructuraCampus().getEstCodigo(), true)));
+                
+               
+                if(!(orgEstructuraCampusEmisionList.isEmpty())){
+                    setOrgEstructuraCampusEmision(orgEstructuraCampusEmisionList.get(0));
+                   // System.out.println("campus 2");
+                }
+            } else {                
+               validaSeleccionEstructuraSeguridadCampus=false;
+               orgEstructuraCampusEmisionList = orgEstructuraFacade.listaEstructuraCampusActivo(getOrgEstructuraSedeEmision());
+               
+            }            
+        }
+      
+    } 
+
+    public OrgEstructura getOrgEstructuraSedeEmision() {
+        return orgEstructuraSedeEmision;
+    }
+
+    public void setOrgEstructuraSedeEmision(OrgEstructura orgEstructuraSedeEmision) {
+        this.orgEstructuraSedeEmision = orgEstructuraSedeEmision;
+    }
+
+    public OrgEstructura getOrgEstructuraCampusEmision() {
+        return orgEstructuraCampusEmision;
+    }
+
+    public void setOrgEstructuraCampusEmision(OrgEstructura orgEstructuraCampusEmision) {
+        this.orgEstructuraCampusEmision = orgEstructuraCampusEmision;
+    }
+
+   public List<OrgEstructura> getOrgEstructuraSedeEmisionList() {
+        if(orgEstructuraSedeEmisionList==null){
+            updateSedeEmisionList();
+        }
+        return orgEstructuraSedeEmisionList;
+    }
+
+    public void setOrgEstructuraSedeEmisionList(List<OrgEstructura> orgEstructuraSedeEmisionList) {
+        this.orgEstructuraSedeEmisionList = orgEstructuraSedeEmisionList;
+    }
+
+    public List<OrgEstructura> getOrgEstructuraCampusEmisionList() {
+        return orgEstructuraCampusEmisionList;
+    }
+
+    public void setOrgEstructuraCampusEmisionList(List<OrgEstructura> orgEstructuraCampusEmisionList) {
+        this.orgEstructuraCampusEmisionList = orgEstructuraCampusEmisionList;
     }
    
 }
