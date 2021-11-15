@@ -266,10 +266,11 @@ public class PosRepGeneralController implements Serializable{
             
             
             if(posAlumnoWrapper!=null){
-                codigoPeriodo=Integer.valueOf(String.valueOf(posAlumnoWrapper.getCodPeriodo()));
-                estCampus = Integer.valueOf(String.valueOf(posAlumnoWrapper.getEstCampus()));
+                codigoPeriodo=Integer.valueOf(String.valueOf(posAlumnoWrapper.getCodPeriodo()));    
+                estSede =  posRepResultadoController.getOrgEstructuraSedeEmision()== null?null:posRepResultadoController.getOrgEstructuraSedeEmision().getEstCodigo();
+                estCampus = Integer.valueOf(String.valueOf(posRepResultadoController.getOrgEstructuraCampusEmision()== null?null:posRepResultadoController.getOrgEstructuraCampusEmision().getEstCodigo()));  
                 estPosgrado = Integer.valueOf(String.valueOf(posAlumnoWrapper.getEstPosgrado())); 
-                estSede = Long.valueOf(posAlumnoWrapper.getEstSede());
+              
                 tituloPosgrado = String.valueOf(posAlumnoWrapper.getTitulo());
                 mencionEstudiante =  String.valueOf(posAlumnoWrapper.getTieneMencionEst());
                 totalMenciones = Integer.valueOf(String.valueOf(posAlumnoWrapper.getTotalMenciones()));

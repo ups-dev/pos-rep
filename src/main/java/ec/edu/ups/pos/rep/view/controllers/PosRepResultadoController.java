@@ -537,13 +537,7 @@ public class PosRepResultadoController implements Serializable{
         setOfeGrupoList(null);
         updateSedeList();
         setInsAlumnoWrapper(null);
- 
-  /*      setOrgEstructuraSedeEmision(null);
-        setOrgEstructuraSedeEmisionList(null);
-        setOrgEstructuraCampusEmision(null);
-        setOrgEstructuraCampusEmisionList(null);*/
-     //   updateSedeEmisionList();*/
-       //  updateCampusEmisionList();
+
         
     }
 
@@ -636,7 +630,7 @@ public class PosRepResultadoController implements Serializable{
         OrgEstructura estructuraSeleccionada = null;
         
         if( getOrgEstructuraCarrera() != null){
-            //System.out.println("getOrgEstructuraCarrerarrrrrrrrrr");
+            //System.out.println("getOrgEstructuraCarreraaaaa");
             
             estructuraSeleccionada = getOrgEstructuraCarrera();
             
@@ -645,7 +639,7 @@ public class PosRepResultadoController implements Serializable{
         
            if (getOrgEstructuraCampus()!=null){   
                
-             //  System.out.println("getOrgEstructuraCampusss");
+             //  System.out.println("getOrgEstructuraCampusssss");
                 estructuraSeleccionada = getOrgEstructuraCampus();
             
             }else 
@@ -761,11 +755,8 @@ public class PosRepResultadoController implements Serializable{
        if (secOrgEstructuraController.getEstructuraSede().getEstCodigo().equals(PosRepConstants.TODAS_SEDES)) {
             setValidaSeleccionEstructuraSeguridadSede(false);
             orgEstructuraSedeEmisionList = orgEstructuraFacade.listaEstructuraSedeActivo();
-            System.out.println("sede 0");
-            /*if(!orgEstructuraSedeEmisionList.isEmpty()){
-                setOrgEstructuraSedeEmision(getOrgEstructuraSedeEmisionList().get(0));
-                System.out.println("sede 1");
-            }*/
+         
+            
         } 
     
          else {
@@ -773,64 +764,34 @@ public class PosRepResultadoController implements Serializable{
             setOrgEstructuraSedeEmisionList(Arrays.asList(orgEstructuraFacade.find(secOrgEstructuraController.getEstructuraSede().getEstCodigo(), true)));
             if(!orgEstructuraSedeEmisionList.isEmpty()){
                 setOrgEstructuraSedeEmision(getOrgEstructuraSedeEmisionList().get(0));
-                System.out.println("sede 1");
+              
             }
-            System.out.println("sede 2");
         }
         updateCampusEmisionList();
       
     }
      
-   // Campus de Emision
-  /*  public void updateCampusEmisionList() {
-        //setOrgEstructuraCampusEmision(null);
-       // setOrgEstructuraCampusEmisionList(null);     
-        
-        if (getOrgEstructuraSedeEmision() != null) {
-            System.out.println("campus Emision diferente de null");
-            
-            if (!Objects.equals(secOrgEstructuraController.getEstructuraCampus().getEstCodigo(), PosRepConstants.TODOS_CAMPUS)
-                    && !Objects.equals(secOrgEstructuraController.getEstructuraSede().getEstCodigo(), PosRepConstants.TODAS_SEDES)) {
-                validaSeleccionEstructuraSeguridadCampus=true;
-                setOrgEstructuraCampusEmisionList(Arrays.asList(orgEstructuraFacade.find(secOrgEstructuraController.getEstructuraCampus().getEstCodigo(), true)));
-                
-                System.out.println("campus 1");
-                if(!(orgEstructuraCampusEmisionList.isEmpty())){
-                    setOrgEstructuraCampusEmision(orgEstructuraCampusEmisionList.get(0));
-                    System.out.println("campus 2");
-                }
-            } else {
-                System.out.println("campus else");
-               validaSeleccionEstructuraSeguridadCampus=false;
-                orgEstructuraCampusEmisionList = orgEstructuraFacade.listaEstructuraCampusActivo(getOrgEstructuraSedeEmision());
-            }            
-        }  */
-    
+   // Campus de Emision  
      public void updateCampusEmisionList() {
             
         
         if (getOrgEstructuraSedeEmision() != null) {
-            System.out.println("campus Emision diferente de null");
+           // System.out.println("campus Emision diferente de null");
             
             if (!Objects.equals(secOrgEstructuraController.getEstructuraCampus().getEstCodigo(), PosRepConstants.TODOS_CAMPUS)
                     && !Objects.equals(secOrgEstructuraController.getEstructuraSede().getEstCodigo(), PosRepConstants.TODAS_SEDES)) {
                 validaSeleccionEstructuraSeguridadCampus=true;
                 setOrgEstructuraCampusEmisionList(Arrays.asList(orgEstructuraFacade.find(secOrgEstructuraController.getEstructuraCampus().getEstCodigo(), true)));
                 
-                System.out.println("campus 1");
+               
                 if(!(orgEstructuraCampusEmisionList.isEmpty())){
                     setOrgEstructuraCampusEmision(orgEstructuraCampusEmisionList.get(0));
-                    System.out.println("campus 2");
+                   // System.out.println("campus 2");
                 }
-            } else {
-                System.out.println("campus else");
-                
+            } else {                
                validaSeleccionEstructuraSeguridadCampus=false;
                orgEstructuraCampusEmisionList = orgEstructuraFacade.listaEstructuraCampusActivo(getOrgEstructuraSedeEmision());
-               /* if(!(orgEstructuraCampusEmisionList.isEmpty())){
-                    setOrgEstructuraCampusEmision(orgEstructuraCampusEmisionList.get(0));
-                    System.out.println("campus 2");
-                }*/
+               
             }            
         }
       
