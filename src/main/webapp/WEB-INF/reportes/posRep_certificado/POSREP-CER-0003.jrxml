@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-CER-0003" pageWidth="595" pageHeight="842" columnWidth="551" leftMargin="22" rightMargin="22" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
 	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="145"/>
+	<property name="ireport.y" value="241"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_alu_codigo" class="java.lang.Integer">
@@ -212,8 +212,8 @@ decode(malp.materia_mencion,'N',1,0) cont_modulos,*/
 malp.total_menciones,
         calp.numero_veces, calp.nota_final, NVL(calp.estado,malp.estado) estado_modulo,calp.tap_codigo,calp.tipo_aprobacion,observaciones_matricula,
         calp.pel_codigo, calp.pel_descripcion,calp.fecha_semestre,calp.para_contar,calp.para_promediar,calp.resolucion,
-        DECODE(malp.tiene_mencion_pro,'S',decode(malp.total_menciones,1,cac2.cac_descripcion||', '||'MENCIÓN '||UPPER(cdd.cdd_mencion),
-           NVL((cac2.cac_descripcion||', '||(select 'MENCIÓN '||UPPER(cdd.cdd_mencion)
+        DECODE(malp.tiene_mencion_pro,'S', (decode(cac2.cac_descripcion,'OTRO',cde.cde_des_tit_opcional,cac2.cac_descripcion)||
+               (select ', '||'MENCIÓN '||UPPER(cdd.cdd_mencion)
                 from    ped.ped_cde_dep cdd,
                       ins.ins_ipa_cdd iic,
                       ins.ins_ins_pro_aca ipa
@@ -221,7 +221,7 @@ malp.total_menciones,
                 and    ipa.ipa_codigo = iic.ipa_codigo
                 and    iic.aud_eliminado  = 'N'
                 and    ipa.ins_codigo     = ins.ins_codigo
-                and    cdd.dep_codigo     = dep.dep_codigo)),0)),'N',decode(cac2.cac_descripcion,'OTRO',cde.cde_des_tit_opcional,cac2.cac_descripcion))TITULO,
+                and    cdd.dep_codigo     = dep.dep_codigo)),decode(cac2.cac_descripcion,'OTRO',cde.cde_des_tit_opcional,cac2.cac_descripcion)) TITULO,
 				(select decode(count(*),0,'S','N') from CALIFICACIONPOS calp2 where ins.ins_codigo         = calp2.ins_codigo
 AND    pre.pre_numero         = calp2.pre_numero
 and malp.mal_nivel=calp2.mal_nivel

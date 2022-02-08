@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-CER-0001" pageWidth="595" pageHeight="842" columnWidth="551" leftMargin="22" rightMargin="22" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="398"/>
+	<property name="ireport.y" value="110"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_pel_codigo" class="java.lang.Integer">
@@ -60,7 +60,7 @@
        tiene_mencion,
        NVL(tiene_mencion_est,'N') tiene_mencion_est,
        total_menciones,
-       decode( tiene_mencion,'N',decode(titulo,'OTRO',cde_des_tit_opcional,titulo),'S',(decode(total_menciones,1,mencion_proyecto,decode(mencion_estudiante,null,null,mencion_estudiante)))) titulo
+       DECODE(tiene_mencion,'N', (decode(titulo,'OTRO',cde_des_tit_opcional,titulo)),'S',(decode(total_menciones,1,mencion_proyecto,mencion_estudiante)))titulo
 
 from
 
@@ -124,7 +124,7 @@ from
            and    ipa.ins_codigo = inc.ins_codigo
            and    cdd.dep_codigo = dep.dep_codigo
                   ) tiene_mencion_est,
-          (select cac2.cac_descripcion||', '||'MENCIÓN '||cdd.cdd_mencion
+          (select decode(cac2.cac_descripcion,'OTRO',cde.cde_des_tit_opcional,cac2.cac_descripcion)||', '||'MENCIÓN '||cdd.cdd_mencion
           from    ped.ped_cde_dep cdd,
                   ins.ins_ipa_cdd iic,
                   ins.ins_ins_pro_aca ipa
@@ -138,7 +138,7 @@ from
            where cdd1.dep_codigo = dep.dep_codigo
            )total_menciones,
            cac2.cac_descripcion titulo,
-           cac2.cac_descripcion||', '||'MENCIÓN '||cdd.cdd_mencion  mencion_proyecto,
+           decode(cac2.cac_descripcion,'OTRO',cde.cde_des_tit_opcional,cac2.cac_descripcion)||', '||'MENCIÓN '||cdd.cdd_mencion  mencion_proyecto,
    cde.cde_des_tit_opcional,
    pre.pre_numero
 
