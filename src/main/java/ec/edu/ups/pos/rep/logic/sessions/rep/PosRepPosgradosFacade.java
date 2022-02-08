@@ -120,8 +120,8 @@ public class PosRepPosgradosFacade extends AbstractFacade<PosgradoAlumnoWrapper>
                                                     "                           where cdd1.dep_codigo = dep.dep_codigo   " +
                                                     "                           )totalMenciones,   " +
                                                     "                           cdd.cdd_codigo codMencionProyecto,   " +
-                                                    "                           cac2.cac_descripcion titulo,   " +
-                                                    "                           cac2.cac_descripcion||', '||'MENCIÓN '||UPPER(cdd.cdd_mencion)  mencionProyecto,  " +
+                                                    "                           decode(cac2.cac_descripcion,'OTRO',cde.cde_des_tit_opcional,cac2.cac_descripcion) titulo,   " +
+                                                    "                           decode(cac2.cac_descripcion,'OTRO',cde.cde_des_tit_opcional,cac2.cac_descripcion)||', '||'MENCIÓN '||UPPER(cdd.cdd_mencion)  mencionProyecto,  " +
                                                     "                           cde.cde_des_tit_opcional   ,dep.dep_codigo,inc.ins_codigo,      " +
                                                     "                           (select 'S'     " +
                                                     "                           from  stg.stg_acta_grado  acg, " +
