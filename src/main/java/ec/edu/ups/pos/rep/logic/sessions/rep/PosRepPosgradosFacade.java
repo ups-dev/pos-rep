@@ -54,13 +54,13 @@ public class PosRepPosgradosFacade extends AbstractFacade<PosgradoAlumnoWrapper>
                                                     "       tieneMencion,   " +
                                                     "       NVL(tieneMencionEst,'N') tieneMencionEst,   " +
                                                     "       totalMenciones,  " +
-                                                    "       decode( tieneMencion,'N',decode(titulo,'OTRO',cde_des_tit_opcional,titulo),'S',(decode(totalMenciones,1,mencionProyecto,decode(mencionEstudiante,null,null,mencionEstudiante)))) titulo,  " +
+                                                    "       decode( tieneMencion,'N',decode(titulo,'OTRO',cde_des_tit_opcional,titulo),'S',(decode(totalMenciones,1,mencionProyecto,mencionEstudiante))) titulo,  " +
                                                     "       preCodigo,  " +
                                                     "       codMencionEstudiante," +
                                                     "       vigencia,  " +
                                                     "       NVL(actaGrado,'N') actaGrado " +
                                                     "       from (" +
-                                                    "                select " +
+                                                    "                select distinct " +
                                                     "                     dse.dee_descripcion        sede,   " +
                                                     "                     dcm.dee_descripcion        campus,   " +
                                                     "                     dpos.dee_descripcion        posgrado,   " +
@@ -106,7 +106,7 @@ public class PosRepPosgradosFacade extends AbstractFacade<PosgradoAlumnoWrapper>
                                                     "                           and    ipa.ins_codigo = inc.ins_codigo   " +
                                                     "                           and    cdd.dep_codigo = dep.dep_codigo          " +
                                                     "                                  ) codMencionEstudiante,           " +
-                                                    "                          (select cac2.cac_descripcion||', '||'MENCIÓN '||UPPER(cdd.cdd_mencion)   " +
+                                                    "                          (select decode(cac2.cac_descripcion,'OTRO',cde.cde_des_tit_opcional,cac2.cac_descripcion)||', '||'MENCIÓN '||UPPER(cdd.cdd_mencion)   " +
                                                     "                          from    ped.ped_cde_dep cdd,   " +
                                                     "                                  ins.ins_ipa_cdd iic,   " +
                                                     "                                  ins.ins_ins_pro_aca ipa   " +
