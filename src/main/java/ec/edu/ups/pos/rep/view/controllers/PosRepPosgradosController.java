@@ -107,12 +107,13 @@ public class PosRepPosgradosController implements Serializable{
     
     public void cargarValidaciones(RepReportesSistema repReportesSistema){
         
-        //System.out.println("repReportesSistema.getResCodigo() " + repReportesSistema.getResCodigo());
+        System.out.println("repReportesSistema.getResCodigo()myyyy " + repReportesSistema.getResCodigo());
         // System.out.println("PosRepConstants.REPORTE_SISTEMA_RECORD_ACADEMICO_GRADUADOS" + PosRepConstants.REPORTE_SISTEMA_RECORD_ACADEMICO_GRADUADOS);
        if(repReportesSistema.getResCodigo().equals(PosRepConstants.REPORTE_SISTEMA_CALIFICACIONES_SEMESTRE)) {
             
          matNivelPeriodoEstructuraList= matMatriculaFacade.obtieneSemestre(insAlumnoWrapper.getAluCodigo());
-        //System.out.println("insAlumnoWrapper.getAluCodigo()" + insAlumnoWrapper.getAluCodigo());
+     //   System.out.println("insAlumnoWrapper.getAluCodigo()" + insAlumnoWrapper.getAluCodigo());
+    
         
         
         }else if (repReportesSistema.getResCodigo().equals(PosRepConstants.REPORTE_SISTEMA_RECORD_ACADEMICO_GRADUADOS)){
@@ -128,7 +129,7 @@ public class PosRepPosgradosController implements Serializable{
         
         //aqui se va a cargar valores por defecto para sede y campus emision
         cargarEstructuraEmisionDefecto();
-        System.out.println("Carga por defecto");
+      //  System.out.println("Carga por defecto");
 
     }
       public boolean validarParametros(RepReportesSistema repReportesSistema){
@@ -227,27 +228,30 @@ public class PosRepPosgradosController implements Serializable{
      posRepResultadoController.setOrgEstructuraCampusEmisionList(null);
      posRepResultadoController.setOrgEstructuraSedeEmisionList(null);
      
-             System.out.println("insAlumnoWrapper" + insAlumnoWrapper);
+          //   System.out.println("insAlumnoWrapper" + insAlumnoWrapper);
      
       if (insAlumnoWrapper != null){
+          
+          
           List <OrgEstructura> estructuraEmision = orgEstructuraFacade.obtenerEstructuraPosgradoAlumno(insAlumnoWrapper.getAluCodigo().toString());
       
+          if ( estructuraEmision.isEmpty()){
           
-        /*   OrgEstructura posgrado= estructuraEmision.get(0);
-           OrgEstructura campus = posgrado.getOrgEstructuraPadre();
-           OrgEstructura sede = posgrado.getOrgEstructuraPadre().getOrgEstructuraPadre();*/
+             Messages.addGlobalWarn("El estudiante no posee una inscripción válida.");
+          } else{
           
+         
             posgrado= estructuraEmision.get(0);
             campus = posgrado.getOrgEstructuraPadre();
             sede = posgrado.getOrgEstructuraPadre().getOrgEstructuraPadre();
            
            posRepResultadoController.setOrgEstructuraSedeEmision(sede);
-          System.out.println("sede inscripcion :"+sede);
+          //System.out.println("sede inscripcion :"+sede);
            
            posRepResultadoController.setOrgEstructuraCampusEmision(campus);
-           System.out.println("campus inscripcion :"+campus);
+        //   System.out.println("campus inscripcion :"+campus);
            
-           
+          } 
       }
           
        

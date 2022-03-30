@@ -84,7 +84,7 @@ public class OrgEstructuraFacade extends AbstractFacade<OrgEstructura> {
                      "     inner join ORG.ORG_DESCRIPCION_ESTRUCTURA deeCarrera on deeCarrera.DEE_CODIGO = estCarrera.DEE_CODIGO" +
                      " WHERE alu.ALU_CODIGO = "+alu_codigo;     */
        
-       String sql = " SELECT distinct pos.*  " +
+    /*   String sql = " SELECT distinct pos.*  " +
                         " FROM ins.ins_inscripcion inc, " +
                         "     ins.ins_oferta_inscripcion_inicial oii, " +
                         "     mat.mat_matricula   mta, " +
@@ -95,7 +95,28 @@ public class OrgEstructuraFacade extends AbstractFacade<OrgEstructura> {
                         " AND   mta.aud_eliminado = 'N' " +
                         " AND   mta.mat_pagado = 'S' " +
                         " AND   oii.est_codigo = pos.est_codigo " +
-                        " AND   inc.alu_codigo = "+alu_codigo;  
+                        " AND   inc.alu_codigo = "+alu_codigo;  */
+    
+    
+       String sql = " SELECT distinct  pos.*    " +
+                    " FROM ins.ins_inscripcion inc,   " + 
+                    "     ins.ins_oferta_inscripcion_inicial oii,   " +
+                    "     ins.ins_ins_pro_aca                ipa,  " +
+                    "     org.org_estructura                 pos,  " +
+                    "     fac.fac_pago_factura               paf   " +
+                    " WHERE inc.oii_codigo = oii.oii_codigo   " +
+                    " AND   oii.est_codigo = pos.est_codigo   " +
+                    " AND   inc.aud_eliminado      = 'N'    " +
+                    " AND   inc.ins_anulado        = 'N'    " +
+                    " AND   ipa.aud_eliminado      = 'N'   " +
+                    " AND   inc.ins_aprobado       = 'S'  " +
+                    " AND   inc.ins_codigo         = paf.ins_codigo  " +    
+                    " AND   paf.paf_pagado         = 'S'  " +
+                    " AND   paf.tip_codigo         = 8    " +  
+                    " AND   ipa.ins_codigo         = inc.ins_codigo   " +
+                    " AND   ipa.ipa_vigente        = 'S'  " +
+                    " AND   ipa.aud_eliminado      = 'N'  " +
+                    " AND   inc.alu_codigo         = "+alu_codigo;
        
         Query q = em.createNativeQuery(sql, OrgEstructura.class);                       
         return q.getResultList();
