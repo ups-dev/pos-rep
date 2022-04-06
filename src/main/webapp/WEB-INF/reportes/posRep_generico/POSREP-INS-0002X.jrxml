@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-INS-0002X" pageWidth="2170" pageHeight="842" columnWidth="2130" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a5610fb4-cc29-46b5-b47b-735f7e78b38b">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-INS-0002X" pageWidth="2300" pageHeight="842" columnWidth="2260" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a5610fb4-cc29-46b5-b47b-735f7e78b38b">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="2128"/>
+	<property name="ireport.x" value="2323"/>
 	<property name="ireport.y" value="0"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String">
@@ -81,7 +81,8 @@
         and  mta.mat_anulado        = 'N'
         and  pee.pee_codigo = mta.pee_codigo
         and  pee.pee_nivel  = 1
-        and  pee.pel_codigo = pel.pel_codigo)pagado_matr
+        and  pee.pel_codigo = pel.pel_codigo)pagado_matr,
+        decode(inc.ins_confirmado,'S','SI','N','NO','NO') confirmado
 FROM   ins.ins_inscripcion                      inc,
        ins.ins_alumno                           alu,
        ins.ins_oferta_inscripcion_inicial       oii,
@@ -144,6 +145,7 @@ ORDER BY  sed.est_codigo,campus,posgrado,cohorte,apellidos,nombres]]>
 	<field name="PAGADO_INSC" class="java.lang.String"/>
 	<field name="FECHA_MATRICULA" class="java.sql.Timestamp"/>
 	<field name="PAGADO_MATR" class="java.lang.String"/>
+	<field name="CONFIRMADO" class="java.lang.String"/>
 	<variable name="EVALUADO_SUM" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[]]></variableExpression>
 	</variable>
@@ -236,14 +238,14 @@ ORDER BY  sed.est_codigo,campus,posgrado,cohorte,apellidos,nombres]]>
 				<text><![CDATA[CELULAR]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Estilo_titulo" x="1774" y="0" width="120" height="16" uuid="cbb0ab85-3465-4da9-896d-d34430e3a9b6"/>
+				<reportElement style="Estilo_titulo" x="1901" y="0" width="120" height="16" uuid="cbb0ab85-3465-4da9-896d-d34430e3a9b6"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[FECHA DE INSCRIPCIÓN]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Estilo_titulo" x="1956" y="0" width="116" height="16" uuid="4edc80d1-7cf8-4e31-887e-31daf33161e4"/>
+				<reportElement style="Estilo_titulo" x="2083" y="0" width="116" height="16" uuid="4edc80d1-7cf8-4e31-887e-31daf33161e4"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -257,14 +259,14 @@ ORDER BY  sed.est_codigo,campus,posgrado,cohorte,apellidos,nombres]]>
 				<text><![CDATA[N°]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Estilo_titulo" x="2072" y="0" width="58" height="16" uuid="dd164eb7-eb5d-4f32-baf4-3d2489fc85b7"/>
+				<reportElement style="Estilo_titulo" x="2199" y="0" width="61" height="16" uuid="dd164eb7-eb5d-4f32-baf4-3d2489fc85b7"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[PAGADO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Estilo_titulo" x="1894" y="0" width="62" height="16" uuid="c9e4055f-88c7-4870-adb0-26f640298027"/>
+				<reportElement style="Estilo_titulo" x="2021" y="0" width="62" height="16" uuid="c9e4055f-88c7-4870-adb0-26f640298027"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -273,6 +275,10 @@ ORDER BY  sed.est_codigo,campus,posgrado,cohorte,apellidos,nombres]]>
 			<staticText>
 				<reportElement style="Estilo_titulo" x="1661" y="0" width="113" height="16" uuid="a7c93e6d-cac4-458a-a423-461d9bfbb4de"/>
 				<text><![CDATA[GRADUADO UPS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Estilo_titulo" x="1774" y="0" width="127" height="16" uuid="ed59d9d9-64b3-4b2c-94f8-4634494ca208"/>
+				<text><![CDATA[CONFIRMADO ADMITIDO]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -336,11 +342,11 @@ ORDER BY  sed.est_codigo,campus,posgrado,cohorte,apellidos,nombres]]>
 				<textFieldExpression><![CDATA[$V{CONTADOR}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido" x="2072" y="0" width="58" height="20" isPrintWhenDetailOverflows="true" uuid="114e2312-b041-4db2-8d75-5e449336af9a"/>
+				<reportElement style="Estilo_contenido" x="2199" y="0" width="61" height="20" isPrintWhenDetailOverflows="true" uuid="114e2312-b041-4db2-8d75-5e449336af9a"/>
 				<textFieldExpression><![CDATA[$F{PAGADO_MATR}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido" x="1956" y="0" width="116" height="20" isPrintWhenDetailOverflows="true" uuid="8e595d6f-3c9a-4fd1-b02b-861ca90f5c05"/>
+				<reportElement style="Estilo_contenido" x="2083" y="0" width="116" height="20" isPrintWhenDetailOverflows="true" uuid="8e595d6f-3c9a-4fd1-b02b-861ca90f5c05"/>
 				<textFieldExpression><![CDATA[$F{FECHA_MATRICULA}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
@@ -348,12 +354,16 @@ ORDER BY  sed.est_codigo,campus,posgrado,cohorte,apellidos,nombres]]>
 				<textFieldExpression><![CDATA[$F{GRADUADO_UPS}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido" x="1894" y="0" width="62" height="20" isPrintWhenDetailOverflows="true" uuid="42e25ca6-de44-4176-934b-f42e0c36429d"/>
+				<reportElement style="Estilo_contenido" x="2021" y="0" width="62" height="20" isPrintWhenDetailOverflows="true" uuid="42e25ca6-de44-4176-934b-f42e0c36429d"/>
 				<textFieldExpression><![CDATA[$F{PAGADO_INSC}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido" x="1774" y="0" width="120" height="20" isPrintWhenDetailOverflows="true" uuid="545cbbfa-8675-4574-9a1c-ee4fe0070770"/>
+				<reportElement style="Estilo_contenido" x="1901" y="0" width="120" height="20" isPrintWhenDetailOverflows="true" uuid="545cbbfa-8675-4574-9a1c-ee4fe0070770"/>
 				<textFieldExpression><![CDATA[$F{FECHA_INSCRIPCION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Estilo_contenido" x="1774" y="0" width="127" height="20" uuid="586728f2-4125-44c4-ab34-fb58da8e2a89"/>
+				<textFieldExpression><![CDATA[$F{CONFIRMADO}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
