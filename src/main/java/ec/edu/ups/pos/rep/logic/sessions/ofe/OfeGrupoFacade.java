@@ -38,22 +38,28 @@ public class OfeGrupoFacade extends AbstractFacade<OfeGrupo> {
      * @param orgPeriodoInicial Período Inicial
      * @param orgPeriodoFinal Período Final
      * @param gthPersona Docente
+     * @param estCodigo Programa
      * @return Grupos por malla.
      */
-    public List<OfeGrupo> obtieneGrupo(PedMalla pedMalla, Long orgPeriodoInicial, Long orgPeriodoFinal, GthPersona gthPersona){
-        Query q = getEntityManager().createQuery("SELECT gru "
-                                               + "FROM   OfeGrupo         gru, "
-                                               + "       OfeDistributivo  dis "
-                                               + "WHERE  gru              = dis.ofeGrupo "
-                                               + "AND    gru.malCodigo    = :malCodigo "
-                                               + "AND    gru.pelCodigo    BETWEEN :pelCodigoInicial AND :pelCodigoFinal "
-                                               + "AND    dis.perCodigo    = :perCodigo "
-                                               + "AND    gru.audEliminado = 'N' "
-                                               + "ORDER BY gru.gruCodigo ")
-                .setParameter("malCodigo", pedMalla.getMalCodigo())
-                .setParameter("pelCodigoInicial", orgPeriodoInicial)
-                .setParameter("pelCodigoFinal", orgPeriodoFinal)
-                .setParameter("perCodigo", gthPersona.getPerCodigo());                
+    public List<OfeGrupo> obtieneGrupo(PedMalla pedMalla, Long orgPeriodoInicial, Long orgPeriodoFinal, GthPersona gthPersona,Long estCodigo){
+        Query q = getEntityManager().createNativeQuery(" SELECT gru.* " +
+                                                        " FROM   ofe.ofe_grupo         gru, " +
+                                                        "       ofe.ofe_distributivo  dis " +
+                                                        " WHERE  dis.GRU_CODIGO=gru.GRU_CODIGO " +
+                                                        " AND    gru.mal_Codigo    = ?1 " +
+                                                        " and    dis.est_codigo IN (SELECT  e.est_codigo " +
+                                                                                    " FROM    org.org_estructura e " +
+                                                                                    " CONNECT BY PRIOR e.est_codigo = e.est_codigo_padre " +
+                                                                                    " START WITH e.est_codigo = ?2) " +
+                                                        " AND    gru.pel_Codigo    BETWEEN ?3 AND ?4 " +
+                                                        " AND    dis.per_Codigo    = ?5 " +
+                                                        " AND    gru.aud_Eliminado = 'N' " +
+                                                        " ORDER BY gru.gru_Codigo",OfeGrupo.class)
+                .setParameter(1, pedMalla.getMalCodigo())
+                .setParameter(2, estCodigo)
+                .setParameter(3, orgPeriodoInicial)
+                .setParameter(4, orgPeriodoFinal)
+                .setParameter(5, gthPersona.getPerCodigo());                
         (new CacheStoreModeParam(CacheStoreMode.REFRESH)).processParam(q);
         return q.getResultList();
     }

@@ -162,7 +162,7 @@ public class PosRepGeneralController implements Serializable{
                 gruCodigo=String.valueOf(ofeGrupo.getGruCodigo());
             }    
             String pagado= posRepResultadoController.getPafPagado();
-                        
+                 String pv_anio= posRepResultadoController.getAnio();       
             
             //Definición de Parámetros
             ReportParamBuilder rpb =
@@ -180,6 +180,7 @@ public class PosRepGeneralController implements Serializable{
             rpb.add("pv_pee_nivel", codigoNivel);
             rpb.add("pv_paf_pagado", pagado);
             rpb.add("pn_alu_codigo", codigoAlumno);
+            rpb.add("pv_anio", pv_anio);
 
      //Definición de Formato de Archivo
       switch (formato) {

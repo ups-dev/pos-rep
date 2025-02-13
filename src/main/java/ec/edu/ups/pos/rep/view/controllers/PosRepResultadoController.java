@@ -80,8 +80,8 @@ public class PosRepResultadoController implements Serializable{
     private InsAlumnoWrapper insAlumnoWrapper;
     private List<InsAlumnoWrapper> listadoAlumnos;
     private Long aluCodigo;
-    
-    
+     private String Anio;
+    private List<String> listadoAnio;
       
     @Inject
     private SecOrgEstructuraController secOrgEstructuraController;
@@ -163,7 +163,7 @@ public class PosRepResultadoController implements Serializable{
         updateCampusList();
         updateModalidadPorProgramaList();
     }
-
+    
     public void updateCampusList() {
         setOrgEstructuraCampus(null);
         setOrgEstructuraCampusList(null);        
@@ -318,9 +318,17 @@ public class PosRepResultadoController implements Serializable{
                 pelCodigoF = pelCodigoI;
         }
         else
-            pelCodigoF = pelCodigoI;
+           pelCodigoF = pelCodigoI;
+        Long estCodigo = 0L;
+        if(getOrgEstructuraCarrera()!=null){
+            estCodigo = getOrgEstructuraCarrera().getEstCodigo();
+        }else if(getOrgEstructuraCampus()!=null){
+            estCodigo = getOrgEstructuraCampus().getEstCodigo();
+        }else if(getOrgEstructuraSede()!=null){
+            estCodigo = getOrgEstructuraSede().getEstCodigo();
+        }            
         if(getPedMalla()!=null && getOrgPeriodoInicial()!=null && getGthPersona()!=null){            
-            setOfeGrupoList(ofeGrupoFacade.obtieneGrupo(getPedMalla(), pelCodigoI, pelCodigoF, getGthPersona()));
+            setOfeGrupoList(ofeGrupoFacade.obtieneGrupo(getPedMalla(), pelCodigoI, pelCodigoF, getGthPersona(),estCodigo));
         }          
     }
    
@@ -432,7 +440,14 @@ public class PosRepResultadoController implements Serializable{
 
     public void setOrgPeriodoLectivoList(List<OrgPeriodoLectivo> orgPeriodoLectivoList) {
         this.orgPeriodoLectivoList = orgPeriodoLectivoList;
-    }        
+    } 
+    public String getAnio() {
+        return Anio;
+    }
+
+    public void setAnio(String Anio) {
+        this.Anio = Anio;
+    }
 
     public List<GthPersona> getGthPersonaList() {
         Long pelCodigo = 0L;
@@ -478,6 +493,19 @@ public class PosRepResultadoController implements Serializable{
         this.ofeGrupoList = ofeGrupoList;
     }    
 
+   public void setAnioList(List<String> listadoAnio) {
+        this.listadoAnio = listadoAnio;
+    }    
+ public List<String> getAnioList() {
+      listadoAnio = new ArrayList<>();
+      for(int years = Calendar.getInstance().get(Calendar.YEAR); years>=Calendar.getInstance().get(Calendar.YEAR)-10; years--) {
+    listadoAnio.add(years+"");
+}
+
+        return listadoAnio;
+    }   
+    
+    
     public String getFiltro() {
         return filtro;
     }

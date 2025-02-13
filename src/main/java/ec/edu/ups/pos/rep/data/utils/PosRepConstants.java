@@ -63,18 +63,13 @@ public class PosRepConstants {
     public static final Long REPORTE_SISTEMA_RECORD_ACADEMICO_GRADUADOS = 38L;
     public static final Long REP_PARAMETRO_COHORTE_TODOS = 19L;          //Parámetro Cohorte con opción Todos
     public static final Long REP_PARAMETRO_MODALIDAD_TODOS = 20L;          //Parámetro Modalidad con opción Todos
-    
+    public static final Long REP_PARAMETRO_ANIO = 22L;          //Parámetro de  Año
     
     
     static {
-//        EMAIL_TO_ERROR.add("mpinedav@ups.edu.ec");        
-//        EMAIL_TO_ERROR.add("mjarama@ups.edu.ec");
-        EMAIL_TO_ERROR.add("emora@ups.edu.ec");
-     //   EMAIL_TO_ERROR.add("prodriguezl@ups.edu.ec");
-        EMAIL_TO_ERROR.add("myunga@ups.edu.ec");
         EMAIL_TO_ERROR.add("dperalta@ups.edu.ec");
-        EMAIL_TO_ERROR.add("vclavijo@ups.edu.ec");
         EMAIL_TO_ERROR.add("esalto@ups.edu.ec");
-//        EMAIL_TO.add("mpinedav@ups.edu.ec");       
+        EMAIL_TO_ERROR.add("jsuarez@ups.edu.ec");
+        EMAIL_TO_ERROR.add("dmatovelle@ups.edu.ec");
     }
 }

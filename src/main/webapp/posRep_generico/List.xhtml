@@ -488,6 +488,40 @@
                         </ui:decorate>
                     </ui:fragment>
                 </h:panelGroup>
+                                             
+                <h:panelGroup id="anio">
+<!--                   <ui:fragment rendered="#{repReportesSistemaController.selected ne null 
+                                             and posRepResultadoController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_ANIO)}">-->
+
+                        <!--Filtro Año-->
+                        <ui:decorate template="/WEB-INF/templates/decorators/search/ups-search-param.xhtml">
+                            <ui:define name="ups-search-param-title">    
+                                <p:outputLabel value="#{posRepBundle['PosRepAnio']}:" />                        
+                            </ui:define>
+
+                            <ui:define name="ups-search-param-content">
+                                <p:selectOneMenu id="posRepFiltrarAnio" value="#{posRepResultadoController.anio}"                                         
+                                                 filter="true" filterMatchMode="contains" var="filtro" 
+                                                 >                            
+                                 
+                                    <f:selectItems value="#{posRepResultadoController.anioList}"
+                                                   var="grupoItem"
+                                                   itemValue="#{anio}"
+                                                   itemLabel="#{anio}"
+                                                   />  
+                                    
+                                     <p:column>
+                                             <h:outputText value="#{filtro}" />  
+                                         </p:column>                  
+                                </p:selectOneMenu>                        
+                            </ui:define>
+                        </ui:decorate>
+<!--                     </ui:fragment>-->
+                </h:panelGroup>                              
+                                             
+                                             
+                                             
+                                             
                
      <h:panelGroup id="pagado">
                     <ui:fragment rendered="#{repReportesSistemaController.selected ne null 

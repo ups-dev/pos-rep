@@ -1,6 +1,9 @@
 package ec.edu.ups.pos.rep.view.controller.rep;
 
+import ec.edu.ups.jsf.security.ups.util.TipoEstructura;
+import ec.edu.ups.jsf.security.ups.web.session.SecOrgEstructuraController;
 import ec.edu.ups.pos.rep.data.entities.rep.RepReportesSistema;
+import ec.edu.ups.pos.rep.data.utils.PosRepConstants;
 import ec.edu.ups.pos.rep.logic.sessions.rep.RepReportesSistemaFacade;
 import ec.edu.ups.pos.rep.view.controllers.AbstractController;
 import java.util.List;
@@ -17,7 +20,9 @@ public class RepReportesSistemaController extends AbstractController<RepReportes
     
     @Inject
     private RepReportesSistemaFacade repReportesSistemaFacade;
-       
+    @Inject
+    private SecOrgEstructuraController secOrgEstructuraController;
+        
     public RepReportesSistemaController() {
         super(RepReportesSistema.class);
     }    
@@ -34,6 +39,7 @@ public class RepReportesSistemaController extends AbstractController<RepReportes
     public void preRenderView(String valor_modulo) {
         if (!Faces.isPostback()) {
             modulo = valor_modulo;
+               secOrgEstructuraController.setTipoEstructura(TipoEstructura.PROGRAMA);
         }
     } 
        
