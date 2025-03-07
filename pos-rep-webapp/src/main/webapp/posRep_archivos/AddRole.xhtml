@@ -1,0 +1,65 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:u="http://ups.edu.ec/ui">
+
+    <h:form id="PosRepAddRolForm">
+        <p:dialog id="PosRepAddRol" widgetVar="PosRepAddRolDialog" modal="true"
+                  resizable="false" draggable="false" fitViewport="true"
+                  header="#{posRepBundle['PosRepNuevoRol']}" closeOnEscape="true">
+            <u:verticalStack gapXs="3">
+                <p:messages id="messages" closable="true">
+                    <p:effect type="pulsate" event="load" delay="200" speed="500">
+                        <f:param name="times" value="1"/>
+                    </p:effect>
+                </p:messages>
+
+                <u:formLayout id="display">
+                    <p:dataTable style="padding-top: 10px; padding-bottom: 10px"
+                                 id="PosReportesSistemaDataTable3"
+                                 widgetVar="PosReportesSistemaDataTableVar3"
+                                 value="#{posRepReporteRolController.allRol}"
+                                 var="item"
+                                 rowKey="#{item.rolCodigo}"
+                                 sortBy="#{item.rolDescripcion}"
+                                 sortOrder="ascending"
+                                 paginator="true"
+                                 rows="15"
+                                 rowsPerPageTemplate="15,30,45,60"
+                                 selection="#{posRepReporteRolController.manageSelectedRol}"
+                                 filteredValue="#{posRepReporteRolController.filterAsegRolList}"
+                                 selectionMode="single"
+                                 paginatorPosition="bottom"
+                                 emptyMessage="#{posRepBundle['TableEmpty']}">
+
+                        <p:ajax event="rowSelect" update=":PosRepAddRolForm:PosReportesSistemaDataTable3"
+                                listener="#{posRepReporteRolController.repReporteRol.setAsegRol(posRepReporteRolController.manageSelectedRol)}"
+                        />
+
+                        <p:column sortBy="#{item.rolDescripcion}" filterBy="#{item.rolDescripcion}" filterMatchMode="contains">
+                            <f:facet name="header">
+                                <h:outputText value="#{posRepBundle['PosRepRoles']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.rolDescripcion}"/>
+                        </p:column>
+
+                    </p:dataTable>
+
+
+                </u:formLayout>
+            </u:verticalStack>
+
+            <f:facet name="footer">
+                <p:commandButton id="cancelButton" value="#{posRepBundle['Cancel']}" icon="fa fa-xmark"
+                                 update=":PosReportesSistemaDataTable"
+                                 onclick="PF('PosRepAddRolDialog').hide()" type="button"/>
+                <p:commandButton id="saveButton" value="#{posRepBundle['Accept']}" icon="fa fa-save"
+                                 actionListener="#{posRepReporteRolController.saveNew}"
+                                 update=":PosReportesForm:messages,:PosReportesForm:PosReportesSistemaDataTable, :PosReportesForm:rolesPanelGroup, :PosReportesForm:PosRepRoles, :PosReportesForm:PosReportesSistemaDataTable2, :PosRepEditForm, :PosReportesForm:enableButton, :PosReportesForm:disableButton,  :PosReportesForm:deleteButton"
+                                 oncomplete="handleSubmit(xhr,status,args,PF('PosRepAddRolDialog'));"/>
+            </f:facet>
+        </p:dialog>
+    </h:form>
+</ui:composition>

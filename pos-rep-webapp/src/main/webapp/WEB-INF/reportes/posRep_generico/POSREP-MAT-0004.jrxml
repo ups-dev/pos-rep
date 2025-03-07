@@ -1,0 +1,806 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-MAT-0004" pageWidth="760" pageHeight="842" columnWidth="720" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="28"/>
+	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
+	<parameter name="pv_usuario" class="java.lang.String"/>
+	<parameter name="pn_est_codigo" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pv_mod_codigo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pv_pel_codigo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[--MATRICULADOS CON FECHA DE COHORTE VIGENTE
+SELECT DISTINCT dsed.dee_descripcion        sede,
+        dcam.dee_descripcion        campus,
+        dpos.dee_descripcion        posgrado,
+        mod.mod_descripcion         modalidad,
+        pel.pel_codigo,
+        pel.pel_descripcion         cohorte,
+        cli.cllc_ruc                cedula,
+        alu.alu_apellidos||' '||alu.alu_nombres   estudiante,
+        alu.alu_fecha_nacimiento    fecha_nacimiento,
+       (select ag1.arg_nacionalidad
+        from org.org_area_geografica ag5,
+              org.org_area_geografica ag4,
+              org.org_area_geografica ag3,
+              org.org_area_geografica ag2,
+              org.org_area_geografica ag1
+        where ag5.arg_codigo_padre = ag4.arg_codigo
+        and   ag4.arg_codigo_padre = ag3.arg_codigo
+        and   ag3.arg_codigo_padre = ag2.arg_codigo
+        and   ag2.arg_codigo_padre = ag1.arg_codigo
+        and   ag5.arg_codigo       = alu.arg_codigo_nac)   nacionalidad,
+       cli.cllc_calle               direccion,
+       cli.cllc_fono                telefono,
+       cli.cllc_celular             celular,
+       alu.alu_email                correo_institucional,
+       cli.cllc_email               correo_personal,inc.ins_codigo
+FROM    mat.mat_matricula           mat,
+        cal.cal_calificacion        cal,
+        fac.fac_pago_factura        paf,
+        sigac.cliente_local         cli,
+        ofe.ofe_grupo               gru,
+        ped.ped_malla               mal,
+        ped.ped_proyecto_educacion  pre,
+        ped.ped_des_est_pro_edu     dep,
+        org.org_descripcion_estructura dpos,
+        org.org_descripcion_estructura dcam,
+        org.org_descripcion_estructura dsed,
+        org.org_estructura          pos,
+        org.org_estructura          cam,
+        org.org_estructura          sed,
+        org.org_periodo_estructura  pee,
+        org.org_periodo_lectivo     pel,
+        ins.ins_alumno              alu,
+        ins.ins_inscripcion         inc,
+        ins.ins_oferta_inscripcion_inicial       oii,
+        ped.ped_modalidad           mod
+WHERE   mat.mat_codigo  = cal.mat_codigo
+AND     mat.mat_codigo  = paf.ins_codigo
+AND     mat.cllc_cdg    = cli.cllc_cdg
+AND     cal.gru_codigo  = gru.gru_codigo(+)
+AND     cal.mal_codigo  = mal.mal_codigo
+AND     mal.pre_numero  = pre.pre_numero
+AND     mat.pee_codigo  = pee.pee_codigo
+AND     dep.dep_codigo  = mat.dep_codigo --
+AND     dep.pre_numero  = pre.pre_numero
+AND     dep.dee_codigo  = dpos.dee_codigo
+AND     pee.est_codigo  = pos.est_codigo
+AND     pos.dee_codigo  = dpos.dee_codigo
+AND     cam.est_codigo  = pos.est_codigo_padre
+AND     cam.dee_codigo  = dcam.dee_codigo
+AND     sed.est_codigo  = cam.est_codigo_padre
+AND     sed.dee_codigo  = dsed.dee_codigo
+AND     alu.cllc_cdg    = mat.cllc_cdg
+AND     mat.mat_tipo_proceso = 'M'
+AND     paf.tip_codigo  = 4
+AND     paf.paf_pagado  = 'S'
+AND     pel.pel_codigo  = pee.pel_codigo
+AND     pee.pel_codigo  like $P{pv_pel_codigo}
+AND     pos.est_codigo  IN (SELECT est_codigo e
+                            FROM   org.org_estructura e
+                            WHERE  e.est_nivel  = 4
+                            START WITH e.est_codigo = $P{pn_est_codigo}
+                            CONNECT BY PRIOR e.est_codigo = e.est_codigo_padre)
+AND     cal.aud_eliminado = 'N'
+AND     cal.cal_retirado  = 'N'
+AND     mat.aud_eliminado = 'N'
+AND     mat.mat_anulado   = 'N'
+AND     inc.ins_codigo    = mat.ins_codigo
+AND     oii.oii_codigo    = inc.oii_codigo
+AND     mod.mod_codigo    = oii.mod_codigo
+AND     oii.mod_codigo    like $P{pv_mod_codigo}
+AND     inc.ins_codigo  NOT  IN  (select rei.ins_codigo  --SIN DECLARATORIA DE APTITUD
+                                  from sse.sse_tipo_resolucion tir,
+                                       sse.sse_tip_con_tip_res tct,
+                                       sse.sse_antecedente     ant,
+                                       sse.sse_resolucion      res,
+                                       sse.sse_resolucion_inscripcion rei
+                                  where tir.tir_codigo = tct.tir_codigo
+                                  and   tct.tct_codigo = ant.tct_codigo
+                                  and   ant.ant_codigo = res.ant_codigo
+                                  and   tir.tir_codigo  = 9
+                                  and   res.aud_eliminado = 'N'
+                                  and   res.res_estado  = 'A'
+                                  and   res.res_codigo   = rei.res_codigo)
+AND  pee.pee_fecha_final_cohorte >= SYSDATE
+
+UNION
+--MATRICULADOS CON TRABAJO DE TITULACION O PRORROGAS 1,2
+SELECT DISTINCT dsed.dee_descripcion        sede,
+        dcam.dee_descripcion        campus,
+        dpos.dee_descripcion        posgrado,
+        mod.mod_descripcion         modalidad,
+        pel.pel_codigo,
+        pel.pel_descripcion         cohorte,
+        cli.cllc_ruc                cedula,
+        alu.alu_apellidos||' '||alu.alu_nombres   estudiante,
+        alu.alu_fecha_nacimiento    fecha_nacimiento,
+       (select ag1.arg_nacionalidad
+        from org.org_area_geografica ag5,
+              org.org_area_geografica ag4,
+              org.org_area_geografica ag3,
+              org.org_area_geografica ag2,
+              org.org_area_geografica ag1
+        where ag5.arg_codigo_padre = ag4.arg_codigo
+        and   ag4.arg_codigo_padre = ag3.arg_codigo
+        and   ag3.arg_codigo_padre = ag2.arg_codigo
+        and   ag2.arg_codigo_padre = ag1.arg_codigo
+        and   ag5.arg_codigo       = alu.arg_codigo_nac)   nacionalidad,
+       cli.cllc_calle               direccion,
+       cli.cllc_fono                telefono,
+       cli.cllc_celular             celular,
+       alu.alu_email                correo_institucional,
+       cli.cllc_email               correo_personal,inc.ins_codigo
+FROM    mat.mat_matricula           mat,
+        cal.cal_calificacion        cal,
+        fac.fac_pago_factura        paf,
+        sigac.cliente_local         cli,
+        ofe.ofe_grupo               gru,
+        ped.ped_malla               mal,
+        ped.ped_proyecto_educacion  pre,
+        ped.ped_des_est_pro_edu     dep,
+        org.org_descripcion_estructura dpos,
+        org.org_descripcion_estructura dcam,
+        org.org_descripcion_estructura dsed,
+        org.org_estructura          pos,
+        org.org_estructura          cam,
+        org.org_estructura          sed,
+        org.org_periodo_estructura  pee,
+        org.org_periodo_lectivo     pel,
+        ins.ins_alumno              alu,
+        ins.ins_inscripcion         inc,
+        ins.ins_oferta_inscripcion_inicial       oii,
+        ped.ped_modalidad           mod
+WHERE   mat.mat_codigo  = cal.mat_codigo
+AND     mat.mat_codigo  = paf.ins_codigo
+AND     mat.cllc_cdg    = cli.cllc_cdg
+AND     cal.gru_codigo  = gru.gru_codigo(+)
+AND     cal.mal_codigo  = mal.mal_codigo
+AND     mal.pre_numero  = pre.pre_numero
+AND     mat.pee_codigo  = pee.pee_codigo
+AND     dep.dep_codigo  = mat.dep_codigo --
+AND     dep.pre_numero  = pre.pre_numero
+AND     dep.dee_codigo  = dpos.dee_codigo
+AND     pee.est_codigo  = pos.est_codigo
+AND     pos.dee_codigo  = dpos.dee_codigo
+AND     cam.est_codigo  = pos.est_codigo_padre
+AND     cam.dee_codigo  = dcam.dee_codigo
+AND     sed.est_codigo  = cam.est_codigo_padre
+AND     sed.dee_codigo  = dsed.dee_codigo
+AND     alu.cllc_cdg    = mat.cllc_cdg
+AND     mat.mat_tipo_proceso = 'M'
+AND     paf.tip_codigo  = 4
+AND     paf.paf_pagado  = 'S'
+AND     pel.pel_codigo  = pee.pel_codigo
+AND     pee.pel_codigo  like $P{pv_pel_codigo}
+AND     pos.est_codigo  IN (SELECT est_codigo e
+                            FROM   org.org_estructura e
+                            WHERE  e.est_nivel  = 4
+                            START WITH e.est_codigo = $P{pn_est_codigo}
+                            CONNECT BY PRIOR e.est_codigo = e.est_codigo_padre)
+AND     cal.aud_eliminado = 'N'
+AND     cal.cal_retirado  = 'N'
+AND     mat.aud_eliminado = 'N'
+AND     mat.mat_anulado   = 'N'
+AND     inc.ins_codigo    = mat.ins_codigo
+AND     oii.oii_codigo    = inc.oii_codigo
+AND     mod.mod_codigo    = oii.mod_codigo
+AND     oii.mod_codigo    like $P{pv_mod_codigo}
+AND     inc.ins_codigo  NOT  IN  (select distinct rei.ins_codigo --SIN DECLARATORIA DE APTITUD
+                                  from sse.sse_tipo_resolucion tir,
+                                       sse.sse_tip_con_tip_res tct,
+                                       sse.sse_antecedente     ant,
+                                       sse.sse_resolucion      res,
+                                       sse.sse_resolucion_inscripcion rei
+                                  where tir.tir_codigo = tct.tir_codigo
+                                  and   tct.tct_codigo = ant.tct_codigo
+                                  and   ant.ant_codigo = res.ant_codigo
+                                  and   tir.tir_codigo  = 9
+                                  and   res.aud_eliminado = 'N'
+                                  and   res.res_estado  = 'A'
+                                  and   res.res_codigo   = rei.res_codigo)
+AND  inc.ins_codigo  IN    (select distinct ipa.ins_codigo -- CON TRABAJO DE TITULACION O PRORROGAS 1,2
+                            from stg.stg_trabajo_graduacion trg,
+                                 ins.ins_ins_pro_aca ipa,
+                                 stg.stg_prorroga_trabajo prt,
+                                 org.org_estructura       pos,
+                                 org.org_descripcion_estructura dpos
+                            where ipa.ipa_codigo = trg.ipa_codigo
+                            and   trg.tdg_aprobado = 'S'
+                            and   trg.tdg_codigo  = prt.tdg_codigo(+)
+                            and   prt.prt_numero_prorroga(+)IN (1,2)
+                            and   prt.prt_vigente(+) = 'S'
+                            and   pos.est_codigo     = trg.est_codigo
+                            and   pos.dee_codigo     = dpos.dee_codigo
+                            and   dpos.tie_codigo    = 6
+                            and   ((trg.tdg_fecha_vencimiento >= SYSDATE) OR (prt.prt_fecha_vencimiento >= SYSDATE))
+                            )
+UNION
+--MATRICULADOS Y CON FECHA DE ÚLTIMO MÓDULO + 6 MESES
+SELECT DISTINCT dsed.dee_descripcion sede,
+        dcam.dee_descripcion        campus,
+        dpos.dee_descripcion        posgrado,
+        mod.mod_descripcion         modalidad,
+        pel.pel_codigo,
+        pel.pel_descripcion         cohorte,
+        cli.cllc_ruc                cedula,
+        alu.alu_apellidos||' '||alu.alu_nombres   estudiante,
+        alu.alu_fecha_nacimiento    fecha_nacimiento,
+       (select ag1.arg_nacionalidad
+        from org.org_area_geografica ag5,
+              org.org_area_geografica ag4,
+              org.org_area_geografica ag3,
+              org.org_area_geografica ag2,
+              org.org_area_geografica ag1
+        where ag5.arg_codigo_padre = ag4.arg_codigo
+        and   ag4.arg_codigo_padre = ag3.arg_codigo
+        and   ag3.arg_codigo_padre = ag2.arg_codigo
+        and   ag2.arg_codigo_padre = ag1.arg_codigo
+        and   ag5.arg_codigo       = alu.arg_codigo_nac)   nacionalidad,
+       cli.cllc_calle               direccion,
+       cli.cllc_fono                telefono,
+       cli.cllc_celular             celular,
+       alu.alu_email                correo_institucional,
+       cli.cllc_email               correo_personal,inc.ins_codigo
+FROM    mat.mat_matricula           mat,
+        cal.cal_calificacion        cal,
+        fac.fac_pago_factura        paf,
+        ped.ped_malla               mal,
+        ofe.ofe_grupo               gru,
+        ofe.ofe_distributivo        dis,
+        sigac.cliente_local         cli,
+        ped.ped_proyecto_educacion  pre,
+        ped.ped_des_est_pro_edu     dep,
+        org.org_descripcion_estructura dpos,
+        org.org_descripcion_estructura dcam,
+        org.org_descripcion_estructura dsed,
+        org.org_estructura          pos,
+        org.org_estructura          cam,
+        org.org_estructura          sed,
+        org.org_periodo_estructura  pee,
+        org.org_periodo_lectivo     pel,
+        ins.ins_alumno              alu,
+        ins.ins_inscripcion         inc,
+        ins.ins_oferta_inscripcion_inicial oii,
+        ped.ped_modalidad           mod
+WHERE   mat.mat_codigo  = cal.mat_codigo
+AND     mat.mat_codigo  = paf.ins_codigo
+AND     cal.mal_codigo  = mal.mal_codigo
+AND     cal.gru_codigo  = gru.gru_codigo
+AND     dis.gru_codigo = gru.gru_codigo
+AND     mat.mat_tipo_proceso = 'M'
+AND     paf.tip_codigo  = 4
+AND     paf.paf_pagado  = 'S'
+AND     mat.cllc_cdg    = cli.cllc_cdg
+AND     mal.pre_numero  = pre.pre_numero
+AND     mat.pee_codigo  = pee.pee_codigo
+AND     dep.dep_codigo  = mat.dep_codigo --
+AND     dep.pre_numero  = pre.pre_numero
+AND     dep.dee_codigo  = dpos.dee_codigo
+AND     pee.est_codigo  = pos.est_codigo
+AND     pos.dee_codigo  = dpos.dee_codigo
+AND     cam.est_codigo  = pos.est_codigo_padre
+AND     cam.dee_codigo  = dcam.dee_codigo
+AND     sed.est_codigo  = cam.est_codigo_padre
+AND     sed.dee_codigo  = dsed.dee_codigo
+AND     alu.cllc_cdg    = mat.cllc_cdg
+AND     pel.pel_codigo  = pee.pel_codigo
+AND     pee.pel_codigo  like $P{pv_pel_codigo}
+AND     pos.est_codigo  IN (SELECT est_codigo e
+                            FROM   org.org_estructura e
+                            WHERE  e.est_nivel  = 4
+                            START WITH e.est_codigo = $P{pn_est_codigo}
+                            CONNECT BY PRIOR e.est_codigo = e.est_codigo_padre)
+AND     cal.aud_eliminado = 'N'
+AND     cal.cal_retirado  = 'N'
+AND     mat.aud_eliminado = 'N'
+AND     mat.mat_anulado   = 'N'
+AND     inc.ins_codigo    = mat.ins_codigo
+AND     oii.oii_codigo    = inc.oii_codigo
+AND     mod.mod_codigo    = oii.mod_codigo
+AND     oii.mod_codigo    like $P{pv_mod_codigo}
+AND     inc.ins_codigo  NOT  IN  (select rei.ins_codigo  --SIN DECLARATORIA DE APTITUD
+                                  from sse.sse_tipo_resolucion tir,
+                                       sse.sse_tip_con_tip_res tct,
+                                       sse.sse_antecedente     ant,
+                                       sse.sse_resolucion      res,
+                                       sse.sse_resolucion_inscripcion rei
+                                  where tir.tir_codigo = tct.tir_codigo
+                                  and   tct.tct_codigo = ant.tct_codigo
+                                  and   ant.ant_codigo = res.ant_codigo
+                                  and   tir.tir_codigo  = 9
+                                  and   res.aud_eliminado = 'N'
+                                  and   res.res_estado  = 'A'
+                                  and   res.res_codigo   = rei.res_codigo)
+
+AND (dis.dis_fecha_fin) IN     (select distinct max(dist.dis_fecha_fin)   --FECHA FIN ULTIMO MODULO
+                                                from ofe.ofe_grupo grup,
+                                                     ofe.ofe_distributivo dist,
+                                                     ped.ped_malla        mal,
+                                                     ped.ped_proyecto_educacion pro,
+                                                     ped.ped_tipo_proyecto_educacion      tpe,
+                                                     ped.ped_materia                      mte,
+                                                     ped.ped_des_est_pro_edu              dep,
+                                                     org.org_descripcion_estructura       dca,
+                                                     org.org_estructura                   posg,
+                                                     org.org_estructura                   cam,
+                                                     ped.ped_mod_pro_edu                  mpe,
+                                                     ped.ped_est_mod_pro_edu              emp
+                                                where grup.gru_codigo = dist.gru_codigo
+                                                and   grup.mal_codigo = mal.mal_codigo
+                                                and   pro.pre_numero = mal.pre_numero
+                                                and   pro.tpe_codigo = tpe.tpe_codigo
+                                                and   tpe.ctp_codigo = 4--Posgrados
+                                                and   mte.mat_codigo = mal.mat_codigo
+                                                and   pro.pre_numero = dep.pre_numero
+                                                and   dca.dee_codigo = dep.dee_codigo
+                                                and   dca.dee_codigo = posg.dee_codigo
+                                                and   posg.est_codigo_padre = cam.est_codigo
+                                                and   pro.pre_numero = pre.pre_numero
+                                                and   grup.pel_codigo = gru.pel_codigo
+                                                and   posg.est_codigo = pos.est_codigo
+                                                and   pro.pre_numero = mpe.pre_numero
+                                                and   mpe.mpe_codigo = emp.mpe_codigo
+                                                and   emp.emp_codigo = grup.emp_codigo
+                                                and   grup.gru_item  = gru.gru_item
+                                                and   grup.aud_eliminado = 'N'
+                                                and   posg.est_codigo_padre = emp.est_codigo
+                                                and   mal.mal_nivel    = (select max(m.mal_nivel)--NIVEL MAS ALTO DE LA MALLA
+                                                                          from ped.ped_malla m
+                                                                          where m.pre_numero = pro.pre_numero
+                                                                          and   m.aud_eliminado = 'N'
+                                                                          ))
+AND  ADD_MONTHS(TO_DATE(TO_CHAR(dis.dis_fecha_fin,'dd,mm,yyyy'),'DD/MM/YYYY'),6)  >= SYSDATE
+ORDER   BY sede,campus,posgrado,pel_codigo,modalidad,estudiante]]>
+	</queryString>
+	<field name="SEDE" class="java.lang.String"/>
+	<field name="CAMPUS" class="java.lang.String"/>
+	<field name="POSGRADO" class="java.lang.String"/>
+	<field name="MODALIDAD" class="java.lang.String"/>
+	<field name="PEL_CODIGO" class="java.math.BigDecimal"/>
+	<field name="COHORTE" class="java.lang.String"/>
+	<field name="CEDULA" class="java.lang.String"/>
+	<field name="ESTUDIANTE" class="java.lang.String"/>
+	<field name="FECHA_NACIMIENTO" class="java.sql.Timestamp"/>
+	<field name="NACIONALIDAD" class="java.lang.String"/>
+	<field name="DIRECCION" class="java.lang.String"/>
+	<field name="TELEFONO" class="java.lang.String"/>
+	<field name="CELULAR" class="java.lang.String"/>
+	<field name="CORREO_INSTITUCIONAL" class="java.lang.String"/>
+	<field name="CORREO_PERSONAL" class="java.lang.String"/>
+	<field name="INS_CODIGO" class="java.math.BigDecimal"/>
+	<variable name="ESTUDIANTE_1" class="java.lang.Integer" resetType="Group" resetGroup="cohorte_grup" calculation="Count">
+		<variableExpression><![CDATA[$F{ESTUDIANTE}]]></variableExpression>
+	</variable>
+	<variable name="COHORTE_1" class="java.lang.Integer" resetType="Group" resetGroup="cohorte_grup" calculation="Count">
+		<variableExpression><![CDATA[$F{COHORTE}]]></variableExpression>
+	</variable>
+	<variable name="MODALIDAD_1" class="java.lang.Integer" resetType="Group" resetGroup="modalidad_grup" calculation="Count">
+		<variableExpression><![CDATA[$F{MODALIDAD}]]></variableExpression>
+	</variable>
+	<variable name="POSGRADO_1" class="java.lang.Integer" resetType="Group" resetGroup="prog_grup" calculation="Count">
+		<variableExpression><![CDATA[$F{POSGRADO}]]></variableExpression>
+	</variable>
+	<variable name="CAMPUS_1" class="java.lang.Integer" resetType="Group" resetGroup="camp_grup" calculation="Count">
+		<variableExpression><![CDATA[$F{CAMPUS}]]></variableExpression>
+	</variable>
+	<variable name="SEDE_1" class="java.lang.Integer" resetType="Group" resetGroup="sede_grup" calculation="Count">
+		<variableExpression><![CDATA[$F{SEDE}]]></variableExpression>
+	</variable>
+	<variable name="CEDULA_1" class="java.lang.Integer" resetType="Group" resetGroup="FORMULARIO_GROUP" calculation="Count">
+		<variableExpression><![CDATA[$F{CEDULA}]]></variableExpression>
+	</variable>
+	<group name="FORMULARIO_GROUP" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[]]></groupExpression>
+		<groupFooter>
+			<band height="16">
+				<textField>
+					<reportElement style="Estilo_titulo" x="594" y="0" width="80" height="16" uuid="e627c28d-7ec0-4761-a8b0-d1d452b86815"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$V{CEDULA_1}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="Estilo_titulo" x="317" y="0" width="152" height="16" uuid="24e456a4-d83a-4ec4-9454-92293229c785"/>
+					<text><![CDATA[TOTAL POR REPORTE:]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="sede_grup" isStartNewPage="true" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{SEDE}]]></groupExpression>
+		<groupHeader>
+			<band height="16">
+				<rectangle>
+					<reportElement stretchType="RelativeToBandHeight" x="1" y="0" width="719" height="16" isPrintWhenDetailOverflows="true" uuid="922ab071-5b2f-4a1a-891c-d66cf6650136"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</rectangle>
+				<staticText>
+					<reportElement style="Estilo_titulo" x="2" y="0" width="84" height="16" uuid="4b65ae6d-cd5d-4630-905e-318fb9ecd1b7"/>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[SEDE:]]></text>
+				</staticText>
+				<textField>
+					<reportElement style="Estilo_contenido" x="87" y="0" width="438" height="16" uuid="aa839aef-8301-4282-bc62-c4c22a0e969a"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{SEDE}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="16">
+				<staticText>
+					<reportElement style="Estilo_titulo" x="317" y="0" width="152" height="16" uuid="dc1fb4f2-67da-4e88-9977-af10bf37c7ee"/>
+					<text><![CDATA[TOTAL POR SEDE:]]></text>
+				</staticText>
+				<textField>
+					<reportElement style="Estilo_titulo" x="594" y="0" width="80" height="16" uuid="d1194b29-c278-44d6-aaaf-da47bfddfb89"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$V{SEDE_1}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="camp_grup" isStartNewPage="true" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{CAMPUS}]]></groupExpression>
+		<groupHeader>
+			<band height="16">
+				<rectangle>
+					<reportElement stretchType="RelativeToBandHeight" x="1" y="0" width="719" height="16" isPrintWhenDetailOverflows="true" uuid="15c4d18f-aea3-4e1d-9df3-6875f4586525"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</rectangle>
+				<textField>
+					<reportElement style="Estilo_contenido" x="87" y="0" width="438" height="16" uuid="26986cdb-8280-45ea-83c9-d636e3a05ca8"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{CAMPUS}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="Estilo_titulo" x="2" y="0" width="84" height="16" uuid="b2429953-fd20-4c84-80cb-558065658706"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[CAMPUS:]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="16">
+				<staticText>
+					<reportElement style="Estilo_titulo" x="317" y="0" width="152" height="16" uuid="caa7dc0a-e65a-48c6-ae2d-492f757fb594"/>
+					<text><![CDATA[TOTAL POR CAMPUS:]]></text>
+				</staticText>
+				<textField>
+					<reportElement style="Estilo_titulo" x="594" y="0" width="80" height="16" uuid="5988e27a-aa6c-4d6b-a6a4-9fd8e1774663"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$V{CAMPUS_1}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="prog_grup" isStartNewPage="true" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{POSGRADO}]]></groupExpression>
+		<groupHeader>
+			<band height="16">
+				<rectangle>
+					<reportElement style="Estilo_titulo" stretchType="RelativeToBandHeight" x="1" y="0" width="719" height="16" isPrintWhenDetailOverflows="true" uuid="ecb73770-b117-482a-9135-f71fde6387a3"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</rectangle>
+				<staticText>
+					<reportElement style="Estilo_titulo" x="2" y="0" width="85" height="16" uuid="8477fc6a-f910-41f5-8490-84f0d1baec77"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[PROGRAMA:]]></text>
+				</staticText>
+				<textField>
+					<reportElement style="Estilo_contenido" x="87" y="0" width="459" height="16" uuid="f5de055a-3fdc-4dc7-88ad-ca36f74f06bd"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{POSGRADO}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="16">
+				<staticText>
+					<reportElement style="Estilo_titulo" x="317" y="0" width="152" height="16" uuid="521b869b-084a-41c5-ab8a-c20934a3eb47"/>
+					<text><![CDATA[TOTAL POR PROGRAMA:]]></text>
+				</staticText>
+				<textField>
+					<reportElement style="Estilo_titulo" x="594" y="0" width="80" height="16" uuid="aa6c4245-2572-4960-abd3-60abea331778"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$V{POSGRADO_1}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="modalidad_grup" isStartNewPage="true" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{MODALIDAD}]]></groupExpression>
+		<groupHeader>
+			<band height="16">
+				<rectangle>
+					<reportElement style="Estilo_titulo" stretchType="RelativeToBandHeight" x="1" y="0" width="719" height="16" isPrintWhenDetailOverflows="true" uuid="d6e28bea-2c46-4b9d-96eb-0955c1064ab9"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</rectangle>
+				<staticText>
+					<reportElement style="Estilo_titulo" x="2" y="0" width="84" height="16" uuid="614c16fe-ce8d-45e7-a84e-2e0886550630"/>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[MODALIDAD:]]></text>
+				</staticText>
+				<textField>
+					<reportElement style="Estilo_contenido" x="87" y="0" width="438" height="16" uuid="6466b628-938b-49e9-bcb1-acdce7dc8da5"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{MODALIDAD}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="16">
+				<staticText>
+					<reportElement style="Estilo_titulo" x="317" y="0" width="152" height="16" uuid="9627f199-7e6d-4929-979d-f6825e3ba783"/>
+					<text><![CDATA[TOTAL POR MODALIDAD:]]></text>
+				</staticText>
+				<textField>
+					<reportElement style="Estilo_titulo" x="594" y="0" width="80" height="16" uuid="901825b8-b237-43fb-8e49-98bb705de021"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$V{MODALIDAD_1}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="cohorte_grup" isStartNewPage="true" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{COHORTE}]]></groupExpression>
+		<groupHeader>
+			<band height="44">
+				<rectangle>
+					<reportElement style="Estilo_titulo" stretchType="RelativeToBandHeight" x="1" y="0" width="554" height="16" isPrintWhenDetailOverflows="true" printWhenGroupChanges="cohorte_grup" uuid="77a9f437-e343-4a58-bc18-25e9b18b9a91"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</rectangle>
+				<rectangle>
+					<reportElement style="Estilo_titulo" stretchType="RelativeToBandHeight" x="1" y="0" width="719" height="44" isPrintWhenDetailOverflows="true" uuid="bb701f5f-6628-45ec-9557-d1813a61dfbf"/>
+					<graphicElement>
+						<pen lineWidth="0.25"/>
+					</graphicElement>
+				</rectangle>
+				<staticText>
+					<reportElement style="Estilo_titulo7" x="16" y="28" width="52" height="16" uuid="152986d9-6a89-444f-ad6b-3ffb73d013e4"/>
+					<text><![CDATA[CEDULA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Estilo_titulo7" x="68" y="28" width="118" height="16" uuid="5a4eb27f-1a58-4b31-81af-e2ae47c7ebe8"/>
+					<text><![CDATA[ESTUDIANTE]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Estilo_titulo7" x="633" y="18" width="61" height="26" uuid="39c516b7-dcad-445d-a921-4c897939ccd5"/>
+					<text><![CDATA[CORREO PERSONAL]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Estilo_titulo7" x="2" y="28" width="15" height="16" uuid="9c7cc943-d1de-4a23-8aa7-8ba240af937f"/>
+					<text><![CDATA[N°]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Estilo_titulo" x="2" y="0" width="84" height="16" printWhenGroupChanges="cohorte_grup" uuid="8d3e7a36-2d15-498d-a235-7787115f2172"/>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[COHORTE:]]></text>
+				</staticText>
+				<textField>
+					<reportElement style="Estilo_contenido" x="87" y="0" width="438" height="16" uuid="823c669d-56ad-419f-83a3-507d25adb3fb"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{COHORTE}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="Estilo_titulo7" x="188" y="28" width="53" height="16" uuid="4cf5549e-59df-4c58-9c69-26f5ec12dd33"/>
+					<text><![CDATA[FECHA NAC.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Estilo_titulo7" x="242" y="28" width="72" height="16" uuid="159d8590-24ce-4b02-ba31-6d47db2f16b4"/>
+					<text><![CDATA[NACIONALIDAD]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Estilo_titulo7" x="314" y="28" width="119" height="16" uuid="bbfd07d2-a3f4-4a48-a94c-54c5e93e5950"/>
+					<text><![CDATA[DIRECCIÓN]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Estilo_titulo7" x="434" y="28" width="51" height="16" uuid="4f1a7ba1-f326-4d86-a0da-c34fb77acd64"/>
+					<text><![CDATA[TELEFONO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Estilo_titulo7" x="485" y="28" width="51" height="16" uuid="b5cee3b1-dd14-4bd9-9229-1088331f1207"/>
+					<text><![CDATA[CELULAR]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Estilo_titulo7" x="536" y="18" width="82" height="26" uuid="d1e1e679-2538-48a0-aa23-0f97de669302"/>
+					<text><![CDATA[CORREO INSTITUCIONAL]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="27">
+				<staticText>
+					<reportElement style="Estilo_titulo" x="317" y="11" width="152" height="16" uuid="3236796b-f328-4cf0-b58f-db77be0b68ab"/>
+					<text><![CDATA[TOTAL POR COHORTE:]]></text>
+				</staticText>
+				<textField>
+					<reportElement style="Estilo_titulo" x="594" y="11" width="80" height="16" uuid="3708fe54-600d-4853-a9d7-7593a22bfcbf"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$V{COHORTE_1}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="68" splitType="Stretch">
+			<staticText>
+				<reportElement x="87" y="8" width="562" height="20" uuid="8ea67fb7-87ca-4929-97fd-e721c62bc85f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[UNIVERSIDAD POLITECNICA SALESIANA]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="584" y="49" width="99" height="15" uuid="8e5effba-7258-4e5f-9a29-764a369c2df6"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["PÁGINA "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="684" y="49" width="22" height="15" uuid="43900013-4c86-49bb-9101-1b71cd16fda9"/>
+				<textElement>
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MMM-yyyy HH:mm:ss">
+				<reportElement x="584" y="37" width="121" height="11" uuid="c183fefc-60d4-4297-a72d-3c846e7295f8"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Estilo_titulo" x="115" y="28" width="506" height="20" uuid="d2d61470-2ed1-4a20-a5d2-bc0217482f35"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SISTEMA DE POSGRADOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Estilo_titulo" x="115" y="48" width="503" height="20" uuid="865a698f-ebce-4bf6-bd0c-c082e55cf570"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ESTUDIANTES CON COBERTURA DE SEGURO DE ACCIDENTES]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="16">
+			<rectangle>
+				<reportElement style="Estilo_contenido7" stretchType="RelativeToBandHeight" x="1" y="0" width="719" height="16" isPrintWhenDetailOverflows="true" uuid="a117000b-8b01-4323-8b90-bf11ad2e4b84"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</rectangle>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Estilo_contenido7" x="16" y="0" width="52" height="16" isPrintWhenDetailOverflows="true" uuid="109f43c8-2a02-435f-aa0d-29f727bc0d88"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CEDULA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Estilo_contenido7" x="2" y="0" width="15" height="16" isPrintWhenDetailOverflows="true" uuid="f4b55b7d-5661-4d5f-a659-b89e2986362a"/>
+				<textFieldExpression><![CDATA[$V{ESTUDIANTE_1}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement style="Estilo_contenido7" x="188" y="0" width="53" height="16" isPrintWhenDetailOverflows="true" uuid="5ded5be6-c8e1-4815-a706-bf73503b45b9"/>
+				<textFieldExpression><![CDATA[$F{FECHA_NACIMIENTO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Estilo_contenido7" x="68" y="0" width="118" height="16" isPrintWhenDetailOverflows="true" uuid="c7f1f9be-21fb-4ef0-b850-8a190a4a431f"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ESTUDIANTE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Estilo_contenido7" x="314" y="0" width="119" height="16" isPrintWhenDetailOverflows="true" uuid="e8d8c616-efb0-416f-ae7d-a798aeb3018f"/>
+				<textFieldExpression><![CDATA[$F{DIRECCION}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Estilo_contenido7" x="242" y="0" width="72" height="16" isPrintWhenDetailOverflows="true" uuid="008c478c-81d2-4a92-8676-7d276f1977ae"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NACIONALIDAD}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Estilo_contenido7" x="485" y="0" width="51" height="16" isPrintWhenDetailOverflows="true" uuid="1eeb77b8-d3fd-4e4a-b320-3e4b21150e78"/>
+				<textFieldExpression><![CDATA[$F{CELULAR}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Estilo_contenido7" x="434" y="0" width="51" height="16" isPrintWhenDetailOverflows="true" uuid="948841ab-953e-42c9-a5d3-fb466a25382c"/>
+				<textFieldExpression><![CDATA[$F{TELEFONO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Estilo_contenido7" x="536" y="0" width="97" height="16" isPrintWhenDetailOverflows="true" uuid="52333ec7-747b-4f6c-9719-1d030c270d37"/>
+				<textFieldExpression><![CDATA[$F{CORREO_INSTITUCIONAL}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Estilo_contenido7" x="633" y="0" width="86" height="16" isPrintWhenDetailOverflows="true" uuid="75185430-47dd-4140-bf24-eaf7e45d7036"/>
+				<textFieldExpression><![CDATA[$F{CORREO_PERSONAL}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="621" y="0" width="98" height="20" uuid="561d4da4-7c95-4462-91b0-4b0d2da5ef37"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{pv_usuario}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="0" width="87" height="20" uuid="c5a85c87-16d1-4c62-b923-e9281435359c"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Posrep_mat_0004]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

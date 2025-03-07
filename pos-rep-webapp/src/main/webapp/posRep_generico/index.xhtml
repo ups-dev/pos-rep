@@ -1,0 +1,20 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:o="http://omnifaces.org/ui"
+                xmlns:u="http://ups.edu.ec/ui"
+                template="/WEB-INF/templates/template-menu.xhtml">
+
+    <f:metadata>
+        <o:importConstants type="ec.edu.ups.pos.rep.data.utils.PosRepConstants"/>
+        <f:event type="preRenderView"
+                 listener="#{repReportesSistemaController.preRenderView(PosRepConstants.REP_PARAMETRO_MODULO_REPORTES)}"></f:event>
+    </f:metadata>
+
+
+
+    <ui:define name="posRep-content">
+        <u:page  title="#{posRepBundle['PosResultadosTitle']}" fullWidth="true">
+            <ui:include src="/posRep_generico/List.xhtml"/>
+        </u:page>
+    </ui:define>
+</ui:composition>

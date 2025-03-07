@@ -1,0 +1,12 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui">
+    <h:form id="menuForm" rendered="#{facesContext.application.projectStage ne 'Production'}">
+        <p:menuButton value="#{posRepBundle['Maintenance']}">
+            <p:menuitem value="#{posRepBundle['PosResultadosTitle']}" outcome="/posRep_generico/index"/>
+            <p:menuitem value="#{posRepBundle['PosResultadosTitle2']}" outcome="/posRep_certificado/index"/>
+            <p:menuitem value="#{posRepBundle['PosArchivos']}" outcome="/posRep_archivos/index"/>
+        </p:menuButton>
+    </h:form>
+</ui:composition>
