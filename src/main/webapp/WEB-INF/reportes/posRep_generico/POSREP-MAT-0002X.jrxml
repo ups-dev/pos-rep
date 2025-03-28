@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-MAT-0002X" pageWidth="2500" pageHeight="840" columnWidth="2460" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a5610fb4-cc29-46b5-b47b-735f7e78b38b">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
+	<parameter name="pv_usuario" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pn_pel_codigo" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pn_est_codigo" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pv_paf_pagado" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pv_pee_nivel" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT  dsed.dee_descripcion        sede,
+        dcam.dee_descripcion        campus,
+        pos.est_codigo,
+        dpos.dee_descripcion        posgrado,
+        pel.pel_descripcion, pel.pel_codigo,
+        cli.cllc_ruc                cedula,
+        decode(alu.alu_genero,'M','MASCULINO','F','FEMENINO',NULL) genero,
+        alu.alu_apellidos           apellidos,
+        alu.alu_nombres             nombres,
+        alu.alu_email               email,
+        cli.cllc_email              email_personal,
+        cli.cllc_fono               telefono,
+        cli.cllc_celular            celular,
+        NVL(( select distinct 'SI'
+        from stg.stg_acta_grado g ,
+             stg.stg_trabajo_graduacion tg,
+             ins.ins_ins_pro_aca ipa,
+             org.org_estructura  car,
+             org.org_descripcion_estructura dca,
+             ins.ins_inscripcion            inc,
+             ins.ins_alumno                 alu
+        where ipa.ipa_codigo = tg.ipa_codigo
+        and   tg.tdg_codigo  = g.tdg_codigo
+        and   g.aud_eliminado = 'N'
+        and   car.est_codigo  = tg.est_codigo
+        and   car.dee_codigo = dca.dee_codigo
+        and   dca.tie_codigo = 5
+        and   inc.ins_codigo = ipa.ins_codigo
+        and   inc.alu_codigo = alu.alu_codigo
+        and   alu.cllc_cdg   = cli.cllc_cdg
+        UNION
+        select distinct 'SI'
+         from sna.sna_acta_grado            ag,
+              sna.sna_titulo_proyecto_academico tp
+          where tp.pra_numero = ag.pra_numero
+          AND tp.fac_codigo = ag.fac_codigo
+          AND tp.car_codigo = ag.car_codigo
+          AND tp.tit_codigo = ag.tit_codigo
+          AND tp.tpa_titulo_terminal = 'S'
+          and ag.acg_eliminado = 'N'
+          AND ag.cllc_cdg = cli.cllc_cdg
+         ),'NO') ex_alumno,
+        PEE.PEE_NIVEL               nivel,
+        to_char(mat.mat_fecha_registro,'dd/mm/yyyy')     fecha_matricula,
+        DECODE(paf.paf_pagado,'S','SI','N','NO')  pagado,
+        DECODE(fof.fof_tipo,'P','POR PERIODO','T','TOTAL')forma_facturacion,
+        DECODE(enp.enve_tipo_pago,1,'EFECTIVO / T.C',2,'CUOTAS','EFECTIVO / T.C')forma_pago,enp.enp_codigo,
+       (select count(*)
+        from fac.fac_prefactura_vencimiento pv
+        where pv.enp_codigo = enp.enp_codigo
+        and   pv.aud_eliminado = 'N')nro_cuotas,
+       (select count(*)
+        from fac.fac_prefactura_vencimiento pv
+        where pv.enp_codigo = enp.enp_codigo
+        and   pv.prv_cancelado = 'S'
+        and   pv.aud_eliminado = 'N')cuotas_pagadas,
+       (select count(*)
+        from fac.fac_prefactura_vencimiento pv
+        where pv.enp_codigo = enp.enp_codigo
+        and   pv.prv_cancelado = 'N'
+        and   pv.aud_eliminado = 'N')cuotas_pendientes,
+       (select count(*)
+        from fac.fac_prefactura_vencimiento pv
+        where pv.enp_codigo =  enp.enp_codigo
+        and   pv.prv_cancelado = 'N'
+        and   pv.prv_fecha < SYSDATE
+        and   pv.aud_eliminado = 'N')cuotas_vencidas
+      FROM mat.mat_matricula        mat,
+        fac.fac_pago_factura        paf,
+        fac.fac_forma_facturacion   fof,
+        fac.fac_encabezado_prefactura enp,
+        sigac.cliente_local         cli,
+        ins.ins_alumno              alu,
+        ped.ped_proyecto_educacion  pre,
+        ped.ped_des_est_pro_edu     dep,
+        org.org_descripcion_estructura dpos,
+        org.org_descripcion_estructura dcam,
+        org.org_descripcion_estructura dsed,
+        org.org_estructura          pos,
+        org.org_estructura          cam,
+        org.org_estructura          sed,
+        org.org_periodo_estructura  pee,
+        org.org_periodo_lectivo     pel
+WHERE   mat.mat_codigo  = paf.ins_codigo
+AND     mat.mat_tipo_proceso = 'M'
+AND     mat.aud_eliminado = 'N'
+AND     mat.mat_anulado = 'N'
+AND     paf.tip_codigo  = 4
+AND     fof.ins_codigo(+) = mat.ins_codigo
+AND     fof.aud_eliminado = 'N' --Modificado por: Myriam Yunga --Se agrega condición 26-05-2020
+AND     mat.cllc_cdg    = cli.cllc_cdg
+AND     alu.cllc_cdg    = cli.cllc_cdg
+AND     dep.dep_codigo  = mat.dep_codigo
+AND     dep.pre_numero  = pre.pre_numero
+AND     dep.dee_codigo  = dpos.dee_codigo
+AND     pee.est_codigo  = pos.est_codigo
+AND     pos.dee_codigo  = dpos.dee_codigo
+AND     cam.est_codigo  = pos.est_codigo_padre
+AND     cam.dee_codigo  = dcam.dee_codigo
+AND     sed.est_codigo  = cam.est_codigo_padre
+AND     sed.dee_codigo  = dsed.dee_codigo
+AND     mat.pee_codigo  = pee.pee_codigo
+AND     pel.pel_codigo  = pee.pel_codigo
+AND     enp.enp_codigo(+)  = paf.enp_codigo
+AND     pee.pee_nivel   like $P{pv_pee_nivel}
+AND     pee.pel_codigo = $P{pn_pel_codigo}
+AND     pos.est_codigo  IN (SELECT est_codigo e
+                            FROM   org.org_estructura e
+                            WHERE  e.est_nivel  = 4
+                            START WITH e.est_codigo = $P{pn_est_codigo}
+                            CONNECT BY PRIOR e.est_codigo = e.est_codigo_padre)
+AND    paf.paf_pagado like $P{pv_paf_pagado}
+ORDER BY sede,campus,posgrado,pee.pee_nivel,apellidos, nombres]]>
+	</queryString>
+	<field name="SEDE" class="java.lang.String"/>
+	<field name="CAMPUS" class="java.lang.String"/>
+	<field name="EST_CODIGO" class="java.math.BigDecimal"/>
+	<field name="POSGRADO" class="java.lang.String"/>
+	<field name="PEL_DESCRIPCION" class="java.lang.String"/>
+	<field name="PEL_CODIGO" class="java.math.BigDecimal"/>
+	<field name="CEDULA" class="java.lang.String"/>
+	<field name="GENERO" class="java.lang.String"/>
+	<field name="APELLIDOS" class="java.lang.String"/>
+	<field name="NOMBRES" class="java.lang.String"/>
+	<field name="EMAIL" class="java.lang.String"/>
+	<field name="EMAIL_PERSONAL" class="java.lang.String"/>
+	<field name="TELEFONO" class="java.lang.String"/>
+	<field name="CELULAR" class="java.lang.String"/>
+	<field name="EX_ALUMNO" class="java.lang.String"/>
+	<field name="NIVEL" class="java.math.BigDecimal"/>
+	<field name="FECHA_MATRICULA" class="java.lang.String"/>
+	<field name="PAGADO" class="java.lang.String"/>
+	<field name="FORMA_FACTURACION" class="java.lang.String"/>
+	<field name="FORMA_PAGO" class="java.lang.String"/>
+	<field name="ENP_CODIGO" class="java.math.BigDecimal"/>
+	<field name="NRO_CUOTAS" class="java.math.BigDecimal"/>
+	<field name="CUOTAS_PAGADAS" class="java.math.BigDecimal"/>
+	<field name="CUOTAS_PENDIENTES" class="java.math.BigDecimal"/>
+	<field name="CUOTAS_VENCIDAS" class="java.math.BigDecimal"/>
+	<variable name="EVALUADO_SUM" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="EVALUADO_SUM_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="EVALUADO_SUM_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<title>
+		<band height="16">
+			<staticText>
+				<reportElement style="Estilo_titulo" x="99" y="0" width="140" height="16" uuid="d41dc3ca-b6b4-460b-aec7-3ae58fe5f1c4"/>
+				<textElement verticalAlignment="Top">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CAMPUS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Estilo_titulo" x="239" y="0" width="307" height="16" uuid="a08d5bcc-aa63-4573-9393-61bfab29adc1"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[POSGRADO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Estilo_titulo" x="546" y="0" width="100" height="16" uuid="f48c37be-5476-4444-b408-7a92096d8d28"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[COHORTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Estilo_titulo" x="718" y="0" width="68" height="16" uuid="909d3a0b-f884-45e8-960d-84d95244181a"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CÉDULA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Estilo_titulo" x="874" y="0" width="144" height="16" uuid="d449973a-70ab-4b7e-b058-9de0f9ba9e33"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[APELLIDOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Estilo_titulo" x="1146" y="0" width="141" height="16" uuid="730d488e-a3b5-459b-b032-7af8520aa5cb"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[EMAIL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Estilo_titulo" x="1711" y="0" width="35" height="16" uuid="f9bc6d60-9eb2-4e47-9e0f-7c3a4366cc98"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[NIVEL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Estilo_titulo" x="1746" y="0" width="51" height="16" uuid="e2d156b8-2748-4935-ab8a-7b47478dc80b"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PAGADO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Estilo_titulo" x="1930" y="0" width="105" height="16" uuid="066927df-5b22-49d9-9c07-5fb9dc90c616"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FORMA DE PAGO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Estilo_titulo" x="0" y="0" width="99" height="16" uuid="a4e32891-1aa9-4c72-a000-1a58aba89ab4"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[SEDE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Estilo_titulo" x="1610" y="0" width="101" height="16" uuid="2d71ee2e-1989-46d7-8190-5ff9ee70e7c9"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA MATRICULA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Estilo_titulo" x="1797" y="0" width="133" height="16" uuid="df82e5a7-d6ca-4c28-861f-87a06eddadcf"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FORMA DE FACTURACIÓN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Estilo_titulo" x="2035" y="0" width="100" height="16" uuid="060bcd4e-e5dc-4c66-9040-285705f72471"/>
+				<text><![CDATA[TOTAL DE CUOTAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Estilo_titulo" x="2135" y="0" width="100" height="16" uuid="fac33a2b-376e-48b9-ad9d-02318e38fbdb"/>
+				<text><![CDATA[CUOTAS PAGADAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Estilo_titulo" x="2235" y="0" width="120" height="16" uuid="6deff7e5-dbae-4ff5-b149-bdfddbb54e8c"/>
+				<text><![CDATA[CUOTAS_PENDIENTES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Estilo_titulo" x="2355" y="0" width="104" height="16" uuid="ec146625-2671-49f3-80f8-b216fee7536b"/>
+				<text><![CDATA[CUOTAS VENCIDAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Estilo_titulo" x="1018" y="0" width="128" height="16" uuid="99454001-3cb0-4735-b680-f12468f5d276"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOMBRES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Estilo_titulo" x="1287" y="0" width="167" height="16" uuid="62790bee-156d-4e8f-b2f3-8f6afedbf6ce"/>
+				<text><![CDATA[EMAIL_PERSONAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Estilo_titulo" x="1454" y="0" width="73" height="16" uuid="f23182b5-2d5c-447a-9c15-b551ffc8a5b9"/>
+				<text><![CDATA[TELEFONO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Estilo_titulo" x="1527" y="0" width="83" height="16" uuid="a12efa5e-4631-4bc7-85f1-d6ac9e86a06e"/>
+				<text><![CDATA[CELULAR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Estilo_titulo" x="646" y="0" width="71" height="16" uuid="16de9f68-56a2-4195-9d77-01fb4e121074"/>
+				<text><![CDATA[GRADO UPS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Estilo_titulo" x="786" y="0" width="88" height="16" uuid="669c4f90-bf6f-400b-9b9a-bc2f8edb1213"/>
+				<text><![CDATA[GÉNERO]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Estilo_contenido" x="99" y="0" width="140" height="20" isPrintWhenDetailOverflows="true" uuid="cd1a93c7-ac87-4aac-b5e2-581ebad14b71"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CAMPUS}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Estilo_contenido" x="546" y="0" width="100" height="20" isPrintWhenDetailOverflows="true" uuid="3789da0e-1a7e-40a7-aade-44b479828484"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PEL_DESCRIPCION}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Estilo_contenido" x="718" y="0" width="68" height="20" isPrintWhenDetailOverflows="true" uuid="39313c33-7385-4559-8a0d-1a718729d4c0"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CEDULA}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Estilo_contenido" mode="Transparent" x="1146" y="0" width="141" height="20" isPrintWhenDetailOverflows="true" uuid="8e07bcab-5691-4ff5-9894-020f4ab4bbd6"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{EMAIL}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="1711" y="0" width="35" height="20" isPrintWhenDetailOverflows="true" uuid="15aa2673-5663-4d68-bc3d-44632f1665da"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NIVEL}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="1746" y="0" width="51" height="20" isPrintWhenDetailOverflows="true" uuid="f9093c98-7287-4dd8-84c3-f3da55a01958"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PAGADO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="1930" y="0" width="105" height="20" isPrintWhenDetailOverflows="true" uuid="d5c76526-c42f-4ea1-bb87-a9ed38124b48"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FORMA_PAGO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Estilo_contenido" x="0" y="0" width="99" height="20" uuid="721d6d5b-3a54-4469-8136-822b83e89869"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SEDE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Estilo_contenido" x="1610" y="0" width="101" height="20" isPrintWhenDetailOverflows="true" uuid="91844b8c-aa55-4032-8fdd-72eccf59be78"/>
+				<textFieldExpression><![CDATA[$F{FECHA_MATRICULA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Estilo_contenido" x="239" y="0" width="307" height="20" uuid="93fc95fe-90a0-4750-a1a9-5205f1a44cef"/>
+				<textFieldExpression><![CDATA[$F{POSGRADO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="1797" y="0" width="133" height="20" isPrintWhenDetailOverflows="true" uuid="97dad221-3a5b-4f23-925e-2d4f20362176"/>
+				<textFieldExpression><![CDATA[$F{FORMA_FACTURACION}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="2035" y="0" width="100" height="20" isPrintWhenDetailOverflows="true" uuid="39dafb24-29f0-4c2e-b25d-f314bdd7f181"/>
+				<textFieldExpression><![CDATA[$F{NRO_CUOTAS}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="2135" y="0" width="100" height="20" isPrintWhenDetailOverflows="true" uuid="65aee27b-c24e-46b8-9f49-162a0c20a525"/>
+				<textFieldExpression><![CDATA[$F{CUOTAS_PAGADAS}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="2235" y="0" width="120" height="20" isPrintWhenDetailOverflows="true" uuid="61469c41-5c1d-47f6-8e3d-8c8b8c91a848"/>
+				<textFieldExpression><![CDATA[$F{CUOTAS_PENDIENTES}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="2355" y="0" width="104" height="20" isPrintWhenDetailOverflows="true" uuid="93b6038d-102b-477b-94f8-db28a46654e9"/>
+				<textFieldExpression><![CDATA[$F{CUOTAS_VENCIDAS}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Estilo_contenido" x="874" y="0" width="144" height="20" isPrintWhenDetailOverflows="true" uuid="89cd81f1-763f-4aff-9f86-85d2c4277d38"/>
+				<textFieldExpression><![CDATA[$F{APELLIDOS}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Estilo_contenido" x="1018" y="0" width="128" height="20" isPrintWhenDetailOverflows="true" uuid="a4b69657-c29a-4715-a809-80a866f41fbe"/>
+				<textFieldExpression><![CDATA[$F{NOMBRES}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Estilo_contenido" x="1287" y="0" width="167" height="20" isPrintWhenDetailOverflows="true" uuid="cbc55e41-6745-4233-aa38-f7b98cbcecaf"/>
+				<textFieldExpression><![CDATA[$F{EMAIL_PERSONAL}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Estilo_contenido" x="1454" y="0" width="73" height="20" isPrintWhenDetailOverflows="true" uuid="1fd05a2e-fb12-4620-b462-eb4f01fbd412"/>
+				<textFieldExpression><![CDATA[$F{TELEFONO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Estilo_contenido" x="1527" y="0" width="83" height="20" isPrintWhenDetailOverflows="true" uuid="6a31f492-a187-4e68-9ccb-917db41901ce"/>
+				<textFieldExpression><![CDATA[$F{CELULAR}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Estilo_contenido" x="646" y="0" width="71" height="20" isPrintWhenDetailOverflows="true" uuid="ae537f85-91d4-437a-aeaf-bb91406c90e5"/>
+				<textFieldExpression><![CDATA[$F{EX_ALUMNO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Estilo_contenido" x="786" y="0" width="88" height="20" uuid="caece0b5-c589-48f8-a609-e4bdd623f771"/>
+				<textFieldExpression><![CDATA[$F{GENERO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

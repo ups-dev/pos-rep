@@ -1,0 +1,273 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:us="http://ups.edu.ec/ui/security"
+                xmlns:u="http://ups.edu.ec/ui"
+                xmlns:o="http://omnifaces.org/ui">
+
+    <f:metadata>
+        <o:importConstants type="ec.edu.ups.pos.rep.data.utils.PosRepConstants"/>
+    </f:metadata>
+
+    <h:form id="PosReportesForm">
+        <u:verticalStack gapXs="3">
+
+            <p:messages id="messages" closable="true">
+                <p:effect type="pulsate" event="load" delay="200" speed="500">
+                    <f:param name="times" value="1"/>
+                </p:effect>
+            </p:messages>
+
+            <u:card>
+                <p:panel id="informesPanel" style="margin-bottom: 10px" header="#{posRepBundle['PosResultadosTitle3']}">
+                    <p:toolbar id="informesToolbar">
+                        <p:toolbarGroup align="left">
+
+                            <us:auth permissions="{'operations':['CREAR']}">
+                                <p:commandButton id="createButton" icon="fa fa-file" value="#{posRepBundle['Add']}"
+                                                 update=":PosReportesForm:rolesPanelGroup, :PosReportesForm:PosRepRoles, :PosReportesForm:PosReportesSistemaDataTable2, :PosRepCreateForm"
+                                                 actionListener="#{posRepGestorArchivosController.prepareCreate}"
+                                                 oncomplete="PF('PosRepCreateDialog').show()"
+                                                 process="@this" resetValues="true"/>
+                            </us:auth>
+                            <us:auth permissions="{'operations':['EDITAR']}">
+
+                                <p:commandButton id="editButton" icon="fa fa-file" value="#{posRepBundle['Edit']}"
+                                                 update=":PosReportesForm:rolesPanelGroup, :PosReportesForm:PosRepRoles, :PosReportesForm:PosReportesSistemaDataTable2, :PosRepEditForm"
+                                                 actionListener="#{posRepGestorArchivosController.prepareEdit}"
+                                                 disabled="#{ empty posRepGestorArchivosController.selected }"
+                                                 oncomplete="PF('PosRepEditDialog').show()"
+                                                 process="@this" resetValues="true"/>
+                            </us:auth>
+
+                            <us:auth permissions="{'operations':['ACTIVAR']}">
+                                <p:commandButton id="enableButton" icon="fa fa-check" value="#{posRepBundle['Enable']}"
+                                                 actionListener="#{posRepGestorArchivosController.unblockRecord()}"
+                                                 update=":PosReportesForm:messages, :PosReportesForm:PosReportesSistemaDataTable, :PosReportesForm:enableButton, :PosReportesForm:disableButton,  :PosReportesForm:deleteButton"
+                                                 disabled="#{posRepGestorArchivosController.selected.audEliminado ne 'S'}"
+                                                 process="@this">
+                                    <p:confirm header="#{posRepBundle['PosResultadosTitle3']}"
+                                               message="#{posRepBundle['ConfirmEnableMessage']}"
+                                               icon="fa fa-triangle-exclamation"/>
+                                </p:commandButton>
+                            </us:auth>
+                            <us:auth permissions="{'operations':['DESACTIVAR']}">
+                                <p:commandButton id="disableButton" icon="fa fa-arrows-rotate"
+                                                 value="#{posRepBundle['Disable']}"
+                                                 actionListener="#{posRepGestorArchivosController.blockRecord()}"
+                                                 update=":PosReportesForm:messages, :PosReportesForm:PosReportesSistemaDataTable, :PosReportesForm:enableButton, :PosReportesForm:disableButton,  :PosReportesForm:deleteButton"
+                                                 disabled="#{posRepGestorArchivosController.selected.audEliminado ne 'N'}"
+                                                 process="@this">
+
+                                    <p:confirm header="#{posRepBundle['PosResultadosTitle3']}"
+                                               message="#{posRepBundle['ConfirmDisableMessage']}"
+                                               icon="fa fa-triangle-exclamation"/>
+                                </p:commandButton>
+                            </us:auth>
+
+                            <us:auth permissions="{'operations':['ELIMINAR']}">
+                                <p:commandButton id="deleteButton" icon="fa fa-trash-can" value="#{posRepBundle['Delete']}"
+                                                 actionListener="#{posRepGestorArchivosController.delete}"
+                                                 update=":PosReportesForm:messages,:PosReportesForm:PosReportesSistemaDataTable, :PosReportesForm:rolesPanelGroup, :PosReportesForm:PosRepRoles, :PosReportesForm:PosReportesSistemaDataTable2, :PosRepEditForm, :PosReportesForm:enableButton, :PosReportesForm:disableButton,  :PosReportesForm:deleteButton"
+                                                 disabled="#{empty posRepGestorArchivosController.selected or posRepGestorArchivosController.selected.audEliminado ne 'S'}"
+                                                 process="@this">
+                                    <p:confirm header="#{posRepBundle['PosRepCuestionario']}"
+                                               message="#{posRepBundle['ConfirmDeleteMessage']}"
+                                               icon="fa fa-triangle-exclamation"/>
+                                </p:commandButton>
+                            </us:auth>
+
+                        </p:toolbarGroup>
+                    </p:toolbar>
+
+                    <p:dataTable style="padding-top: 10px; padding-bottom: 10px"
+                                 id="PosReportesSistemaDataTable"
+                                 widgetVar="PosReportesSistemaDataTableVar"
+                                 value="#{posRepGestorArchivosController.items}"
+                                 var="item"
+                                 rowKey="#{item.resCodigo}"
+                                 sortBy="#{item.resReporte}"
+                                 sortOrder="ascending"
+                                 paginator="true"
+                                 rows="10"
+                                 rowsPerPageTemplate="10,20,30,40,50"
+                                 selectionMode="single"
+                                 paginatorPosition="bottom"
+                                 emptyMessage="#{posRepBundle['TableEmpty']}"
+                                 selection="#{posRepGestorArchivosController.selected}"
+                                 filteredValue="#{posRepGestorArchivosController.itemsFilter}">
+
+                        <p:ajax event="rowSelect"
+                                update=":PosReportesForm:PosReportesSistemaDataTable, :PosReportesForm:rolesPanelGroup, :PosReportesForm:PosRepRoles, :PosReportesForm:PosReportesSistemaDataTable2, :PosReportesForm:informesToolbar, :PosReportesForm:editButton"
+                                listener="#{posRepReporteRolController.actualizarTabla(posRepGestorArchivosController.selected)}"/>
+
+                        <p:ajax event="filter"
+                                update=":PosReportesForm:PosReportesSistemaDataTable, :PosReportesForm:rolesPanelGroup, :PosReportesForm:PosRepRoles, :PosReportesForm:PosReportesSistemaDataTable2"
+                                listener="#{posRepGestorArchivosController.setSelected(null)}"/>
+
+                        <p:column sortBy="#{item.resReporte}" filterBy="#{item.resReporte}" filterMatchMode="contains">
+                            <f:facet name="header">
+                                <h:outputText value="#{posRepBundle['RepReportesSistemaLabel_resReporte']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.resReporte}"/>
+                        </p:column>
+
+                        <p:column styleClass="columnFormato">
+                            <f:facet name="header">
+                                <h:outputText value="#{posRepBundle['RepReportesSistemaLabel_resSistema']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.resSistema}"/>
+                        </p:column>
+
+                        <p:column  styleClass="columnFormato">
+                            <f:facet name="header">
+                                <h:outputText value="#{posRepBundle['RepReportesSistemaLabel_resModulo']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.resModulo}"/>
+                        </p:column>
+
+                        <p:column styleClass="columnFormato">
+                            <f:facet name="header">
+                                <h:outputText value="Download"/>
+                            </f:facet>
+
+                            <p:commandLink id="pdfDownload"
+                                           ajax="false"
+                                           update="messages"
+                                           process="@this"
+                                           onclick="PrimeFaces.monitorDownload(start, stop);"
+                                           disabled="#{posRepGestorArchivosController.selected.resCodigo != item.resCodigo  or item.resArchivoJasperPd == null }">
+                                <p:commandButton id="pdfButton" icon="fa fa-download" value="PDF"
+                                                 ajax="false"
+                                                 actionListener="#{posRepGestorArchivosController.getArchivoJasper('pdf')}"
+                                                 disabled="#{posRepGestorArchivosController.selected.resCodigo != item.resCodigo  or item.resArchivoJasperPd == null }"
+                                                 resetValues="true"/>
+                                <p:fileDownload
+                                        value="#{posRepGestorArchivosController.getArchivoJasper('pdf')}"/>
+                            </p:commandLink>
+
+                            <p:commandLink id="excelDownload"
+                                           ajax="false"
+                                           update="messages"
+                                           process="@this"
+                                           onclick="PrimeFaces.monitorDownload(start, stop);"
+                                           disabled="#{posRepGestorArchivosController.selected.resCodigo != item.resCodigo  or item.resArchivoJasperPd == null }">
+                                <p:commandButton id="excelButton" icon="fa fa-download" value="EXCEL" style="margin-left: 20px"
+                                                 ajax="false"
+                                                 actionListener="#{posRepGestorArchivosController.getArchivoJasper('excel')}"
+                                                 disabled="#{posRepGestorArchivosController.selected.resCodigo != item.resCodigo  or item.resArchivoJasperExcel == null }"
+                                                 resetValues="true"/>
+                                <p:fileDownload
+                                        value="#{posRepGestorArchivosController.getArchivoJasper('excel')}"/>
+                            </p:commandLink>
+
+                        </p:column>
+
+                    </p:dataTable>
+                </p:panel>
+
+                <p:panel id="PosRepRoles" style="margin-top: 10px; margin-bottom: 10px" header="#{posRepBundle['PosRepGestorRoles']}">
+
+                    <p:messages id="messagesRol" closable="true">
+                        <p:effect type="pulsate" event="load" delay="200" speed="500">
+                            <f:param name="times" value="1"/>
+                        </p:effect>
+                    </p:messages>
+
+                    <h:panelGroup id="rolesPanelGroup" rendered="#{posRepGestorArchivosController.selected ne null}">
+
+                        <p:toolbar id="rolesToolbar">
+                            <p:toolbarGroup align="left">
+                                <us:auth permissions="{'operations':['CREAR']}">
+                                    <p:commandButton id="createButtonRol" icon="fa fa-file" value="#{posRepBundle['Add']}"
+                                                     update=":PosRepAddRolForm, :PosReportesForm:deleteButton,:PosReportesForm:PosReportesSistemaDataTable2"
+                                                     actionListener="#{posRepReporteRolController.prepareCreate}"
+                                                     action="#{posRepReporteRolController.actualizarTabla(posRepGestorArchivosController.selected)}"
+                                                     oncomplete="PF('PosRepAddRolDialog').show()"
+                                                     disabled="#{empty posRepGestorArchivosController.selected}"
+                                                     process="@this" resetValues="true"/>
+                                </us:auth>
+                                <us:auth permissions="{'operations':['ACTIVAR']}">
+                                    <p:commandButton id="enableButtonRol" icon="fa fa-check"
+                                                     value="#{posRepBundle['Enable']}"
+                                                     actionListener="#{posRepReporteRolController.unblockRecord()}"
+                                                     update=":PosReportesForm:messagesRol, :PosReportesForm:PosReportesSistemaDataTable2,:PosReportesForm:PosReportesSistemaDataTable, :PosReportesForm:rolesToolbar, :PosReportesForm:enableButtonRol, :PosReportesForm:disableButtonRol,  :PosReportesForm:deleteButtonRol"
+                                                     disabled="#{empty posRepReporteRolController.selected or posRepReporteRolController.selected.audEliminado ne 'S'}"
+                                                     process="@this">
+
+                                        <p:confirm header="#{posRepBundle['PosResultadosTitle3']}"
+                                                   message="#{posRepBundle['ConfirmEnableMessage']}"
+                                                   icon="fa fa-triangle-exclamation"/>
+                                    </p:commandButton>
+                                </us:auth>
+                                <us:auth permissions="{'operations':['DESACTIVAR']}">
+                                    <p:commandButton id="disableButtonRol" icon="fa fa-arrows-rotate"
+                                                     value="#{posRepBundle['Disable']}"
+                                                     actionListener="#{posRepReporteRolController.blockRecord()}"
+                                                     update=" :PosReportesForm:messagesRol, :PosReportesForm:PosReportesSistemaDataTable, :PosReportesForm:PosReportesSistemaDataTable2,  :PosReportesForm:rolesToolbar, :PosReportesForm:enableButtonRol, :PosReportesForm:disableButtonRol,  :PosReportesForm:deleteButtonRol"
+                                                     disabled="#{empty posRepReporteRolController.selected or posRepReporteRolController.selected.audEliminado ne 'N'}"
+                                                     process="@this">
+
+                                        <p:confirm header="#{posRepBundle['PosResultadosTitle3']}"
+                                                   message="#{posRepBundle['ConfirmDisableMessage']}"
+                                                   icon="fa fa-triangle-exclamation"/>
+                                    </p:commandButton>
+                                </us:auth>
+                                <us:auth permissions="{'operations':['Delete']}">
+                                    <p:commandButton id="deleteButtonRol" icon="fa fa-trash-can"
+                                                     value="#{posRepBundle['Delete']}"
+                                                     actionListener="#{posRepReporteRolController.delete}"
+                                                     disabled="#{empty posRepReporteRolController.selected or posRepReporteRolController.selected.audEliminado ne 'S'}"
+                                                     update=" :PosReportesForm:messagesRol, :PosReportesForm:PosReportesSistemaDataTable2,  :PosReportesForm:rolesToolbar, :PosReportesForm:enableButtonRol, :PosReportesForm:disableButtonRol,  :PosReportesForm:deleteButtonRol"
+                                                     process="@this" resetValues="true">
+
+                                        <p:confirm header="#{posRepBundle['PosResultadosTitle3']}"
+                                                   message="#{posRepBundle['ConfirmDisableMessage']}"
+                                                   icon="fa fa-triangle-exclamation"/>
+                                    </p:commandButton>
+                                </us:auth>
+                            </p:toolbarGroup>
+                        </p:toolbar>
+                        <p:dataTable style="padding-top: 10px; padding-bottom: 10px"
+                                     id="PosReportesSistemaDataTable2"
+                                     widgetVar="PosReportesSistemaDataTableVar2"
+                                     value="#{posRepGestorArchivosController.selected.repReporteRolCollection}"
+                                     var="item"
+                                     rowKey="#{item.repPerCodigo}"
+                                     sortBy="#{item.asegRol.rolDescripcion}"
+                                     sortOrder="ascending"
+                                     paginator="true"
+                                     rows="10"
+                                     rowsPerPageTemplate="10,20,30,40,50"
+                                     selectionMode="single"
+                                     selection="#{posRepReporteRolController.selected}"
+                                     paginatorPosition="bottom"
+                                     emptyMessage="#{posRepBundle['TableEmpty']}">
+                            <p:ajax event="rowSelect"
+                                    update=":PosReportesForm:rolesToolbar,:PosReportesForm:enableButtonRol, :PosReportesForm:disableButtonRol,  :PosReportesForm:deleteButtonRol"/>
+                            <p:column sortBy="#{item.asegRol.rolDescripcion}" filterBy="#{item.asegRol.rolDescripcion}"
+                                      filterMatchMode="contains">
+                                <f:facet name="header">
+                                    <h:outputText value="Roles"/>
+                                </f:facet>
+                                <h:outputText value="#{item.asegRol.rolDescripcion}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGroup>
+                </p:panel>
+            </u:card>
+        </u:verticalStack>
+    </h:form>
+
+    <script>
+        function start() {
+            PF('statusDialog').show();
+        }
+
+        function stop() {
+            PF('statusDialog').hide();
+        }
+    </script>
+</ui:composition>
