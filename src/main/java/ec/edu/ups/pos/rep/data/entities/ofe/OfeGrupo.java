@@ -1,8 +1,8 @@
 package ec.edu.ups.pos.rep.data.entities.ofe;
 
-import ec.edu.ups.util.jpa.EntitySuperclass;
 import java.util.Collection;
 import java.util.Date;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,336 +14,347 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
-/**
- *
- * @author ups
- */
+import ec.edu.ups.util.jpa.EntitySuperclass;
+
 @Entity
 @Table(name = "OFE_GRUPO", catalog = "", schema = "OFE")
-@XmlRootElement
-public class OfeGrupo extends EntitySuperclass{
+public class OfeGrupo extends EntitySuperclass {
 
-    private static final long serialVersionUID = 1L;
-    @Id
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "GRU_CODIGO", nullable = false)
-    private Long gruCodigo;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "MAL_CODIGO", nullable = false)
-    private Long malCodigo;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "PEL_CODIGO", nullable = false)
-    private Long pelCodigo;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "EMP_CODIGO", nullable = false)
-    private Long empCodigo;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "GRU_ITEM", nullable = false)
-    private Long gruItem;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 100)
-    @Column(name = "GRU_DESCRIPCION", nullable = false, length = 100)
-    private String gruDescripcion;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "GRU_CUPOS", nullable = false)
-    private Integer gruCupos;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "GRU_CUPOS_INTERNET", nullable = false)
-    private Integer gruCuposInternet;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 1)
-    @Column(name = "GRU_ABIERTO", nullable = false, length = 1)
-    private String gruAbierto;
-    @Column(name = "GRU_CUPOS_UTILIZADOS")
-    private Integer gruCuposUtilizados;
-    @Column(name = "GRU_CUPOS_UTILIZADOS_INTERNET")
-    private Integer gruCuposUtilizadosInternet;    
-    @Column(name = "GRU_FECHA_INICIO")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date gruFechaInicio;
-    @Column(name = "GRU_FECHA_FIN")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date gruFechaFin;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 1)
-    @Column(name = "GRU_MODALIDAD_EVALUACION", nullable = false, length = 1)
-    private String gruModalidadEvaluacion;
-    @Size(max = 1)
-    @Column(name = "GRU_AUTORIZADO", length = 1)
-    private String gruAutorizado;
-    @Size(max = 1)
-    @Column(name = "GRU_PLANIFICADO", length = 1)
-    private String gruPlanificado;
-    @Column(name = "EST_CODIGO_EVA")
-    private Long estCodigoEva;
-    @Column(name = "GRU_OFG_NUMERO_LEG")
-    private Long gruOfgNumeroLeg;
-    @Size(max = 1)
-    @Column(name = "OFG_TIPO_LEG", length = 1)
-    private String ofgTipoLeg;
-    @Size(max = 1)
-    @Column(name = "OFG_TIENE_HORARIO_LEG", length = 1)
-    private String ofgTieneHorarioLeg;
-    @Size(max = 1)
-    @Column(name = "GRU_JORNADA", length = 1)
-    private String gruJornada;
-    @Column(name = "PEE_CODIGO")
-    private Long peeCodigo;
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "gruCodigo", fetch = FetchType.LAZY)
-//    private Collection<OfeDocumentoPortafolio> ofeDocumentoPortafolioCollection;
-    @OneToMany(mappedBy = "ofeGrupo", fetch = FetchType.LAZY)
-    private Collection<OfeDistributivo> ofeDistributivoCollection;
+	private static final long serialVersionUID = 1L;
 
-    public OfeGrupo() {
-    }
+	@Id
+	@Basic(optional = false)
+	@NotNull
+	@Column(name = "GRU_CODIGO", nullable = false)
+	private Long gruCodigo;
 
-    public OfeGrupo(Long gruCodigo) {
-        this.gruCodigo = gruCodigo;
-    }
+	@Basic(optional = false)
+	@NotNull
+	@Column(name = "MAL_CODIGO", nullable = false)
+	private Long malCodigo;
 
-    public OfeGrupo(Long gruCodigo, Long malCodigo, Long pelCodigo, Long empCodigo, Long gruItem, String gruDescripcion, Integer gruCupos, Integer gruCuposInternet, String gruAbierto, String gruModalidadEvaluacion) {
-        this.gruCodigo = gruCodigo;
-        this.malCodigo = malCodigo;
-        this.pelCodigo = pelCodigo;
-        this.empCodigo = empCodigo;
-        this.gruItem = gruItem;
-        this.gruDescripcion = gruDescripcion;
-        this.gruCupos = gruCupos;
-        this.gruCuposInternet = gruCuposInternet;
-        this.gruAbierto = gruAbierto;        
-        this.gruModalidadEvaluacion = gruModalidadEvaluacion;
-    }
+	@Basic(optional = false)
+	@NotNull
+	@Column(name = "PEL_CODIGO", nullable = false)
+	private Long pelCodigo;
 
-    public Long getGruCodigo() {
-        return gruCodigo;
-    }
+	@Basic(optional = false)
+	@NotNull
+	@Column(name = "EMP_CODIGO", nullable = false)
+	private Long empCodigo;
 
-    public void setGruCodigo(Long gruCodigo) {
-        this.gruCodigo = gruCodigo;
-    }
+	@Basic(optional = false)
+	@NotNull
+	@Column(name = "GRU_ITEM", nullable = false)
+	private Long gruItem;
 
-    public Long getMalCodigo() {
-        return malCodigo;
-    }
+	@Basic(optional = false)
+	@NotNull
+	@Size(min = 1, max = 100)
+	@Column(name = "GRU_DESCRIPCION", nullable = false, length = 100)
+	private String gruDescripcion;
 
-    public void setMalCodigo(Long malCodigo) {
-        this.malCodigo = malCodigo;
-    }
+	@Basic(optional = false)
+	@NotNull
+	@Column(name = "GRU_CUPOS", nullable = false)
+	private Integer gruCupos;
 
-    public Long getPelCodigo() {
-        return pelCodigo;
-    }
+	@Basic(optional = false)
+	@NotNull
+	@Column(name = "GRU_CUPOS_INTERNET", nullable = false)
+	private Integer gruCuposInternet;
 
-    public void setPelCodigo(Long pelCodigo) {
-        this.pelCodigo = pelCodigo;
-    }
+	@Basic(optional = false)
+	@NotNull
+	@Size(min = 1, max = 1)
+	@Column(name = "GRU_ABIERTO", nullable = false, length = 1)
+	private String gruAbierto;
 
-    public Long getEmpCodigo() {
-        return empCodigo;
-    }
+	@Column(name = "GRU_CUPOS_UTILIZADOS")
+	private Integer gruCuposUtilizados;
 
-    public void setEmpCodigo(Long empCodigo) {
-        this.empCodigo = empCodigo;
-    }
+	@Column(name = "GRU_CUPOS_UTILIZADOS_INTERNET")
+	private Integer gruCuposUtilizadosInternet;
 
-    public Long getGruItem() {
-        return gruItem;
-    }
+	@Column(name = "GRU_FECHA_INICIO")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date gruFechaInicio;
 
-    public void setGruItem(Long gruItem) {
-        this.gruItem = gruItem;
-    }
+	@Column(name = "GRU_FECHA_FIN")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date gruFechaFin;
 
-    public String getGruDescripcion() {
-        return gruDescripcion;
-    }
+	@Basic(optional = false)
+	@NotNull
+	@Size(min = 1, max = 1)
+	@Column(name = "GRU_MODALIDAD_EVALUACION", nullable = false, length = 1)
+	private String gruModalidadEvaluacion;
 
-    public void setGruDescripcion(String gruDescripcion) {
-        this.gruDescripcion = gruDescripcion;
-    }
+	@Size(max = 1)
+	@Column(name = "GRU_AUTORIZADO", length = 1)
+	private String gruAutorizado;
 
-    public Integer getGruCupos() {
-        return gruCupos;
-    }
+	@Size(max = 1)
+	@Column(name = "GRU_PLANIFICADO", length = 1)
+	private String gruPlanificado;
 
-    public void setGruCupos(Integer gruCupos) {
-        this.gruCupos = gruCupos;
-    }
+	@Column(name = "EST_CODIGO_EVA")
+	private Long estCodigoEva;
 
-    public Integer getGruCuposInternet() {
-        return gruCuposInternet;
-    }
+	@Column(name = "GRU_OFG_NUMERO_LEG")
+	private Long gruOfgNumeroLeg;
 
-    public void setGruCuposInternet(Integer gruCuposInternet) {
-        this.gruCuposInternet = gruCuposInternet;
-    }
+	@Size(max = 1)
+	@Column(name = "OFG_TIPO_LEG", length = 1)
+	private String ofgTipoLeg;
 
-    public String getGruAbierto() {
-        return gruAbierto;
-    }
+	@Size(max = 1)
+	@Column(name = "OFG_TIENE_HORARIO_LEG", length = 1)
+	private String ofgTieneHorarioLeg;
 
-    public void setGruAbierto(String gruAbierto) {
-        this.gruAbierto = gruAbierto;
-    }
+	@Size(max = 1)
+	@Column(name = "GRU_JORNADA", length = 1)
+	private String gruJornada;
 
-    public Integer getGruCuposUtilizados() {
-        return gruCuposUtilizados;
-    }
+	@Column(name = "PEE_CODIGO")
+	private Long peeCodigo;
 
-    public void setGruCuposUtilizados(Integer gruCuposUtilizados) {
-        this.gruCuposUtilizados = gruCuposUtilizados;
-    }
+	// @OneToMany(cascade = CascadeType.ALL, mappedBy = "gruCodigo", fetch =
+	// FetchType.LAZY)
+	// private Collection<OfeDocumentoPortafolio> ofeDocumentoPortafolioCollection;
+	@OneToMany(mappedBy = "ofeGrupo", fetch = FetchType.LAZY)
+	private Collection<OfeDistributivo> ofeDistributivoCollection;
 
-    public Integer getGruCuposUtilizadosInternet() {
-        return gruCuposUtilizadosInternet;
-    }
+	public OfeGrupo() {
+	}
 
-    public void setGruCuposUtilizadosInternet(Integer gruCuposUtilizadosInternet) {
-        this.gruCuposUtilizadosInternet = gruCuposUtilizadosInternet;
-    }    
+	public OfeGrupo(Long gruCodigo) {
+		this.gruCodigo = gruCodigo;
+	}
 
-    public Date getGruFechaInicio() {
-        return gruFechaInicio;
-    }
+	public OfeGrupo(Long gruCodigo, Long malCodigo, Long pelCodigo, Long empCodigo, Long gruItem, String gruDescripcion,
+			Integer gruCupos, Integer gruCuposInternet, String gruAbierto, String gruModalidadEvaluacion) {
+		this.gruCodigo = gruCodigo;
+		this.malCodigo = malCodigo;
+		this.pelCodigo = pelCodigo;
+		this.empCodigo = empCodigo;
+		this.gruItem = gruItem;
+		this.gruDescripcion = gruDescripcion;
+		this.gruCupos = gruCupos;
+		this.gruCuposInternet = gruCuposInternet;
+		this.gruAbierto = gruAbierto;
+		this.gruModalidadEvaluacion = gruModalidadEvaluacion;
+	}
 
-    public void setGruFechaInicio(Date gruFechaInicio) {
-        this.gruFechaInicio = gruFechaInicio;
-    }
+	public Long getGruCodigo() {
+		return this.gruCodigo;
+	}
 
-    public Date getGruFechaFin() {
-        return gruFechaFin;
-    }
+	public void setGruCodigo(Long gruCodigo) {
+		this.gruCodigo = gruCodigo;
+	}
 
-    public void setGruFechaFin(Date gruFechaFin) {
-        this.gruFechaFin = gruFechaFin;
-    }
+	public Long getMalCodigo() {
+		return this.malCodigo;
+	}
 
-    public String getGruModalidadEvaluacion() {
-        return gruModalidadEvaluacion;
-    }
+	public void setMalCodigo(Long malCodigo) {
+		this.malCodigo = malCodigo;
+	}
 
-    public void setGruModalidadEvaluacion(String gruModalidadEvaluacion) {
-        this.gruModalidadEvaluacion = gruModalidadEvaluacion;
-    }
+	public Long getPelCodigo() {
+		return this.pelCodigo;
+	}
 
-    public String getGruAutorizado() {
-        return gruAutorizado;
-    }
+	public void setPelCodigo(Long pelCodigo) {
+		this.pelCodigo = pelCodigo;
+	}
 
-    public void setGruAutorizado(String gruAutorizado) {
-        this.gruAutorizado = gruAutorizado;
-    }
+	public Long getEmpCodigo() {
+		return this.empCodigo;
+	}
 
-    public String getGruPlanificado() {
-        return gruPlanificado;
-    }
+	public void setEmpCodigo(Long empCodigo) {
+		this.empCodigo = empCodigo;
+	}
 
-    public void setGruPlanificado(String gruPlanificado) {
-        this.gruPlanificado = gruPlanificado;
-    }
+	public Long getGruItem() {
+		return this.gruItem;
+	}
 
-    public Long getEstCodigoEva() {
-        return estCodigoEva;
-    }
+	public void setGruItem(Long gruItem) {
+		this.gruItem = gruItem;
+	}
 
-    public void setEstCodigoEva(Long estCodigoEva) {
-        this.estCodigoEva = estCodigoEva;
-    }
+	public String getGruDescripcion() {
+		return this.gruDescripcion;
+	}
 
-    public Long getGruOfgNumeroLeg() {
-        return gruOfgNumeroLeg;
-    }
+	public void setGruDescripcion(String gruDescripcion) {
+		this.gruDescripcion = gruDescripcion;
+	}
 
-    public void setGruOfgNumeroLeg(Long gruOfgNumeroLeg) {
-        this.gruOfgNumeroLeg = gruOfgNumeroLeg;
-    }
+	public Integer getGruCupos() {
+		return this.gruCupos;
+	}
 
-    public String getOfgTipoLeg() {
-        return ofgTipoLeg;
-    }
+	public void setGruCupos(Integer gruCupos) {
+		this.gruCupos = gruCupos;
+	}
 
-    public void setOfgTipoLeg(String ofgTipoLeg) {
-        this.ofgTipoLeg = ofgTipoLeg;
-    }
+	public Integer getGruCuposInternet() {
+		return this.gruCuposInternet;
+	}
 
-    public String getOfgTieneHorarioLeg() {
-        return ofgTieneHorarioLeg;
-    }
+	public void setGruCuposInternet(Integer gruCuposInternet) {
+		this.gruCuposInternet = gruCuposInternet;
+	}
 
-    public void setOfgTieneHorarioLeg(String ofgTieneHorarioLeg) {
-        this.ofgTieneHorarioLeg = ofgTieneHorarioLeg;
-    }
+	public String getGruAbierto() {
+		return this.gruAbierto;
+	}
 
-    public String getGruJornada() {
-        return gruJornada;
-    }
+	public void setGruAbierto(String gruAbierto) {
+		this.gruAbierto = gruAbierto;
+	}
 
-    public void setGruJornada(String gruJornada) {
-        this.gruJornada = gruJornada;
-    }
+	public Integer getGruCuposUtilizados() {
+		return this.gruCuposUtilizados;
+	}
 
-    public Long getPeeCodigo() {
-        return peeCodigo;
-    }
+	public void setGruCuposUtilizados(Integer gruCuposUtilizados) {
+		this.gruCuposUtilizados = gruCuposUtilizados;
+	}
 
-    public void setPeeCodigo(Long peeCodigo) {
-        this.peeCodigo = peeCodigo;
-    }
+	public Integer getGruCuposUtilizadosInternet() {
+		return this.gruCuposUtilizadosInternet;
+	}
 
-//    @XmlTransient
-//    public Collection<OfeDocumentoPortafolio> getOfeDocumentoPortafolioCollection() {
-//        return ofeDocumentoPortafolioCollection;
-//    }
-//
-//    public void setOfeDocumentoPortafolioCollection(Collection<OfeDocumentoPortafolio> ofeDocumentoPortafolioCollection) {
-//        this.ofeDocumentoPortafolioCollection = ofeDocumentoPortafolioCollection;
-//    }
+	public void setGruCuposUtilizadosInternet(Integer gruCuposUtilizadosInternet) {
+		this.gruCuposUtilizadosInternet = gruCuposUtilizadosInternet;
+	}
 
-    @XmlTransient
-    public Collection<OfeDistributivo> getOfeDistributivoCollection() {
-        return ofeDistributivoCollection;
-    }
+	public Date getGruFechaInicio() {
+		return this.gruFechaInicio;
+	}
 
-    public void setOfeDistributivoCollection(Collection<OfeDistributivo> ofeDistributivoCollection) {
-        this.ofeDistributivoCollection = ofeDistributivoCollection;
-    }
+	public void setGruFechaInicio(Date gruFechaInicio) {
+		this.gruFechaInicio = gruFechaInicio;
+	}
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (gruCodigo != null ? gruCodigo.hashCode() : 0);
-        return hash;
-    }
+	public Date getGruFechaFin() {
+		return this.gruFechaFin;
+	}
 
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof OfeGrupo)) {
-            return false;
-        }
-        OfeGrupo other = (OfeGrupo) object;
-        if ((this.gruCodigo == null && other.gruCodigo != null) || (this.gruCodigo != null && !this.gruCodigo.equals(other.gruCodigo))) {
-            return false;
-        }
-        return true;
-    }
+	public void setGruFechaFin(Date gruFechaFin) {
+		this.gruFechaFin = gruFechaFin;
+	}
 
-    @Override
-    public String toString() {
-        return "OfeGrupo[ gruCodigo=" + gruCodigo + " ]";
-    }
-    
+	public String getGruModalidadEvaluacion() {
+		return this.gruModalidadEvaluacion;
+	}
+
+	public void setGruModalidadEvaluacion(String gruModalidadEvaluacion) {
+		this.gruModalidadEvaluacion = gruModalidadEvaluacion;
+	}
+
+	public String getGruAutorizado() {
+		return this.gruAutorizado;
+	}
+
+	public void setGruAutorizado(String gruAutorizado) {
+		this.gruAutorizado = gruAutorizado;
+	}
+
+	public String getGruPlanificado() {
+		return this.gruPlanificado;
+	}
+
+	public void setGruPlanificado(String gruPlanificado) {
+		this.gruPlanificado = gruPlanificado;
+	}
+
+	public Long getEstCodigoEva() {
+		return this.estCodigoEva;
+	}
+
+	public void setEstCodigoEva(Long estCodigoEva) {
+		this.estCodigoEva = estCodigoEva;
+	}
+
+	public Long getGruOfgNumeroLeg() {
+		return this.gruOfgNumeroLeg;
+	}
+
+	public void setGruOfgNumeroLeg(Long gruOfgNumeroLeg) {
+		this.gruOfgNumeroLeg = gruOfgNumeroLeg;
+	}
+
+	public String getOfgTipoLeg() {
+		return this.ofgTipoLeg;
+	}
+
+	public void setOfgTipoLeg(String ofgTipoLeg) {
+		this.ofgTipoLeg = ofgTipoLeg;
+	}
+
+	public String getOfgTieneHorarioLeg() {
+		return this.ofgTieneHorarioLeg;
+	}
+
+	public void setOfgTieneHorarioLeg(String ofgTieneHorarioLeg) {
+		this.ofgTieneHorarioLeg = ofgTieneHorarioLeg;
+	}
+
+	public String getGruJornada() {
+		return this.gruJornada;
+	}
+
+	public void setGruJornada(String gruJornada) {
+		this.gruJornada = gruJornada;
+	}
+
+	public Long getPeeCodigo() {
+		return this.peeCodigo;
+	}
+
+	public void setPeeCodigo(Long peeCodigo) {
+		this.peeCodigo = peeCodigo;
+	}
+
+	public Collection<OfeDistributivo> getOfeDistributivoCollection() {
+		return this.ofeDistributivoCollection;
+	}
+
+	public void setOfeDistributivoCollection(Collection<OfeDistributivo> ofeDistributivoCollection) {
+		this.ofeDistributivoCollection = ofeDistributivoCollection;
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		// TODO: Warning - this method won't work in the case the id fields are not set
+		if (!(object instanceof OfeGrupo)) {
+			return false;
+		}
+		OfeGrupo other = (OfeGrupo) object;
+		if ((this.gruCodigo == null && other.gruCodigo != null)
+				|| (this.gruCodigo != null && !this.gruCodigo.equals(other.gruCodigo))) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = 0;
+		hash += ((this.gruCodigo != null) ? this.gruCodigo.hashCode() : 0);
+		return hash;
+	}
+
+	@Override
+	public String toString() {
+		return "OfeGrupo[ gruCodigo=" + this.gruCodigo + " ]";
+	}
+
 }

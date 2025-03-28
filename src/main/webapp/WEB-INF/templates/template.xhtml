@@ -1,65 +1,62 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-                xmlns:ui="http://java.sun.com/jsf/facelets"
-                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
+                xmlns:u="http://ups.edu.ec/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
                 template="/WEB-INF/templates/ups-master.xhtml">
 
-    <ui:define name="ups-head-top">        
-        <link rel="shortcut icon" type="image/x-icon" href="#{resource['ups-template:images/icons/favicon.ico']}" />
-    </ui:define>
-    
-    <ui:define name="ups-title-before" >
-        POS_REP - 
+    <ui:define name="ups-title">
+        POS-REP - <ui:insert name="posRep-title"><h:outputText value="#{posRepBundle['AppName']}"/></ui:insert>/>
     </ui:define>
 
-    <ui:define name="ups-title" >
-        <h:outputText value="#{posRepBundle['AppName']}"/>
-    </ui:define>
-    
-    <ui:define name="ups-title-after" >
-    </ui:define>
-
-    <ui:define name="ups-header-session">    
-        <ui:include src="/security-ups-logout.xhtml" />
-    </ui:define>
-
-            <ui:define name="ups-header-content-title">
-                Generación de Reportes
-            </ui:define>
-
-    <ui:define name="ups-header-menu">
-        <h:panelGroup styleClass="col-12" rendered="#{facesContext.application.projectStage ne 'Production'}" layout="block">
-            <div class="row">
-                <ui:include src="/appmenu.xhtml" />
-            </div>
-        </h:panelGroup>
-    </ui:define>
-    
-    <ui:define name="ups-breadcrumb-contenido-secundario">
-    </ui:define>
-    
-    <ui:define name="ups-body-top">
-        <h:outputStylesheet library="default" name="css/pfcrud.css" />
-    </ui:define>
-    
-    <ui:define name="ups-content-left">
-        <p:panel header="Estructura" >
-            <h:form id="secOrgEstructuraMenu">
-                <ui:insert name="ups-content-estructura" />
-            </h:form>
-        </p:panel>
-        <p:panel header="Menú" styleClass="mt-3">
-            <ui:include src="/security-ups-menu.xhtml" />
-        </p:panel>
-    </ui:define>
-
-    <ui:define name="ups-body-bottom">
-        <ui:include src="/confirmation.xhtml"/>
+    <ui:define name="ups-head">
+        <h:outputStylesheet library="default" name="css/pfcrud.css"/>
         <h:outputScript library="default" name="js/pfcrud.js"/>
     </ui:define>
 
-    <ui:define name="ups-footer-content">
-        <h:outputText value="#{posRepBundle['AppFooter']}"/>
-    </ui:define>
+    <ui:define name="ups-frame">
+        <u:frame showTestingLabel="#{not facesContext.isProjectStage('Production')}"
+                 title="Administración del Sistema de Reportes">
+            <f:facet name="navigation">
+                <div class="d-flex flex-column gap-2 m-2">
+                    <ui:include src="/appmenu.xhtml"/>
+                    <p:panel header="Estructura">
+                        <h:form id="secOrgEstructuraMenu">
+                            <ui:insert name="posRep-estructura"/>
+                        </h:form>
+                    </p:panel>
+                    <p:panel header="Menú">
+                        <ui:include src="/security-ups-menu.xhtml"/>
+                    </p:panel>
+                </div>
+            </f:facet>
 
+            <f:facet name="userMenu">
+                <h:form id="SecurityUpsLogoutForm">
+                    <u:userMenu
+                            initials="#{userSessionBean.userInfo.firstName.charAt(0)} #{userSessionBean.userInfo.lastName.charAt(0)}"
+                            name="#{userSessionBean.userInfo.fullName}"
+                            detail="#{userSessionBean.userInfo.login}">
+                        <f:facet name="actions">
+                            <p:menu>
+                                <p:menuitem value="Cerrar sesión" icon="fa fa-right-from-bracket"
+                                            action="#{userSessionBean.logout()}"/>
+                            </p:menu>
+                        </f:facet>
+                    </u:userMenu>
+                </h:form>
+            </f:facet>
+
+            <f:facet name="content">
+                <ui:insert name="posRep-content"/>
+            </f:facet>
+
+            <f:facet name="footer">
+                <ui:decorate template="/WEB-INF/templates/sections/ups-footer.xhtml"/>
+            </f:facet>
+        </u:frame>
+
+        <ui:include src="/confirmation.xhtml"/>
+    </ui:define>
 </ui:composition>

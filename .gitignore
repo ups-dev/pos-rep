@@ -1,5 +1,46 @@
-/**/target/
-/**/faces-config.NavData
-/**/nb-configuration.xml
-/**/nbactions*.xml
-pom.xml.versionsBackup
+### Build y dependencias ###
+target/
+build/
+!**/src/main/**/target/
+!**/src/test/**/target/
+!**/src/main/**/build/
+!**/src/test/**/build/
+.mvn/wrapper/maven-wrapper.jar
+.mvn/wrapper/maven-wrapper.properties
+mvn.log
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+.idea/workspace.xml
+.idea/libraries/
+.idea/shelf/
+
+### Eclipse ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache
+bin/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+
+### Gradle ###
+.gradle/
+gradle-app.setting
+
+### Mac OS ###
+.DS_Store
