@@ -70,11 +70,8 @@ public class InsAlumnoWrapper implements Serializable {
 			return false;
 		}
 		InsAlumnoWrapper other = (InsAlumnoWrapper) object;
-		if ((this.aluCodigo == null && other.aluCodigo != null)
-				|| (this.aluCodigo != null && !this.aluCodigo.equals(other.aluCodigo))) {
-			return false;
-		}
-		return true;
+		return (this.aluCodigo != null || other.aluCodigo == null)
+				&& (this.aluCodigo == null || this.aluCodigo.equals(other.aluCodigo));
 	}
 
 	@Override

@@ -52,7 +52,7 @@
     <!--Configuracion jsf-security-ups -->
     <context-param>
         <param-name>ec.edu.ups.jsf.security.ENABLE_SECURITY</param-name>
-        <param-value>false</param-value>
+        <param-value>true</param-value>
 
         <!--  <param-value>false</param-value> poner true para que considere los permisos-->
 

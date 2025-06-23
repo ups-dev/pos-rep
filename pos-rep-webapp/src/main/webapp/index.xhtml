@@ -10,11 +10,11 @@
         <h:outputText value="#{posRepBundle['AppName']}"/>
     </ui:define>
 
-    <ui:define name="org-estructura">
-        <uorg:estructura id="exap"/>
+    <ui:define name="posRep-estructura">
+        <uorg:estructura id="exap" changeSession="true" />
     </ui:define>
 
-    <ui:define name="org-content">
+    <ui:define name="posRep-content">
         <u:page fullWidth="true">
             <u:card>
                 <p:panel header="#{posRepBundle['Welcome']}">

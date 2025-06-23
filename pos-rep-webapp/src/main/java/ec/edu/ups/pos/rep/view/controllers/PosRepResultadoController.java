@@ -220,8 +220,6 @@ public class PosRepResultadoController implements Serializable {
 
 	public void updateCarreraList() {
 
-		// setOrgEstructuraCarrera(null);
-		// setOrgEstructuraCarreraList(null);
 		updateAsignaturaList();
 		setGthPersona(null);
 
@@ -780,7 +778,7 @@ public class PosRepResultadoController implements Serializable {
 			String replace = query.replace(" ", "%%");
 			suggestions = this.insAlumnoFacade.findAlumnoWrapper(replace);
 		}
-
+		System.out.println(suggestions);
 		setListadoAlumnos(suggestions);
 		return suggestions;
 	}

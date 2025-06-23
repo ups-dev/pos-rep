@@ -119,7 +119,6 @@
                                 <!--Filtro Estudiante-->
                                 <u:formField label="#{posRepBundle['PosRepEstudiante']}:" autoWidth="false">
 
-
                                     <p:autoComplete id="posRepFiltrarEstudiante2"
                                                     value="#{posRepPosgradosController.insAlumnoWrapper}"
                                                     cache="true" forceSelection="true" maxResults="10"
@@ -128,8 +127,6 @@
                                                     var="p"
                                                     itemLabel="#{not empty p?p.cllcRuc:''}#{not empty p?' - ':''}#{not empty p?p.aluNombres:''}"
                                                     itemValue="#{p}"
-
-
                                                     autocomplete="on"
                                                     completeMethod="#{posRepPosgradosController.autoCompleteAlumnos}"
                                                     queryDelay="0"
@@ -138,6 +135,7 @@
                                                      list="#{posRepPosgradosController.listadoAlumnos}"/>
 
                                         <p:column>
+                                            <h:outputText value="#{p.cllcRuc}"/>
                                             <h:outputText value="#{p.cllcRuc}"/>
                                         </p:column>
                                         <p:column>

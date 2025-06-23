@@ -105,6 +105,6 @@
 
   </dependencies>
   <build>
-    <finalName>pos-rep-webapp</finalName>
+    <finalName>pos-rep</finalName>
   </build>
 </project>

@@ -57,7 +57,6 @@ public class RepReportesSistemaController extends AbstractController<RepReportes
 
 	@Override
 	public void saveNew(ActionEvent event) {
-
 		super.saveNew(event);
 	}
 
