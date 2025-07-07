@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+
     <resource-ref>
         <res-ref-name>jsf/ProjectStage</res-ref-name>
         <res-type>java.lang.String</res-type>
     </resource-ref>
+
     <context-param>
         <param-name>javax.faces.PROJECT_STAGE</param-name>
         <param-value>Development</param-value>
     </context-param>
+
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
@@ -28,13 +30,14 @@
     </welcome-file-list>
 
     <!-- Configuración Aplicación-->
+
     <error-page>
         <exception-type>javax.faces.application.ViewExpiredException</exception-type>
         <location>/error/expired.xhtml</location>
     </error-page>
     <error-page>
         <error-code>403</error-code>
-        <location>/error/404.xhtml</location>
+        <location>/error/403.xhtml</location>
     </error-page>
     <error-page>
         <error-code>404</error-code>
@@ -49,11 +52,10 @@
         <location>/error/500.xhtml</location>
     </error-page>
 
-    <!--Configuracion jsf-security-ups -->
+    <!--Configuracion jsf-security-ups-->
     <context-param>
         <param-name>ec.edu.ups.jsf.security.ENABLE_SECURITY</param-name>
         <param-value>true</param-value>
-
         <!--  <param-value>false</param-value> poner true para que considere los permisos-->
 
     </context-param>
@@ -84,10 +86,6 @@
         <param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
         <param-value>true</param-value>
     </context-param>
-    <context-param>
-        <param-name>javax.faces.FACELETS_REFRESH_PERIOD</param-name>
-        <param-value>0</param-value>
-    </context-param>
 
     <!-- Configuración de Mojarra/RI -->
     <context-param>
@@ -96,7 +94,6 @@
     </context-param>
 
     <!--Configuracion PrimeFaces -->
-
     <context-param>
         <param-name>primefaces.THEME</param-name>
         <param-value>ups</param-value>
@@ -204,6 +201,6 @@
         <listener-class>org.jasig.cas.client.session.SingleSignOutHttpSessionListener</listener-class>
     </listener>
 
-    <distributable/>
+    <distributable />
 
 </web-app>
