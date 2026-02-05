@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-REC-0001" pageWidth="595" pageHeight="842" columnWidth="551" leftMargin="22" rightMargin="22" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
 	<property name="ireport.zoom" value="2.853116706110003"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="367"/>
+	<property name="ireport.y" value="639"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_alu_codigo" class="java.lang.Integer">
@@ -224,7 +224,41 @@ malp.total_menciones,
 (select decode(count(*),0,'S','N') from CALIFICACIONPOS calp2 where ins.ins_codigo         = calp2.ins_codigo
 AND    pre.pre_numero         = calp2.pre_numero
 and malp.mal_nivel=calp2.mal_nivel
-and calp2.mal_obligatorio='N') imprime
+and calp2.mal_obligatorio='N') imprime,
+'A partir de la resolución ' || res.res_num_resolucion || ' ' ||
+    'emitida por ' || res.res_emitido_por || ' ' ||
+    'de fecha ' || TO_CHAR(res.res_fecha_emicion, 'dd/mm/yyyy') || ' ' ||
+    CASE
+        WHEN alu.alu_genero = 'F' THEN 'la'
+        WHEN alu.alu_genero = 'M' THEN 'el'
+        ELSE 'el/la'
+    END || ' estudiante ' ||
+    CASE
+        WHEN (cli.cllc_ruc != res.res_ruc) AND
+             (res.res_apellidos != alu.alu_apellidos OR res.res_nombres != alu.alu_nombres)
+        THEN
+            TRIM(res.res_apellidos || ' ' || res.res_nombres) ||
+            ' con número de identificación ' || res.res_ruc ||
+            ', de ahora en adelante constará con el número de identificación ' ||
+            cli.cllc_ruc || ' y de nombre ' || alu.alu_apellidos || ' ' || alu.alu_nombres ||
+            ', guardando relación entre sus anteriores y nuevos datos por tratarse de la misma persona.'
+        WHEN (res.res_apellidos != alu.alu_apellidos OR res.res_nombres != alu.alu_nombres)
+        THEN
+            TRIM(res.res_apellidos || ' ' || res.res_nombres) ||
+            ', de ahora en adelante constará con el nombre de ' ||
+            alu.alu_apellidos || ' ' || alu.alu_nombres ||
+            ', número de identificación ' || cli.cllc_ruc ||
+            ', guardando relación entre sus anteriores y nuevos datos por tratarse de la misma persona.'
+        WHEN cli.cllc_ruc != res.res_ruc
+        THEN
+            TRIM(alu.alu_apellidos || ' ' || alu.alu_nombres) ||
+            ' con número de identificación ' || res.res_ruc ||
+            ', de ahora en adelante constará con el número de identificación ' ||
+            cli.cllc_ruc ||
+            ', guardando relación entre sus anteriores y nuevos datos por tratarse de la misma persona.'
+        ELSE NULL
+    END AS cambio_identidad,
+    res.res_fecha_emicion
 FROM    ins.ins_inscripcion             ins,
         fac.fac_pago_factura            paf,
         ins.ins_ins_pro_aca             ipa,
@@ -249,7 +283,8 @@ FROM    ins.ins_inscripcion             ins,
         ped.ped_tipo_titulacion         tit,
         mat.mat_matricula               mta,
         MALLAPOS                        malp,
-        CALIFICACIONPOS                 calp
+        CALIFICACIONPOS                 calp,
+ins.ins_resolucion res
 WHERE  ins.ins_codigo    = paf.ins_codigo
 AND    paf.tip_codigo    = 8 --Inscripcion Posgrado
 AND    paf.paf_pagado    = 'S'
@@ -288,6 +323,8 @@ AND    pre.pre_numero         = malp.pre_numero
 AND    ins.ins_codigo         = calp.ins_codigo(+)
 AND    malp.mal_codigo        = calp.mal_codigo(+)
 AND    pre.pre_numero         = calp.pre_numero(+)
+AND alu.alu_codigo=res.alu_codigo(+)
+
 ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 	</queryString>
 	<field name="ALU_CODIGO" class="java.math.BigDecimal"/>
@@ -327,6 +364,8 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 	<field name="RESOLUCION" class="java.lang.String"/>
 	<field name="TITULO" class="java.lang.String"/>
 	<field name="IMPRIME" class="java.lang.String"/>
+	<field name="CAMBIO_IDENTIDAD" class="java.lang.String"/>
+	<field name="RES_FECHA_EMICION" class="java.sql.Timestamp"/>
 	<variable name="contador" class="java.lang.Integer" resetType="Group" resetGroup="estudiante_grup" calculation="Count">
 		<variableExpression><![CDATA[$F{MAT_CODIGO}]]></variableExpression>
 	</variable>
@@ -458,7 +497,7 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="57">
+			<band height="90">
 				<staticText>
 					<reportElement style="Estilo_titulo7" x="4" y="0" width="238" height="15" uuid="6702f2e6-ceb7-4974-91ac-cc978aa6e3e7"/>
 					<textElement>
@@ -506,6 +545,15 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 					<reportElement style="Estilo_contenido7" x="265" y="42" width="38" height="15" uuid="72fbfa7e-a098-4aa6-a028-20ad391d25b3"/>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$V{componentes_pendientes}-$V{electivas}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement positionType="Float" x="0" y="70" width="546" height="20" uuid="c0e1c96e-6c88-47ca-a5dc-9885e57473b9">
+						<printWhenExpression><![CDATA[!$F{RES_FECHA_EMICION}.equals( null )]]></printWhenExpression>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{CAMBIO_IDENTIDAD}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>

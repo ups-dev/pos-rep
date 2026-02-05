@@ -1,4 +1,4 @@
-package ec.edu.ups.pos.rep.view.controller.ins;
+package ec.edu.ups.pos.rep.view.controllers.ins;
 
 import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;

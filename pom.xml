@@ -33,12 +33,12 @@
         <dependency>
             <groupId>ec.edu.ups.jsf.security</groupId>
             <artifactId>jsf-security-ups</artifactId>
-            <version>3.0.2</version>
+            <version>3.0.3</version>
         </dependency>
         <dependency>
             <groupId>ec.edu.ups.jsf</groupId>
             <artifactId>jsf-template-responsive</artifactId>
-            <version>5.2.0</version>
+            <version>5.3.0</version>
         </dependency>
         <dependency>
             <groupId>ec.edu.ups.jsf</groupId>

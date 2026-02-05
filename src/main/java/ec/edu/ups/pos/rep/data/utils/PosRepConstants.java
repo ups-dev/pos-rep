@@ -193,6 +193,11 @@ public final class PosRepConstants {
 	public static final String REP_PARAMETRO_MODULO_REPORTES = "REPORTES";
 
 	/**
+	 * Parámetro fijo del Módulo.
+	 */
+	public static final String REP_PARAMETRO_MODULO_DOCTORADOS = "DOCTORADO";
+
+	/**
 	 * Parámetro de Pagado SI/NO.
 	 */
 	public static final Long REP_PARAMETRO_PAGADO = 17L;

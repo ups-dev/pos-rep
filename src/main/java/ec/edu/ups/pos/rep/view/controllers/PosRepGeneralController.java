@@ -22,11 +22,12 @@ import ec.edu.ups.pos.rep.data.entities.rep.RepSecretarioGeneral;
 import ec.edu.ups.pos.rep.data.entities.rep.RepTipCerRepSis;
 import ec.edu.ups.pos.rep.data.entities.wrapper.InsAlumnoWrapper;
 import ec.edu.ups.pos.rep.data.entities.wrapper.PosgradoAlumnoWrapper;
+import ec.edu.ups.pos.rep.data.utils.PosRepConstants;
 import ec.edu.ups.pos.rep.logic.sessions.rep.RepTipCerRepSisFacade;
-import ec.edu.ups.pos.rep.view.controller.rep.RepEmisionCertificadoController;
-import ec.edu.ups.pos.rep.view.controller.rep.RepNumeroCertificadoController;
-import ec.edu.ups.pos.rep.view.controller.rep.RepReportesSistemaController;
-import ec.edu.ups.pos.rep.view.controller.rep.RepSecretarioGeneralController;
+import ec.edu.ups.pos.rep.view.controllers.rep.RepEmisionCertificadoController;
+import ec.edu.ups.pos.rep.view.controllers.rep.RepNumeroCertificadoController;
+import ec.edu.ups.pos.rep.view.controllers.rep.RepReportesSistemaController;
+import ec.edu.ups.pos.rep.view.controllers.rep.RepSecretarioGeneralController;
 import ec.edu.ups.util.jasper.ReportParamBuilder;
 import ec.edu.ups.util.jasper.ReportType;
 
@@ -81,7 +82,7 @@ public class PosRepGeneralController implements Serializable {
 			}
 
 			// Definición de nombre de: reporte y archivo
-			String nombreReporte = "/WEB-INF/reportes/posRep_generico/" + nombre;
+			String nombreReporte = identificarModulo() + nombre;
 
 			String nombreArchivo = repReportesSistema.getResReporte();
 
@@ -98,17 +99,19 @@ public class PosRepGeneralController implements Serializable {
 			// Identificar la estructura seleccionada para el reporte
 			OrgEstructura orgEstructura = this.posReporteController.identificarEstructura();
 			Integer codigoEstructura = Integer.valueOf(String.valueOf(orgEstructura.getEstCodigo()));
-			this.posRepLogController.appendParametro("SEDE",
-					this.posRepResultadoController.getOrgEstructuraSede().getOrgDescripcionEstructura().getDeeCodigo());
-			this.posRepLogController.appendParametro("CAMPUS",
-					this.posRepResultadoController.getOrgEstructuraCampus()
-						.getOrgDescripcionEstructura()
-						.getDeeCodigo());
-			this.posRepLogController.appendParametro("CARRERA",
-					this.posRepResultadoController.getOrgEstructuraCarrera()
-						.getOrgDescripcionEstructura()
-						.getDeeCodigo());
 
+			this.posRepLogController.appendParametro("ESTRUCTURA", codigoEstructura);
+			/*
+			 * this.posRepLogController.appendParametro("SEDE",
+			 * this.posRepResultadoController.getOrgEstructuraSede().
+			 * getOrgDescripcionEstructura().getDeeCodigo());
+			 * this.posRepLogController.appendParametro("CAMPUS",
+			 * this.posRepResultadoController.getOrgEstructuraCampus()
+			 * .getOrgDescripcionEstructura() .getDeeCodigo());
+			 * this.posRepLogController.appendParametro("CARRERA",
+			 * this.posRepResultadoController.getOrgEstructuraCarrera()
+			 * .getOrgDescripcionEstructura() .getDeeCodigo());
+			 */
 			// Parámetro Periodo Inicial
 			OrgPeriodoLectivo orgPeriodoInicial = this.posRepResultadoController.getOrgPeriodoInicial();
 			Integer codigoPeriodo = 0;
@@ -405,6 +408,21 @@ public class PosRepGeneralController implements Serializable {
 		}
 		this.posRepLogController.saveNew(null);
 		return result;
+	}
+
+	public String identificarModulo() {
+		String modulo = this.repReportesSistemaController.getModulo();
+
+		if (modulo.equals(PosRepConstants.REP_PARAMETRO_MODULO_DOCTORADOS)) {
+			return "/WEB-INF/reportes/posRep_genericoDoctorado/";
+
+		}
+
+		else if (modulo.equals(PosRepConstants.REP_PARAMETRO_MODULO_REPORTES)) {
+			return "/WEB-INF/reportes/posRep_generico/";
+
+		}
+		return "";
 	}
 
 }
