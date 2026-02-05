@@ -1,7 +1,9 @@
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:o="http://omnifaces.org/ui"
+                xmlns:p="http://primefaces.org/ui"
                 xmlns:u="http://ups.edu.ec/ui"
+                xmlns:uorg="http://ups.edu.ec/ui/composites/sec"
                 template="/WEB-INF/templates/template.xhtml">
 
     <f:metadata>
@@ -10,7 +12,11 @@
                  listener="#{repReportesSistemaController.preRenderView(PosRepConstants.REP_PARAMETRO_MODULO_REPORTES)}"></f:event>
     </f:metadata>
 
-
+    <ui:define name="posRep-estructura">
+        <uorg:estructura id="exap" >
+            <p:ajax update=":PosReportesForm" listener="#{posRepResultadoController.callEventAjaxOrgEstructura()}" event="change" process="@this"/>
+        </uorg:estructura>
+    </ui:define>
 
     <ui:define name="posRep-content">
         <u:page  title="#{posRepBundle['PosResultadosTitle']}" fullWidth="true">

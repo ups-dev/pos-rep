@@ -3,6 +3,7 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:o="http://omnifaces.org/ui"
                 xmlns:u="http://ups.edu.ec/ui"
+                xmlns:uorg="http://ups.edu.ec/ui/composites/sec"
                 template="/WEB-INF/templates/template.xhtml">
 
     <f:metadata>
@@ -15,12 +16,22 @@
         <h:outputText value="#{posRepBundle['PosResultadosTitle3']}"/>
     </ui:define>
 
+    <ui:define name="ups-breadcrumb-contenido">
+        #{posRepBundle['PosArchivos']}
+    </ui:define>
+
+    <ui:define name="posRep-estructura">
+        <uorg:estructura id="exap"/>
+    </ui:define>
+
     <ui:define name="posRep-content">
+
         <u:page  title="#{posRepBundle['PosResultadosTitle3']}" fullWidth="true">
             <ui:include src="/posRep_archivos/List.xhtml"/>
             <ui:include src="/posRep_archivos/AddRole.xhtml"/>
             <ui:include src="/posRep_archivos/Create.xhtml"/>
             <ui:include src="/posRep_archivos/Edit.xhtml"/>
         </u:page>
+
     </ui:define>
 </ui:composition>
