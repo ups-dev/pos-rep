@@ -1,212 +1,172 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    
     <parent>
         <groupId>ec.edu.ups</groupId>
         <artifactId>ups-parent</artifactId>
-        <version>7.0</version>
+        <version>8.0.1</version>
     </parent>
-    
+
     <groupId>ec.edu.ups.rep.pos</groupId>
     <artifactId>pos-rep</artifactId>
-    <version>3.1.4</version>
+    <version>4.0.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <name>pos-rep</name>
-    <description>Sistema para generación de reportes de Posgrados.</description>
+    <properties>
+        <spring.javaformat.version>0.0.41</spring.javaformat.version>
+    </properties>
 
-    <developers>
-        <developer>
-            <id>wsaca</id>
-            <name>Wilber Saca</name>
-            <email>wsaca@ups.edu.ec</email>
-            <organization>UPS</organization>
-            <organizationUrl>http://www.ups.edu.ec</organizationUrl>
-        </developer>
-        <developer>
-            <id>vclavijo</id>
-            <name>Verónica Clavijo</name>
-            <email>vclavijo@ups.edu.ec</email>
-            <organization>UPS</organization>
-            <organizationUrl>http://www.ups.edu.ec</organizationUrl>
-        </developer>
-        <developer>
-            <id>myunga</id>
-            <name>Myriam Yunga</name>
-            <email>myunga@ups.edu.ec</email>
-            <organization>UPS</organization>
-            <organizationUrl>http://www.ups.edu.ec</organizationUrl>
-        </developer>      
-    </developers>
-    
-    <scm>
-        <connection>scm:git:ssh://git@dev-bitbucket.ups.edu.ec/scm/pos/pos-rep.git</connection>
-        <developerConnection>scm:git:ssh://git@dev-bitbucket.ups.edu.ec/scm/pos/pos-rep.git</developerConnection>
-        <url> http://dev-bitbucket.ups.edu.ec/projects/POS/repos/pos-rep</url>
-    </scm>
-    
     <dependencies>
-        <dependency>
-            <groupId>org.primefaces</groupId>
-            <artifactId>primefaces</artifactId>
-            <version>6.2</version>
-        </dependency>
-        
-        <!-- File Upload -->
-        <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <version>1.3</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.6</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.primefaces.extensions</groupId>
-            <artifactId>primefaces-extensions</artifactId>
-            <version>6.2</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.primefaces.extensions</groupId>
-            <artifactId>resources-ckeditor</artifactId>
-            <version>6.2</version>
-        </dependency>
-       
-        <dependency>
-            <groupId>org.atmosphere</groupId>
-            <artifactId>atmosphere-runtime</artifactId>
-            <version>2.5.2</version>
-        </dependency>
-       
-        <dependency>
-            <groupId>org.omnifaces</groupId>
-            <artifactId>omnifaces</artifactId>
-            <version>3.1</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.jasig.cas.client</groupId>
-            <artifactId>cas-client-core</artifactId>
-            <version>3.5.0</version>
-        </dependency>
         <dependency>
             <groupId>org.jasig.cas.client</groupId>
             <artifactId>cas-client-integration-jboss</artifactId>
             <version>3.5.0</version>
         </dependency>
-        
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>5.2.5</version>
+        </dependency>
+
+        <!-- UPS -->
         <dependency>
             <groupId>ec.edu.ups.jsf.security</groupId>
             <artifactId>jsf-security-ups</artifactId>
-            <version>2.5</version>
+            <version>3.0.3</version>
         </dependency>
-        
         <dependency>
             <groupId>ec.edu.ups.jsf</groupId>
             <artifactId>jsf-template-responsive</artifactId>
-            <version>4.0</version>
-        </dependency>
-        <dependency>
-            <groupId>ec.edu.ups.jsf</groupId>
-            <artifactId>jsf-components</artifactId>
-            <version>2.0</version>
+            <version>5.3.0</version>
         </dependency>
         <dependency>
             <groupId>ec.edu.ups.jsf</groupId>
             <artifactId>jsf-util</artifactId>
-            <version>1.3</version>
+            <version>2.0.0</version>
         </dependency>
-        
-        <dependency>
-            <groupId>ec.edu.ups.org</groupId>
-            <artifactId>org-common</artifactId>
-            <version>3.5.0</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>ec.edu.ups.aseg</groupId>
-            <artifactId>aseg-common-data</artifactId>
-            <version>1.0</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>ec.edu.ups.ped</groupId>
-            <artifactId>ped-common</artifactId>
-            <version>2.1.1</version>
-        </dependency>   
-        
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi</artifactId>
-            <version>3.17</version>
-        </dependency>        
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml</artifactId>
-            <version>3.17</version>
-        </dependency>
-        
-        <!-- DEPENDENCIA PARA LAS ENTIDADES DEL INS -->
-        <dependency>
-            <groupId>ec.edu.ups.ins</groupId>
-            <artifactId>ins-common-data</artifactId>
-            <version>1.0</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>ec.edu.ups.jr</groupId>
-            <artifactId>jr-scriptlets</artifactId>
-            <version>1.1</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>ec.edu.ups.primefaces.theme</groupId>
-            <artifactId>primefaces-ups</artifactId>
-            <version>2.1</version>
-        </dependency>        
-        
         <dependency>
             <groupId>ec.edu.ups.notification</groupId>
             <artifactId>ups-notification-jsf</artifactId>
-            <version>1.0</version>
+            <version>2.0.0</version>
         </dependency>
+
+        <!-- Java EE -->
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
             <version>8.0</version>
             <scope>provided</scope>
         </dependency>
-        
-        <!-- DEPENDENCIA PARA USAR EL JASPER REPORT -->
+
+        <!-- Jasper -->
         <dependency>
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports</artifactId>
-            <version>5.6.1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>xml-apis</groupId>
-                    <artifactId>xml-apis</artifactId>
-                </exclusion>
-            </exclusions>
+            <version>6.21.3</version>
         </dependency>
-        
-        
+
+        <!-- JasperReports functions -->
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-functions</artifactId>
+            <version>6.21.3</version>
+        </dependency>
+
+        <!-- JasperReports fonts -->
         <dependency>
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports-fonts</artifactId>
-            <version>5.6.1</version>            
+            <version>6.21.3</version>
         </dependency>
-               
-    </dependencies>
-    
-<!--     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>        
-    </properties>-->
 
+        <!-- Apache POI for XLSX export -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>5.3.0</version>
+        </dependency>
+
+
+        <!-- iText for PDF export -->
+        <dependency>
+            <groupId>com.github.librepdf</groupId>
+            <artifactId>openpdf</artifactId>
+            <version>1.3.30</version>
+        </dependency>
+    </dependencies>
+
+<!--             Apache Common -->
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>2.13.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>javax</groupId>
+                <artifactId>javaee-web-api</artifactId>
+                <version>8.0</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>io.spring.javaformat</groupId>
+                <artifactId>spring-javaformat-maven-plugin</artifactId>
+                <version>${spring.javaformat.version}</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <inherited>true</inherited>
+                        <goals>
+                            <goal>validate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.3.1</version>
+                <configuration>
+                    <configLocation>checkstyle.xml</configLocation>
+                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>9.3</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>io.spring.javaformat</groupId>
+                        <artifactId>spring-javaformat-checkstyle</artifactId>
+                        <version>${spring.javaformat.version}</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>checkstyle-validation</id>
+                        <phase>validate</phase>
+                        <inherited>true</inherited>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

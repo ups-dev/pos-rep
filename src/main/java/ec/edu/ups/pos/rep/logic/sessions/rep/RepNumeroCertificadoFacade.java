@@ -1,102 +1,89 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ec.edu.ups.pos.rep.logic.sessions.rep;
+
+import java.util.List;
+
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
+import javax.persistence.TypedQuery;
 
 import ec.edu.ups.pos.rep.data.entities.rep.RepNumeroCertificado;
 import ec.edu.ups.pos.rep.logic.sessions.AbstractFacade;
 import ec.edu.ups.util.exceptions.UPSDataEditException;
-import ec.edu.ups.util.jpa.search.param.CacheStoreModeParam;
-import java.util.List;
-import javax.ejb.Stateless;
-import javax.persistence.CacheStoreMode;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceException;
-import javax.persistence.Query;
 
-/**
- *
- * @author UPS
- */
 @Stateless
 public class RepNumeroCertificadoFacade extends AbstractFacade<RepNumeroCertificado> {
 
-    @PersistenceContext(unitName = "POS_REP_PU")
-    private EntityManager em;
+	@PersistenceContext(unitName = "POS_REP_PU")
+	private EntityManager em;
 
-    @Override
-    protected EntityManager getEntityManager() {
-        return em;
-    }
+	@Override
+	protected EntityManager getEntityManager() {
+		return this.em;
+	}
 
-    public RepNumeroCertificadoFacade() {
-        super(RepNumeroCertificado.class);
-    }
+	public RepNumeroCertificadoFacade() {
+		super(RepNumeroCertificado.class);
+	}
 
-    @Override
-    public void createRecord(RepNumeroCertificado entity) {
-        try {
-            entity.setNceCodigo(findSequence());
-            getEntityManager().persist(entity);
-            getEntityManager().flush();
-        } catch (PersistenceException ex) {
-            wrapException(DataAction.INSERT, ex);
-        }
-    }
+	@Override
+	public void createRecord(RepNumeroCertificado entity) {
+		try {
+			entity.setNceCodigo(findSequence());
+			getEntityManager().persist(entity);
+			getEntityManager().flush();
+		}
+		catch (PersistenceException ex) {
+			wrapException(DataAction.INSERT, ex);
+		}
+	}
 
-    @Override
-    public void editRecord(RepNumeroCertificado entity) {
-        try {
-            RepNumeroCertificado repNumeroCertificado = find(entity.getNceCodigo());
-            //Permite validar si el registro existe
-            if (repNumeroCertificado == null) {
-                throw new UPSDataEditException();
-            }
-            super.editRecord(entity);
-        } catch (PersistenceException pe) {
-            wrapException(AbstractFacade.DataAction.UPDATE, pe);
-        }
-    }
+	@Override
+	public void editRecord(RepNumeroCertificado entity) {
+		try {
+			RepNumeroCertificado repNumeroCertificado = find(entity.getNceCodigo());
+			// Permite validar si el registro existe
+			if (repNumeroCertificado == null) {
+				throw new UPSDataEditException();
+			}
+			super.editRecord(entity);
+		}
+		catch (PersistenceException pe) {
+			wrapException(DataAction.UPDATE, pe);
+		}
+	}
 
-    public RepNumeroCertificado consultaSecuenciaCertificado(Long estCodigo, Long pelCodigo, Long ticCodigo) {
-      
-        Query q = getEntityManager().createNativeQuery(" select * from rep.rep_numero_certificado nce "
-                                                    + " where nce.est_codigo = ?1 "
-                                                    + " and   nce.pel_codigo = ?2 "
-                                                    + " and   nce.tic_codigo = ?3 "
-                                                    + " and   nce.aud_eliminado = 'N' ", RepNumeroCertificado.class)
-                                                    .setParameter(1, estCodigo)
-                                                    .setParameter(2, pelCodigo)
-                                                    .setParameter(3, ticCodigo);
+	public RepNumeroCertificado consultaSecuenciaCertificado(Long estCodigo, Long pelCodigo, Long ticCodigo) {
 
-        (new CacheStoreModeParam(CacheStoreMode.REFRESH)).processParam(q);
+		String jpql = "SELECT nce FROM RepNumeroCertificado nce " + "WHERE nce.estCodigo = :estCodigo "
+				+ "AND nce.pelCodigo = :pelCodigo " + "AND nce.ticCodigo = :ticCodigo " + "AND nce.audEliminado = 'N'";
 
-        List<RepNumeroCertificado> result = q.getResultList();
+		TypedQuery<RepNumeroCertificado> query = getEntityManager().createQuery(jpql, RepNumeroCertificado.class);
+		query.setParameter("estCodigo", estCodigo);
+		query.setParameter("pelCodigo", pelCodigo);
+		query.setParameter("ticCodigo", ticCodigo);
 
-        return result.isEmpty() ? null : result.get(0);
+		// Obtener el resultado
+		List<RepNumeroCertificado> result = query.getResultList();
 
-    }
-    
-    public RepNumeroCertificado consultaSecuenciaCertificadoAnio(Long estCodigo, Long pelCodigo, Long ticCodigo, Long anio) {
-      
-        Query q = getEntityManager().createNativeQuery(" select * from rep.rep_numero_certificado nce " 
-                                                      + " where nce.est_codigo = ?1 " 
-                                                      + " and   nce.tic_codigo = ?2 " 
-                                                      + " and   nce.nce_anio   = ?3 " 
-                                                      + " and   nce.aud_eliminado = 'N' ", RepNumeroCertificado.class)
-                                                    .setParameter(1, estCodigo)
-                                                    .setParameter(2, ticCodigo)
-                                                    .setParameter(3, anio);
+		// Retornar el primer resultado o null si la lista está vacía
+		return result.isEmpty() ? null : result.get(0);
+	}
 
-        (new CacheStoreModeParam(CacheStoreMode.REFRESH)).processParam(q);
+	public RepNumeroCertificado consultaSecuenciaCertificadoAnio(Long estCodigo, Long pelCodigo, Long ticCodigo,
+			Long anio) {
+		String jpql = " select nce from RepNumeroCertificado nce " + " where nce.estCodigo = ?1 "
+				+ " and   nce.ticCodigo = ?2 " + " and   nce.nceAnio   = ?3 " + " and   nce.audEliminado = 'N' ";
+		TypedQuery<RepNumeroCertificado> q = getEntityManager().createQuery(jpql, RepNumeroCertificado.class)
+			.setParameter(1, estCodigo)
+			.setParameter(2, ticCodigo)
+			.setParameter(3, anio);
 
-        List<RepNumeroCertificado> result = q.getResultList();
+		List<RepNumeroCertificado> result = q.getResultList();
 
-        return result.isEmpty() ? null : result.get(0);
+		return result.isEmpty() ? null : result.get(0);
 
-    }
+	}
 
 }

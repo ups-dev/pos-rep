@@ -1,0 +1,471 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:us="http://ups.edu.ec/ui/security"
+                xmlns:u="http://ups.edu.ec/ui"
+                xmlns:o="http://omnifaces.org/ui">
+
+    <o:importConstants type="ec.edu.ups.pos.rep.data.utils.PosRepConstants"/>
+
+    <h:form id="PosReportesDocForm">
+        <u:verticalStack gapXs="3">
+
+            <p:messages id="listMessages" closable="true">
+                <p:effect type="pulsate" event="load" delay="200" speed="500">
+                    <f:param name="times" value="1"/>
+                </p:effect>
+            </p:messages>
+
+
+            <u:card id="RepCabecera">
+
+                <u:verticalStack gapXs="3">
+
+                    <p:toolbar id="informesToolbar">
+                        <p:toolbarGroup align="left">
+
+                            <us:auth permissions="{'operations':['GENERAR']}">
+                                <p:commandButton id="exportExcel"
+                                                 icon="fa fa-file"
+                                                 value="#{posRepBundle['ExportXls']}"
+                                                 process="@this"
+                                                 ajax="false"
+                                                 onclick="PrimeFaces.monitorDownload(start, stop);"
+                                                 disabled="#{repReportesSistemaController.selected.resFormato eq null or (repReportesSistemaController.selected.resFormato ne 'EXCEL' and repReportesSistemaController.selected.resFormato ne 'PDF - EXCEL')}">
+                                    <p:fileDownload
+                                            value="#{posRepGeneralController.generar_reporte_generico('xlsx')}"/>
+                                </p:commandButton>
+                            </us:auth>
+
+                            <us:auth permissions="{'operations':['GENERAR']}">
+                                <p:commandButton id="exportPdf"
+                                                 style="margin-left: 40px"
+                                                 icon="fa fa-file-pdf"
+                                                 value="#{posRepBundle['ExportPdf']}"
+                                                 process="@this"
+                                                 ajax="false"
+                                                 onclick="PrimeFaces.monitorDownload(start, stop);"
+                                                 disabled="#{repReportesSistemaController.selected.resFormato eq null or (repReportesSistemaController.selected.resFormato ne 'PDF' and repReportesSistemaController.selected.resFormato ne 'PDF - EXCEL')}">
+                                    <p:fileDownload value="#{posRepGeneralController.generar_reporte_generico('pdf')}"/>
+                                </p:commandButton>
+
+                            </us:auth>
+                        </p:toolbarGroup>
+                    </p:toolbar>
+
+
+                    <p:dataTable id="PosReportesSistemaDataTable"
+                                 widgetVar="PosReportesSistemaDataTableVar"
+                                 value="#{repReportesSistemaController.items}"
+                                 var="item"
+                                 rowKey="#{item.resCodigo}"
+                                 sortBy="#{item.resReporte}"
+                                 sortOrder="ascending"
+                                 paginator="true"
+                                 rows="10"
+                                 rowsPerPageTemplate="10,20,30,40,50"
+                                 selectionMode="single"
+                                 paginatorPosition="bottom"
+                                 emptyMessage="#{posRepBundle['TableEmpty']}"
+                                 selection="#{repReportesSistemaController.selected}"
+                                 filteredValue="#{repReportesSistemaController.itemsFilter}">
+                        <p:ajax event="rowSelect" update="
+                                                  :PosReportesDocForm:alumno,
+                                                  :PosReportesDocForm:informesToolbar,
+                                                  :PosReportesDocForm:PosRepFiltroPanel,
+                                                  :PosReportesDocForm:sede,
+                                                  :PosReportesDocForm:campus,
+                                                  :PosReportesDocForm:programa,
+                                                  :PosReportesDocForm:cohorte,
+                                                  :PosReportesDocForm:cohorteT,
+                                                  :PosReportesDocForm:modalidad,
+                                                  :PosReportesDocForm:nivel,
+                                                  :PosReportesDocForm:docente,
+                                                  :PosReportesDocForm:asignatura,
+                                                  :PosReportesDocForm:grupo,
+                                                  :PosReportesDocForm:pagado"
+                                listener="#{posRepResultadoController.actualizaFiltros()}"/>
+                        <p:ajax event="filter" update="
+                                                  :PosReportesDocForm:alumno,
+                                                  :PosReportesDocForm:informesToolbar,
+                                                  :PosReportesDocForm:sede,
+                                                  :PosReportesDocForm:campus,
+                                                  :PosReportesDocForm:programa,
+                                                  :PosReportesDocForm:cohorte,
+                                                  :PosReportesDocForm:cohorteT,
+                                                  :PosReportesDocForm:modalidad,
+                                                  :PosReportesDocForm:nivel,
+                                                  :PosReportesDocForm:docente,
+                                                  :PosReportesDocForm:asignatura,
+                                                  :PosReportesDocForm:grupo,
+                                                  :PosReportesDocForm:pagado"
+                                listener="#{repReportesSistemaController.setSelected(null)}"/>
+
+                        <p:column sortBy="#{item.resReporte}" filterBy="#{item.resReporte}" filterMatchMode="contains">
+                            <f:facet name="header">
+                                <h:outputText value="#{posRepBundle['RepReportesSistemaLabel_resReporte']}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.resReporte}"/>
+                        </p:column>
+                    </p:dataTable>
+
+                    <p:panel id="PosRepFiltroPanel" header="#{posRepBundle['PosRepParametros']}">
+
+                        <u:grid columnsXs="1" columnsMd="2" columnsLg="3">
+
+                            <h:panelGroup id="alumno" rendered="#{repReportesSistemaController.selected ne null
+                                                 and posRepPosgradosController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_ALUMNO)}">
+                                <u:formField label="#{posRepBundle['PosRepEstudiante']}:">
+
+                                    <h:panelGroup id="posRepFiltrarEstudiante">
+                                        <p:autoComplete id="posRepFiltrarEstudiante2"
+                                                        value="#{posRepResultadoController.insAlumnoWrapper}"
+                                                        cache="true" forceSelection="true" maxResults="10"
+                                                        minQueryLength="2"
+                                                        cacheTimeout="30000"
+                                                        var="p"
+                                                        itemLabel="#{not empty p?p.cllcRuc:''}#{not empty p?' - ':''}#{not empty p?p.aluNombres:''}"
+                                                        itemValue="#{p}"
+                                                        autocomplete="on"
+                                                        completeMethod="#{posRepResultadoController.autoCompleteAlumnos}"
+                                                        queryDelay="0"
+                                        >
+                                            <o:converter converterId="omnifaces.ListConverter"
+                                                         list="#{posRepResultadoController.listadoAlumnos}"/>
+
+                                            <p:column>
+                                                <h:outputText value="#{p.cllcRuc}"/>
+                                            </p:column>
+                                            <p:column>
+                                                <h:outputText value="#{p.aluNombres}"/>
+                                            </p:column>
+
+                                        </p:autoComplete>
+                                        <p:watermark
+                                                value="#{posRepBundle['PosRepNombreApellido']}"
+                                                for="posRepFiltrarEstudiante2"/>
+                                    </h:panelGroup>
+                                </u:formField>
+                            </h:panelGroup>
+
+                            <h:panelGroup id="sede" rendered="#{repReportesSistemaController.selected ne null
+                                                 and posRepResultadoController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_SEDE)}">
+
+                                <u:formField label="#{posRepBundle['Sede']}:">
+                                    <!--Filtro Sede-->
+                                    <p:selectOneMenu id="posRepFiltrarEstructuraSede" autoWidth="false"
+                                                     value="#{posRepResultadoController.orgEstructuraSede}"
+                                                     filter="true" filterMatchMode="contains" var="filtro">
+                                        <f:selectItem itemLabel="#{posRepBundle['Todos']}" itemValue=""
+                                                      itemDisabled="#{posRepResultadoController.validaSeleccionEstructuraSeguridadSede}"/>
+                                        <f:selectItems value="#{posRepResultadoController.orgEstructuraSedeList}"
+                                                       var="orgEstructuraSedeItem"
+                                                       itemValue="#{orgEstructuraSedeItem}"
+                                                       itemLabel="#{orgEstructuraSedeItem.orgDescripcionEstructura.deeDescripcion.toString()}"
+                                        />
+                                        <p:column>
+                                            <h:outputText value="#{filtro.orgDescripcionEstructura.deeDescripcion}"/>
+                                        </p:column>
+                                        <p:ajax listener="#{posRepResultadoController.updateCampusList()}"
+                                                update="posRepFiltrarEstructuraCampus, posRepFiltrarEstructuraCarrera, posRepFiltrarPeriodoInicial,posRepFiltrarCohorteT, posRepFiltrarNivel, posRepFiltrarAsignatura, posRepFiltrarGrupo, posRepFiltrarDocente,modalidad "/>
+                                    </p:selectOneMenu>
+                                </u:formField>
+                            </h:panelGroup>
+
+                            <h:panelGroup id="campus" rendered="#{repReportesSistemaController.selected ne null
+                                                 and posRepResultadoController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_CAMPUS)}">
+
+                                <u:formField label="#{posRepBundle['Campus']}:">
+                                    <!--Filtro Campus-->
+                                    <p:selectOneMenu id="posRepFiltrarEstructuraCampus" autoWidth="false"
+                                                     value="#{posRepResultadoController.orgEstructuraCampus}"
+                                                     filter="true" filterMatchMode="contains" var="filtro">
+                                        <f:selectItem itemLabel="#{posRepBundle['Todos']}" itemValue=""
+                                                      itemDisabled="#{posRepResultadoController.validaSeleccionEstructuraSeguridadCampus}"/>
+                                        <f:selectItems value="#{posRepResultadoController.orgEstructuraCampusList}"
+                                                       var="orgEstructuraCampusItem"
+                                                       itemValue="#{orgEstructuraCampusItem}"
+                                                       itemLabel="#{orgEstructuraCampusItem.orgDescripcionEstructura.deeDescripcion.toString()}"
+                                        />
+                                        <p:column>
+                                            <h:outputText value="#{filtro.orgDescripcionEstructura.deeDescripcion}"/>
+                                        </p:column>
+                                        <p:ajax update="posRepFiltrarEstructuraCarrera, posRepFiltrarPeriodoInicial,posRepFiltrarCohorteT, posRepFiltrarNivel, posRepFiltrarAsignatura, posRepFiltrarGrupo, posRepFiltrarDocente,modalidad "
+                                                listener="#{posRepResultadoController.updateCarreraList()}"
+                                        />
+                                    </p:selectOneMenu>
+                                </u:formField>
+                            </h:panelGroup>
+
+                            <h:panelGroup id="programa" rendered="#{repReportesSistemaController.selected ne null
+                                                 and posRepResultadoController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_CARRERA)}">
+
+                                <u:formField label="#{posRepBundle['Programa']}:">
+                                    <!--Filtro Carrera-->
+                                    <p:selectOneMenu id="posRepFiltrarEstructuraCarrera" autoWidth="false"
+                                                     value="#{posRepResultadoController.orgEstructuraCarrera}"
+                                                     filter="true" filterMatchMode="contains" var="filtro">
+                                        <f:selectItem itemLabel="#{posRepBundle['Todos']}" itemValue=""
+                                                      itemDisabled="#{posRepResultadoController.validaSeleccionEstructuraSeguridadCarrProg}"/>
+                                        <f:selectItems value="#{posRepResultadoController.orgEstructuraCarreraList}"
+                                                       var="orgEstructuraCarreraItem"
+                                                       itemValue="#{orgEstructuraCarreraItem}"
+                                                       itemLabel="#{orgEstructuraCarreraItem.orgDescripcionEstructura.deeDescripcion.toString()}"
+                                        />
+                                        <p:column>
+                                            <h:outputText value="#{filtro.orgDescripcionEstructura.deeDescripcion}"/>
+                                        </p:column>
+                                        <p:ajax update=" posRepFiltrarPeriodoInicial, posRepFiltrarCohorteT,posRepFiltrarNivel,posRepFiltrarAsignatura, posRepFiltrarGrupo, posRepFiltrarDocente,modalidad "
+                                                listener="#{posRepResultadoController.updateCarreraList()}"
+                                        />
+                                    </p:selectOneMenu>
+                                </u:formField>
+                            </h:panelGroup>
+
+                            <h:panelGroup id="cohorte" rendered="#{repReportesSistemaController.selected ne null
+                                                 and posRepResultadoController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_PERIODO_INICIAL)}">
+                                <u:formField label="#{posRepBundle['PosRepCohorte']}:">
+                                    <!--Filtro Período Inicial-->
+                                    <p:selectOneMenu id="posRepFiltrarPeriodoInicial" autoWidth="false"
+                                                     value="#{posRepResultadoController.orgPeriodoInicial}"
+                                                     filter="true" filterMatchMode="contains" var="filtro"
+                                                     required="true"
+                                                     requiredMessage="Seleccione una Cohorte">
+                                        <f:selectItem itemLabel="#{posRepBundle['SelectOneMessage']}" itemValue=""/>
+                                        <f:selectItems value="#{posRepResultadoController.orgPeriodoLectivoList}"
+                                                       var="periodoLectivoItem"
+                                                       itemValue="#{periodoLectivoItem}"
+                                                       itemLabel="#{periodoLectivoItem.pelDescripcion.toString()} (#{posRepResultadoController.obtenerAnioPosgrado(periodoLectivoItem)})"
+                                        />
+                                        <p:column>
+                                            <h:outputText
+                                                    value="#{filtro.pelDescripcion} (#{posRepResultadoController.obtenerAnioPosgrado(filtro)})"/>
+                                        </p:column>
+                                        <p:ajax update="posRepFiltrarNivel,posRepFiltrarGrupo,posRepFiltrarDocente,posRepFiltrarModalidad"
+                                                listener="#{posRepResultadoController.updateNivelMallaList()}"
+                                        />
+                                    </p:selectOneMenu>
+                                </u:formField>
+                            </h:panelGroup>
+
+                            <h:panelGroup id="cohorteT" rendered="#{repReportesSistemaController.selected ne null
+                                                 and posRepResultadoController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_COHORTE_TODOS)}">
+
+                                <u:formField label="#{posRepBundle['PosRepCohorteT']}:">
+                                    <!--Filtro Cohorte-->
+                                    <p:selectOneMenu id="posRepFiltrarCohorteT" autoWidth="false"
+                                                     value="#{posRepResultadoController.orgPeriodoInicial}"
+                                                     filter="true" filterMatchMode="contains" var="filtro">
+                                        <f:selectItem itemLabel="#{posRepBundle['Todos']}" itemValue=""/>
+
+                                        <f:selectItems value="#{posRepResultadoController.orgPeriodoLectivoList}"
+                                                       var="periodoLectivoItem"
+                                                       itemValue="#{periodoLectivoItem}"
+                                                       itemLabel="#{periodoLectivoItem.pelDescripcion.toString()} (#{posRepResultadoController.obtenerAnioPosgrado(periodoLectivoItem)})"
+                                        />
+                                        <p:column>
+                                            <h:outputText
+                                                    value="#{filtro.pelDescripcion} (#{posRepResultadoController.obtenerAnioPosgrado(filtro)})"/>
+                                        </p:column>
+                                        <p:ajax update="posRepFiltrarNivel,posRepFiltrarGrupo,posRepFiltrarDocente,posRepFiltrarModalidad"
+                                                listener="#{posRepResultadoController.updateNivelMallaList()}"
+                                        />
+                                    </p:selectOneMenu>
+                                </u:formField>
+                            </h:panelGroup>
+
+                            <h:panelGroup id="modalidad" rendered="#{repReportesSistemaController.selected ne null
+                                                 and posRepResultadoController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_MODALIDAD_TODOS)}">
+                                <u:formField label="#{posRepBundle['PosRepModalidad']}:">
+                                    <p:selectOneMenu id="posRepFiltrarModalidad" autoWidth="false"
+                                                     value="#{posRepResultadoController.pedModalidad}"
+                                                     filter="true" filterMatchMode="contains" var="filtro">
+                                        <f:selectItem itemLabel="#{posRepBundle['Todos']}" itemValue=""/>
+                                        <f:selectItems value="#{posRepResultadoController.pedModalidadList}"
+                                                       var="modalidadItem"
+                                                       itemValue="#{modalidadItem}"
+                                                       itemLabel="#{modalidadItem.modDescripcion.toString()} "
+                                        />
+                                        <p:column>
+                                            <h:outputText value="#{filtro.modDescripcion}"/>
+                                        </p:column>
+                                        <p:ajax update="posRepFiltrarNivel,posRepFiltrarGrupo,posRepFiltrarDocente,"
+                                                listener="#{posRepResultadoController.updateNivelMallaList()}"
+                                        />
+                                    </p:selectOneMenu>
+                                </u:formField>
+                            </h:panelGroup>
+
+                            <h:panelGroup id="nivel" rendered="#{repReportesSistemaController.selected ne null
+                                                 and posRepResultadoController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_NIVEL)}">
+                                <u:formField label="#{posRepBundle['PosRepNivel']}:">
+                                    <!--Filtro NIVEL-->
+                                    <p:selectOneMenu id="posRepFiltrarNivel" autoWidth="false"
+                                                     value="#{posRepResultadoController.pedNivelMalla}"
+                                                     filter="true" filterMatchMode="contains" var="filtro"
+                                    >
+                                        <f:selectItem itemLabel="#{posRepBundle['Todos']}" itemValue=""/>
+                                        <f:selectItems value="#{posRepResultadoController.pedMallaNivelList}"
+                                                       var="mallaNivelItem"
+                                                       itemValue="#{mallaNivelItem}"
+                                                       itemLabel="#{mallaNivelItem.toString()}"
+                                        />
+                                        <p:column>
+                                            <h:outputText value="#{filtro}"/>
+                                        </p:column>
+
+                                        <p:ajax update="posRepFiltrarGrupo"
+                                                listener="#{posRepResultadoController.updateGrupoList()}"
+                                        />
+                                    </p:selectOneMenu>
+                                </u:formField>
+                            </h:panelGroup>
+
+                            <h:panelGroup id="docente" rendered="#{repReportesSistemaController.selected ne null
+                                                 and posRepResultadoController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_DOCENTE)}">
+                                <u:formField label="#{posRepBundle['PosRepDocente']}:">
+                                    <!--Filtro Docente-->
+                                    <h:panelGroup id="posRepFiltrarDocente">
+                                        <p:autoComplete id="posRepFiltrarDocente2"
+                                                        value="#{posRepResultadoController.gthPersona}"
+                                                        cache="true" forceSelection="true" maxResults="10"
+                                                        minQueryLength="2"
+                                                        cacheTimeout="30000"
+                                                        var="p"
+                                                        itemLabel="#{p.perNroIdentificacion.concat(' - ').concat(p.perApellidos).concat(' ').concat(p.perNombres)}"
+                                                        itemValue="#{p}"
+                                                        autocomplete="on"
+                                                        completeMethod="#{posRepResultadoController.completePersona}"
+                                                        queryDelay="0">
+                                            <o:converter converterId="omnifaces.ListConverter"
+                                                         list="#{posRepResultadoController.gthPersonaList}"/>
+                                            <p:column>
+                                                <h:outputText value="#{p.perNroIdentificacion}"/>
+                                            </p:column>
+                                            <p:column>
+                                                <h:outputText value="#{p.perApellidos} #{p.perNombres}"/>
+                                            </p:column>
+                                            <p:ajax event="itemSelect"
+                                                    update="posRepFiltrarAsignatura, posRepFiltrarGrupo, posRepFiltrarDocente"
+                                                    listener="#{posRepResultadoController.updateAsignaturaList()}"/>
+                                            <p:ajax event="change" update="posRepFiltrarAsignatura, posRepFiltrarGrupo"
+                                                    listener="#{posRepResultadoController.updateAsignaturaList()}"/>
+
+                                        </p:autoComplete>
+                                        <p:watermark
+                                                value="Escriba nombre o apellido de la persona, caso contrario será Todos."
+                                                for="posRepFiltrarDocente2"/>
+
+                                    </h:panelGroup>
+                                </u:formField>
+                            </h:panelGroup>
+
+                            <h:panelGroup id="asignatura" rendered="#{repReportesSistemaController.selected ne null
+                                                 and posRepResultadoController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_ASIGNATURA)}">
+                                <u:formField label="#{posRepBundle['PosRepAsignatura']}:">
+
+                                    <!--Filtro Asignatura-->
+                                    <p:selectOneMenu id="posRepFiltrarAsignatura" autoWidth="false"
+                                                     value="#{posRepResultadoController.pedMalla}"
+                                                     filter="true" filterMatchMode="contains" var="filtro"
+                                    >
+                                        <f:selectItem itemLabel="#{posRepBundle['Todos']}" itemValue=""/>
+                                        <f:selectItems value="#{posRepResultadoController.pedMallaList}"
+                                                       var="mallaItem"
+                                                       itemValue="#{mallaItem}"
+                                                       itemLabel="#{mallaItem.pedMateria.matDescripcion.toString()}"
+                                        />
+                                        <p:column>
+                                            <h:outputText value="#{filtro.malCodigoAsignatura}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <h:outputText value="#{filtro.pedMateria.matDescripcion}"/>
+                                        </p:column>
+                                        <p:ajax update="posRepFiltrarGrupo"
+                                                listener="#{posRepResultadoController.updateGrupoList()}"
+                                        />
+                                    </p:selectOneMenu>
+                                </u:formField>
+
+                            </h:panelGroup>
+
+                            <h:panelGroup id="grupo" rendered="#{repReportesSistemaController.selected ne null
+                                                 and posRepResultadoController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_GRUPO)}">
+                                <u:formField label="#{posRepBundle['PosRepGrupo']}:">
+                                    <!--Filtro Grupo-->
+                                    <p:selectOneMenu id="posRepFiltrarGrupo"
+                                                     value="#{posRepResultadoController.ofeGrupo}"
+                                                     autoWidth="false"
+                                                     filter="true" filterMatchMode="contains" var="filtro">
+                                        <f:selectItem itemLabel="#{posRepBundle['Todos']}" itemValue=""/>
+                                        <f:selectItems value="#{posRepResultadoController.ofeGrupoList}"
+                                                       var="grupoItem"
+                                                       itemValue="#{grupoItem}"
+                                                       itemLabel="#{grupoItem.gruDescripcion.toString()}"/>
+                                        <p:column>
+                                            <h:outputText value="#{filtro.gruCodigo}"/>
+                                        </p:column>
+                                        <p:column>
+                                            <h:outputText value="#{filtro.gruDescripcion}"/>
+                                        </p:column>
+                                    </p:selectOneMenu>
+                                </u:formField>
+                            </h:panelGroup>
+
+                            <h:panelGroup id="anio" rendered="#{repReportesSistemaController.selected ne null
+                                                                     and posRepResultadoController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_ANIO)}">
+                                <!--                   <ui:fragment rendered="#{repReportesSistemaController.selected ne null
+                                                                             and posRepResultadoController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_ANIO)}">-->
+                                <u:formField label="#{posRepBundle['PosRepAnio']}:">
+                                    <!--Filtro Año-->
+
+                                    <p:selectOneMenu id="posRepFiltrarAnio" value="#{posRepResultadoController.anio}"
+                                                     autoWidth="false"
+                                                     filter="true" filterMatchMode="contains" var="filtro">
+
+                                        <f:selectItems value="#{posRepResultadoController.anioList}"
+                                                       var="grupoItem"
+                                                       itemValue="#{anio}"
+                                                       itemLabel="#{anio}"/>
+
+                                        <p:column>
+                                            <h:outputText value="#{filtro}"/>
+                                        </p:column>
+                                    </p:selectOneMenu>
+                                </u:formField>
+                            </h:panelGroup>
+
+                            <h:panelGroup id="pagado" rendered="#{repReportesSistemaController.selected ne null
+                                                 and posRepResultadoController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_PAGADO)}">
+
+                                <u:formField label="#{posRepBundle['PosRepPagado']}:">
+                                    <!--Filtro Pagado-->
+                                    <p:selectOneMenu id="posRepFiltrarPagado"
+                                                     value="#{posRepResultadoController.pafPagado}"
+                                                     autoWidth="false"
+                                                     filter="true" filterMatchMode="contains">
+                                        <f:selectItem itemLabel="#{posRepBundle['Todos']}" itemValue="%"/>
+                                        <f:selectItem itemLabel="SI" itemValue="S"/>
+                                        <f:selectItem itemLabel="NO" itemValue="N"/>
+                                    </p:selectOneMenu>
+                                </u:formField>
+                            </h:panelGroup>
+                        </u:grid>
+                    </p:panel>
+                </u:verticalStack>
+            </u:card>
+        </u:verticalStack>
+    </h:form>
+
+    <script>
+        function start() {
+            PF('statusDialog').show();
+        }
+
+        function stop() {
+            PF('statusDialog').hide();
+        }
+    </script>
+</ui:composition>

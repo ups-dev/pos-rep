@@ -1,0 +1,37 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:o="http://omnifaces.org/ui"
+                xmlns:u="http://ups.edu.ec/ui"
+                xmlns:uorg="http://ups.edu.ec/ui/composites/sec"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <f:metadata>
+        <o:importConstants type="ec.edu.ups.pos.rep.data.utils.PosRepConstants"/>
+        <f:event type="preRenderView"
+                 listener="#{repReportesSistemaController.preRenderView(PosRepConstants.REP_PARAMETRO_MODULO_GESTOR_ARCHIVOS)}"></f:event>
+    </f:metadata>
+
+    <ui:define name="ups-title">
+        <h:outputText value="#{posRepBundle['PosResultadosTitle3']}"/>
+    </ui:define>
+
+    <ui:define name="ups-breadcrumb-contenido">
+        #{posRepBundle['PosArchivos']}
+    </ui:define>
+
+    <ui:define name="posRep-estructura">
+        <uorg:estructura id="exap"/>
+    </ui:define>
+
+    <ui:define name="posRep-content">
+
+        <u:page  title="#{posRepBundle['PosResultadosTitle3']}" fullWidth="true">
+            <ui:include src="/posRep_archivos/List.xhtml"/>
+            <ui:include src="/posRep_archivos/AddRole.xhtml"/>
+            <ui:include src="/posRep_archivos/Create.xhtml"/>
+            <ui:include src="/posRep_archivos/Edit.xhtml"/>
+        </u:page>
+
+    </ui:define>
+</ui:composition>

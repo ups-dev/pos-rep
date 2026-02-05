@@ -1,33 +1,28 @@
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:o="http://omnifaces.org/ui"
-    template="/WEB-INF/templates/template-menu.xhtml"
-    xmlns:p="http://primefaces.org/ui"
-    xmlns:uorg="http://ups.edu.ec/ui/composites/sec">
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:o="http://omnifaces.org/ui"
+                xmlns:u="http://ups.edu.ec/ui"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:uorg="http://ups.edu.ec/ui/composites/sec"
+                template="/WEB-INF/templates/template.xhtml">
 
-      <f:metadata>
-        <o:importConstants type="ec.edu.ups.pos.rep.data.utils.PosRepConstants" />
-         <f:event type="preRenderView" listener="#{repReportesSistemaController.preRenderView(PosRepConstants.REP_PARAMETRO_MODULO_CERTIFICADOS)}"></f:event>
+    <f:metadata>
+        <o:importConstants type="ec.edu.ups.pos.rep.data.utils.PosRepConstants"/>
+        <f:event type="preRenderView"
+                 listener="#{repReportesSistemaController.preRenderView(PosRepConstants.REP_PARAMETRO_MODULO_CERTIFICADOS)}"></f:event>
     </f:metadata>
-    
-    <ui:define name="ups-title">
-        <h:outputText value="#{posRepBundle['PosResultadosTitle']}"/>
-    </ui:define>
 
-    <ui:define name="ups-breadcrumb-contenido">
-        #{posRepBundle['PosResultadosTitle']}
-    </ui:define>
-
-    <ui:define name="ups-content-estructura">
+    <ui:define name="posRep-estructura">
         <uorg:estructura id="exap" >
-            <p:ajax update=":PosReportesCerForm" listener="#{posRepResultadoController.callEventAjaxOrgEstructura()}" 
+            <p:ajax update=":PosReportesCerForm" listener="#{posRepResultadoController.callEventAjaxOrgEstructura()}"
                     event="change" process="@this"/>
-        </uorg:estructura>         
+        </uorg:estructura>
     </ui:define>
 
-    <ui:define name="ups-content-center">
-        <ui:include src="/posRep_certificado/List.xhtml"/>        
-<!--        <ui:include src="/WEB-INF/templates/include/HotKey.xhtml">-->
+    <ui:define name="posRep-content">
+        <u:page  title="#{posRepBundle['PosResultadosTitle']}" fullWidth="true">
+            <ui:include src="/posRep_certificado/List.xhtml"/>
+        </u:page>
+
     </ui:define>
 </ui:composition>

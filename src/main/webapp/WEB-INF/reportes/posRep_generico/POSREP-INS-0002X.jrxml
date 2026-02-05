@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-INS-0002X" pageWidth="2300" pageHeight="842" columnWidth="2260" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a5610fb4-cc29-46b5-b47b-735f7e78b38b">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="2323"/>
+	<property name="ireport.x" value="1586"/>
 	<property name="ireport.y" value="0"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String">
@@ -82,7 +82,7 @@
         and  pee.pee_codigo = mta.pee_codigo
         and  pee.pee_nivel  = 1
         and  pee.pel_codigo = pel.pel_codigo)pagado_matr,
-        decode(inc.ins_confirmado,'S','SI','N','NO','NO') confirmado
+        decode(inc.ins_confirmado,'S','SI','N','NO',null) confirmado
 FROM   ins.ins_inscripcion                      inc,
        ins.ins_alumno                           alu,
        ins.ins_oferta_inscripcion_inicial       oii,
@@ -278,7 +278,7 @@ ORDER BY  sed.est_codigo,campus,posgrado,cohorte,apellidos,nombres]]>
 			</staticText>
 			<staticText>
 				<reportElement style="Estilo_titulo" x="1774" y="0" width="127" height="16" uuid="ed59d9d9-64b3-4b2c-94f8-4634494ca208"/>
-				<text><![CDATA[CONFIRMADO ADMITIDO]]></text>
+				<text><![CDATA[ADMITIDO]]></text>
 			</staticText>
 		</band>
 	</title>

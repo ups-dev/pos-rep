@@ -1,0 +1,20 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:o="http://omnifaces.org/ui"
+                xmlns:u="http://ups.edu.ec/ui"
+                template="/WEB-INF/templates/template.xhtml">
+
+    <f:metadata>
+        <o:importConstants type="ec.edu.ups.pos.rep.data.utils.PosRepConstants"/>
+        <f:event type="preRenderView"
+                 listener="#{repReportesSistemaController.preRenderView(PosRepConstants.REP_PARAMETRO_MODULO_DOCTORADOS)}"></f:event>
+    </f:metadata>
+
+
+
+    <ui:define name="posRep-content">
+        <u:page  title="#{posRepBundle['PosDoctorado']}" fullWidth="true">
+            <ui:include src="/posRep_genericoDoctorado/List.xhtml"/>
+        </u:page>
+    </ui:define>
+</ui:composition>

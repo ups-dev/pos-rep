@@ -1,267 +1,278 @@
 //Entidad
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ec.edu.ups.pos.rep.data.entities.wrapper;
 
 import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-/**
- *
- * @author ups
- */
 @Entity
 public class PosgradoAlumnoWrapper implements Serializable {
 
-    @Id
-    private String identificador;
-    private Long aluCodigo;
-    private String sede;
-    private String campus;
-    private String posgrado;
-    private String estSede;
-    private String estCampus;
-    private String estPosgrado;
-    private String modalidad;
-    private String periodo;
-    private Long   codPeriodo;
-    private String cohorte;
-    private String tieneMencion;
-    private String tieneMencionEst;
-    private Long   totalMenciones;
-    private String titulo;
-    private Long   preCodigo;
-    private String codMencionEstudiante;
-    private String proyecto;
-    private String vigencia;
-    private String actaGrado;
-   
+	@Id
+	private String identificador;
 
-    public PosgradoAlumnoWrapper() {
-    }
+	private Long aluCodigo;
 
-    public PosgradoAlumnoWrapper(Long aluCodigo) {
-        this.aluCodigo = aluCodigo;
-    }
+	private String sede;
 
-    public PosgradoAlumnoWrapper(String identificador, Long aluCodigo, String sede, String campus, String posgrado, String estSede, String estCampus, String estPosgrado, String modalidad, String periodo, Long codPeriodo, String cohorte, String tieneMencion, String tieneMencionEst, Long totalMenciones, String titulo, Long preCodigo, String codMencionEstudiante, String proyecto, String vigencia, String actaGrado) {
-        this.identificador = identificador;
-        this.aluCodigo = aluCodigo;
-        this.sede = sede;
-        this.campus = campus;
-        this.posgrado = posgrado;
-        this.estSede = estSede;
-        this.estCampus = estCampus;
-        this.estPosgrado = estPosgrado;
-        this.modalidad = modalidad;
-        this.periodo = periodo;
-        this.codPeriodo = codPeriodo;
-        this.cohorte = cohorte;
-        this.tieneMencion = tieneMencion;
-        this.tieneMencionEst = tieneMencionEst;
-        this.totalMenciones = totalMenciones;
-        this.titulo = titulo;
-        this.preCodigo = preCodigo;
-        this.codMencionEstudiante = codMencionEstudiante;
-        this.proyecto = proyecto;
-        this.vigencia = vigencia;
-        this.actaGrado = actaGrado;
-    }     
+	private String campus;
 
-    public Long getAluCodigo() {
-        return aluCodigo;
-    }
+	private String posgrado;
 
-    public void setAluCodigo(Long aluCodigo) {
-        this.aluCodigo = aluCodigo;
-    }
+	private String estSede;
 
+	private String estCampus;
 
-    public String getSede() {
-        return sede;
-    }
+	private String estPosgrado;
 
-    public void setSede(String sede) {
-        this.sede = sede;
-    }
+	private String modalidad;
 
-    public String getCampus() {
-        return campus;
-    }
+	private String periodo;
 
-    public void setCampus(String campus) {
-        this.campus = campus;
-    }
+	private Long codPeriodo;
 
-    public String getPosgrado() {
-        return posgrado;
-    }
+	private String cohorte;
 
-    public void setPosgrado(String posgrado) {
-        this.posgrado = posgrado;
-    }
+	private String tieneMencion;
 
-    public String getModalidad() {
-        return modalidad;
-    }
+	private String tieneMencionEst;
 
-    public void setModalidad(String modalidad) {
-        this.modalidad = modalidad;
-    }
+	private Long totalMenciones;
 
-    public String getPeriodo() {
-        return periodo;
-    }
+	private String titulo;
 
-    public void setPeriodo(String periodo) {
-        this.periodo = periodo;
-    }
+	private Long preCodigo;
 
-    public Long getCodPeriodo() {
-        return codPeriodo;
-    }
+	private String codMencionEstudiante;
 
-    public void setCodPeriodo(Long codPeriodo) {
-        this.codPeriodo = codPeriodo;
-    }
+	private String proyecto;
 
-    public String getTitulo() {
-        return titulo;
-    }
+	private String vigencia;
 
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-    }
+	private String actaGrado;
 
-    public String getIdentificador() {
-        return identificador;
-    }
+	public PosgradoAlumnoWrapper() {
+	}
 
-    public void setIdentificador(String identificador) {
-        this.identificador = identificador;
-    }
+	public PosgradoAlumnoWrapper(Long aluCodigo) {
+		this.aluCodigo = aluCodigo;
+	}
 
-    public String getEstSede() {
-        return estSede;
-    }
+	public PosgradoAlumnoWrapper(String identificador, Long aluCodigo, String sede, String campus, String posgrado,
+			String estSede, String estCampus, String estPosgrado, String modalidad, String periodo, Long codPeriodo,
+			String cohorte, String tieneMencion, String tieneMencionEst, Long totalMenciones, String titulo,
+			Long preCodigo, String codMencionEstudiante, String proyecto, String vigencia, String actaGrado) {
+		this.identificador = identificador;
+		this.aluCodigo = aluCodigo;
+		this.sede = sede;
+		this.campus = campus;
+		this.posgrado = posgrado;
+		this.estSede = estSede;
+		this.estCampus = estCampus;
+		this.estPosgrado = estPosgrado;
+		this.modalidad = modalidad;
+		this.periodo = periodo;
+		this.codPeriodo = codPeriodo;
+		this.cohorte = cohorte;
+		this.tieneMencion = tieneMencion;
+		this.tieneMencionEst = tieneMencionEst;
+		this.totalMenciones = totalMenciones;
+		this.titulo = titulo;
+		this.preCodigo = preCodigo;
+		this.codMencionEstudiante = codMencionEstudiante;
+		this.proyecto = proyecto;
+		this.vigencia = vigencia;
+		this.actaGrado = actaGrado;
+	}
 
-    public void setEstSede(String estSede) {
-        this.estSede = estSede;
-    }
+	public Long getAluCodigo() {
+		return this.aluCodigo;
+	}
 
-    public String getEstCampus() {
-        return estCampus;
-    }
+	public void setAluCodigo(Long aluCodigo) {
+		this.aluCodigo = aluCodigo;
+	}
 
-    public void setEstCampus(String estCampus) {
-        this.estCampus = estCampus;
-    }
+	public String getSede() {
+		return this.sede;
+	}
 
-    public String getEstPosgrado() {
-        return estPosgrado;
-    }
+	public void setSede(String sede) {
+		this.sede = sede;
+	}
 
-    public void setEstPosgrado(String estPosgrado) {
-        this.estPosgrado = estPosgrado;
-    }
+	public String getCampus() {
+		return this.campus;
+	}
 
-    public String getCohorte() {
-        return cohorte;
-    }
+	public void setCampus(String campus) {
+		this.campus = campus;
+	}
 
-    public void setCohorte(String cohorte) {
-        this.cohorte = cohorte;
-    }
+	public String getPosgrado() {
+		return this.posgrado;
+	}
 
-    public String getTieneMencion() {
-        return tieneMencion;
-    }
+	public void setPosgrado(String posgrado) {
+		this.posgrado = posgrado;
+	}
 
-    public void setTieneMencion(String tieneMencion) {
-        this.tieneMencion = tieneMencion;
-    }
+	public String getModalidad() {
+		return this.modalidad;
+	}
 
-    public String getTieneMencionEst() {
-        return tieneMencionEst;
-    }
+	public void setModalidad(String modalidad) {
+		this.modalidad = modalidad;
+	}
 
-    public void setTieneMencionEst(String tieneMencionEst) {
-        this.tieneMencionEst = tieneMencionEst;
-    }
+	public String getPeriodo() {
+		return this.periodo;
+	}
 
-    public Long getTotalMenciones() {
-        return totalMenciones;
-    }
+	public void setPeriodo(String periodo) {
+		this.periodo = periodo;
+	}
 
-    public void setTotalMenciones(Long totalMenciones) {
-        this.totalMenciones = totalMenciones;
-    }
+	public Long getCodPeriodo() {
+		return this.codPeriodo;
+	}
 
-    public Long getPreCodigo() {
-        return preCodigo;
-    }
+	public void setCodPeriodo(Long codPeriodo) {
+		this.codPeriodo = codPeriodo;
+	}
 
-    public void setPreCodigo(Long preCodigo) {
-        this.preCodigo = preCodigo;
-    }
+	public String getTitulo() {
+		return this.titulo;
+	}
 
-    public String getCodMencionEstudiante() {
-        return codMencionEstudiante;
-    }
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
+	}
 
-    public void setCodMencionEstudiante(String codMencionEstudiante) {
-        this.codMencionEstudiante = codMencionEstudiante;
-    }
+	public String getIdentificador() {
+		return this.identificador;
+	}
 
-    public String getProyecto() {
-        return proyecto;
-    }
+	public void setIdentificador(String identificador) {
+		this.identificador = identificador;
+	}
 
-    public void setProyecto(String proyecto) {
-        this.proyecto = proyecto;
-    }
+	public String getEstSede() {
+		return this.estSede;
+	}
 
-    public String getVigencia() {
-        return vigencia;
-    }
+	public void setEstSede(String estSede) {
+		this.estSede = estSede;
+	}
 
-    public void setVigencia(String vigencia) {
-        this.vigencia = vigencia;
-    }
+	public String getEstCampus() {
+		return this.estCampus;
+	}
 
-    public String getActaGrado() {
-        return actaGrado;
-    }
+	public void setEstCampus(String estCampus) {
+		this.estCampus = estCampus;
+	}
 
-    public void setActaGrado(String actaGrado) {
-        this.actaGrado = actaGrado;
-    }
-    
-    
-    
-    
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (aluCodigo != null ? aluCodigo.hashCode() : 0);
-        return hash;
-    }
-    
-       @Override
-     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof PosgradoAlumnoWrapper)) {
-            return false;
-        }
-        PosgradoAlumnoWrapper other = (PosgradoAlumnoWrapper) object;
-        if ((this.identificador == null && other.identificador != null) || (this.identificador != null && !this.identificador.equals(other.identificador))) {
-            return false;
-        }
-        return true;
-    }
+	public String getEstPosgrado() {
+		return this.estPosgrado;
+	}
+
+	public void setEstPosgrado(String estPosgrado) {
+		this.estPosgrado = estPosgrado;
+	}
+
+	public String getCohorte() {
+		return this.cohorte;
+	}
+
+	public void setCohorte(String cohorte) {
+		this.cohorte = cohorte;
+	}
+
+	public String getTieneMencion() {
+		return this.tieneMencion;
+	}
+
+	public void setTieneMencion(String tieneMencion) {
+		this.tieneMencion = tieneMencion;
+	}
+
+	public String getTieneMencionEst() {
+		return this.tieneMencionEst;
+	}
+
+	public void setTieneMencionEst(String tieneMencionEst) {
+		this.tieneMencionEst = tieneMencionEst;
+	}
+
+	public Long getTotalMenciones() {
+		return this.totalMenciones;
+	}
+
+	public void setTotalMenciones(Long totalMenciones) {
+		this.totalMenciones = totalMenciones;
+	}
+
+	public Long getPreCodigo() {
+		return this.preCodigo;
+	}
+
+	public void setPreCodigo(Long preCodigo) {
+		this.preCodigo = preCodigo;
+	}
+
+	public String getCodMencionEstudiante() {
+		return this.codMencionEstudiante;
+	}
+
+	public void setCodMencionEstudiante(String codMencionEstudiante) {
+		this.codMencionEstudiante = codMencionEstudiante;
+	}
+
+	public String getProyecto() {
+		return this.proyecto;
+	}
+
+	public void setProyecto(String proyecto) {
+		this.proyecto = proyecto;
+	}
+
+	public String getVigencia() {
+		return this.vigencia;
+	}
+
+	public void setVigencia(String vigencia) {
+		this.vigencia = vigencia;
+	}
+
+	public String getActaGrado() {
+		return this.actaGrado;
+	}
+
+	public void setActaGrado(String actaGrado) {
+		this.actaGrado = actaGrado;
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		// TODO: Warning - this method won't work in the case the id fields are not set
+		if (!(object instanceof PosgradoAlumnoWrapper)) {
+			return false;
+		}
+		PosgradoAlumnoWrapper other = (PosgradoAlumnoWrapper) object;
+		if ((this.identificador == null && other.identificador != null)
+				|| (this.identificador != null && !this.identificador.equals(other.identificador))) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = 0;
+		hash += ((this.aluCodigo != null) ? this.aluCodigo.hashCode() : 0);
+		return hash;
+	}
 
 }
