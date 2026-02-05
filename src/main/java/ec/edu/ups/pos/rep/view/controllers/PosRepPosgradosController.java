@@ -24,12 +24,6 @@ import ec.edu.ups.pos.rep.logic.sessions.org.OrgEstructuraFacade;
 import ec.edu.ups.pos.rep.logic.sessions.rep.PosRepPosgradosFacade;
 import ec.edu.ups.pos.rep.logic.sessions.rep.RepParametroReporteFacade;
 
-/**
- * Description.
- *
- * @author UPS .
- */
-
 @Named("posRepPosgradosController")
 @ViewScoped
 

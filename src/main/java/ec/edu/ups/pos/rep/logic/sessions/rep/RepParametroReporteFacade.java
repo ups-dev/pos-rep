@@ -12,11 +12,6 @@ import ec.edu.ups.pos.rep.data.entities.rep.RepParametroReporte;
 import ec.edu.ups.pos.rep.data.entities.rep.RepReportesSistema;
 import ec.edu.ups.pos.rep.logic.sessions.AbstractFacade;
 
-/**
- * Description.
- *
- * @author ups .
- */
 @Stateless
 public class RepParametroReporteFacade extends AbstractFacade<RepParametroReporte> {
 

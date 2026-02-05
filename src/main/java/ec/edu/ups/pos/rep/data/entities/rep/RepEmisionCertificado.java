@@ -9,11 +9,6 @@ import javax.validation.constraints.NotNull;
 
 import ec.edu.ups.util.jpa.EntitySuperclass;
 
-/**
- * Description.
- *
- * @author UPS .
- */
 @Entity
 @Table(name = "REP_EMISION_CERTIFICADO", catalog = "", schema = "REP")
 public class RepEmisionCertificado extends EntitySuperclass {

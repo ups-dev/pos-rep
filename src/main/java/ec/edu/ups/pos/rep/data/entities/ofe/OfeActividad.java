@@ -19,11 +19,6 @@ import javax.validation.constraints.Size;
 
 import ec.edu.ups.util.jpa.EntitySuperclass;
 
-/**
- * Description.
- *
- * @author ups .
- */
 @Entity
 @Table(name = "OFE_ACTIVIDAD", catalog = "", schema = "OFE",
 		uniqueConstraints = { @UniqueConstraint(columnNames = { "TIA_CODIGO", "ACT_ITEM" }) })

@@ -12,11 +12,6 @@ import ec.edu.ups.pos.rep.data.entities.gth.GthPersona;
 import ec.edu.ups.pos.rep.data.entities.ped.PedMalla;
 import ec.edu.ups.pos.rep.logic.sessions.AbstractFacade;
 
-/**
- * Description.
- *
- * @author ups .
- */
 @Stateless
 public class PedMallaFacade extends AbstractFacade<PedMalla> {
 

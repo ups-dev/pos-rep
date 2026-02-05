@@ -1,4 +1,4 @@
-package ec.edu.ups.pos.rep.view.controller.rep;
+package ec.edu.ups.pos.rep.view.controllers.rep;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -9,11 +9,6 @@ import ec.edu.ups.pos.rep.data.entities.rep.RepNumeroCertificado;
 import ec.edu.ups.pos.rep.logic.sessions.rep.RepNumeroCertificadoFacade;
 import ec.edu.ups.pos.rep.view.controllers.AbstractController;
 
-/**
- * Description.
- *
- * @author UPS .
- */
 public class RepNumeroCertificadoController extends AbstractController<RepNumeroCertificado> {
 
 	@Inject

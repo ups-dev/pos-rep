@@ -2,11 +2,6 @@ package ec.edu.ups.pos.rep.data.exception;
 
 import ec.edu.ups.util.exceptions.UPSDataCreateException;
 
-/**
- * Description.
- *
- * @author ups .
- */
 public class UPSDataCreateFieldDeactivatedException extends UPSDataCreateException {
 
 	public UPSDataCreateFieldDeactivatedException() {

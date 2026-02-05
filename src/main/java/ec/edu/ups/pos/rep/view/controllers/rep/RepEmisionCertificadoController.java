@@ -1,4 +1,4 @@
-package ec.edu.ups.pos.rep.view.controller.rep;
+package ec.edu.ups.pos.rep.view.controllers.rep;
 
 import javax.inject.Inject;
 
@@ -6,11 +6,6 @@ import ec.edu.ups.pos.rep.data.entities.rep.RepEmisionCertificado;
 import ec.edu.ups.pos.rep.logic.sessions.rep.RepEmisionCertificadoFacade;
 import ec.edu.ups.pos.rep.view.controllers.AbstractController;
 
-/**
- * Description.
- *
- * @author UPS .
- */
 public class RepEmisionCertificadoController extends AbstractController<RepEmisionCertificado> {
 
 	@Inject

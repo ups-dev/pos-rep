@@ -3,17 +3,11 @@ package ec.edu.ups.pos.rep.data.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Description.
- *
- * @author ups .
- */
 public final class PosRepConstants {
 
 	/**
 	 * Constructor privado para prevenir la instanciación.
 	 */
-
 	private PosRepConstants() {
 		throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
 	}
@@ -164,8 +158,7 @@ public final class PosRepConstants {
 	public static final Long REP_PARAMETRO_GRUPO = 11L;
 
 	/**
-	 * public static final Long REP_PARAMETRO_PROGRAMA = 12L; Parámetro de Programa.
-	 * Parámetro de Alumno
+	 * Parámetro de Alumno.
 	 */
 	public static final Long REP_PARAMETRO_ALUMNO = 12L;
 
@@ -198,6 +191,11 @@ public final class PosRepConstants {
 	 * Parámetro fijo del Módulo.
 	 */
 	public static final String REP_PARAMETRO_MODULO_REPORTES = "REPORTES";
+
+	/**
+	 * Parámetro fijo del Módulo.
+	 */
+	public static final String REP_PARAMETRO_MODULO_DOCTORADOS = "DOCTORADO";
 
 	/**
 	 * Parámetro de Pagado SI/NO.

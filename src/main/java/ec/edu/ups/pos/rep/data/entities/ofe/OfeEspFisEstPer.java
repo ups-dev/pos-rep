@@ -15,11 +15,6 @@ import javax.validation.constraints.NotNull;
 
 import ec.edu.ups.util.jpa.EntitySuperclass;
 
-/**
- * Description.
- *
- * @author ups .
- */
 @Entity
 @Table(name = "OFE_ESP_FIS_EST_PER", catalog = "", schema = "OFE", uniqueConstraints = {
 		@UniqueConstraint(columnNames = { "PEL_CODIGO", "EST_CODIGO", "ESF_CODIGO", "TPE_CODIGO" }) })

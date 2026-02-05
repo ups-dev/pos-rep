@@ -11,11 +11,6 @@ import javax.persistence.Query;
 import ec.edu.ups.pos.rep.data.entities.wrapper.PosgradoAlumnoWrapper;
 import ec.edu.ups.pos.rep.logic.sessions.AbstractFacade;
 
-/**
- * Description.
- *
- * @author UPS .
- */
 @Stateless
 public class PosRepPosgradosFacade extends AbstractFacade<PosgradoAlumnoWrapper> {
 

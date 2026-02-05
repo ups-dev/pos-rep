@@ -14,11 +14,6 @@ import ec.edu.ups.pos.rep.data.entities.org.OrgPeriodoEstructura;
 import ec.edu.ups.pos.rep.data.entities.org.OrgPeriodoLectivo;
 import ec.edu.ups.pos.rep.logic.sessions.AbstractFacade;
 
-/**
- * Description.
- *
- * @author ups .
- */
 @Stateless
 public class OrgPeriodoEstructuraFacade extends AbstractFacade<OrgPeriodoEstructura> {
 
@@ -59,12 +54,47 @@ public class OrgPeriodoEstructuraFacade extends AbstractFacade<OrgPeriodoEstruct
 	}
 
 	/**
+	 * Lista periodos vigentes por campus.
+	 * @param orgEstructura .
+	 * @return periodos .
+	 */
+	public List<OrgPeriodoLectivo> obtieneCohorteDoctoradoPorEstructura(OrgEstructura orgEstructura) {
+
+		String sql = " Select distinct pel.* " + " from org.org_periodo_estructura pee, "
+				+ "     org.org_periodo_lectivo    pel, " + "     org.org_estructura         est "
+				+ " where est.est_codigo = pee.est_codigo " + " and   pee.pel_codigo = pel.pel_codigo "
+				+ " and   pee.est_codigo  IN (SELECT est_codigo e "
+				+ "                            FROM   org.org_estructura e "
+				+ "                            WHERE  e.est_nivel  = 4 "
+				+ "                            START WITH e.est_codigo = ?1 "
+				+ "                            CONNECT BY PRIOR e.est_codigo = e.est_codigo_padre) "
+				+ " and pel.pel_Tipo = 'D' " + " and pel.aud_eliminado = 'N' " + " order by 1 DESC ";
+
+		Query q = getEntityManager().createNativeQuery(sql, OrgPeriodoLectivo.class)
+			.setParameter(1, orgEstructura.getEstCodigo())
+			.setHint("javax.persistence.cache.retrieveMode", CacheRetrieveMode.BYPASS);
+		return q.getResultList();
+	}
+
+	/**
 	 * Lista periodos vigentes.
 	 * @return periodos.
 	 */
 	public List<OrgPeriodoLectivo> obtienePeriodoLectivo() {
 		TypedQuery<OrgPeriodoLectivo> q = getEntityManager().createQuery(
-				"SELECT pel FROM OrgPeriodoLectivo pel WHERE pel.pelTipo= 'P' AND pel.audEliminado= 'N' ORDER BY pel.pelCodigo DESC",
+				"SELECT pel FROM OrgPeriodoLectivo pel WHERE pel.pelTipo= ('P') AND pel.audEliminado= 'N' ORDER BY pel.pelCodigo DESC",
+				OrgPeriodoLectivo.class)
+			.setHint("javax.persistence.cache.retrieveMode", CacheRetrieveMode.BYPASS);
+		return q.getResultList();
+	}
+
+	/**
+	 * Lista periodos vigentes.
+	 * @return periodos.
+	 */
+	public List<OrgPeriodoLectivo> obtienePeriodoLectivoDoctorado() {
+		TypedQuery<OrgPeriodoLectivo> q = getEntityManager().createQuery(
+				"SELECT pel FROM OrgPeriodoLectivo pel WHERE pel.pelTipo= ('D') AND pel.audEliminado= 'N' ORDER BY pel.pelCodigo DESC",
 				OrgPeriodoLectivo.class)
 			.setHint("javax.persistence.cache.retrieveMode", CacheRetrieveMode.BYPASS);
 		return q.getResultList();

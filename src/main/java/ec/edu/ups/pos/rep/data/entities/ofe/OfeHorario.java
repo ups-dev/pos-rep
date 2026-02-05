@@ -18,11 +18,6 @@ import javax.validation.constraints.Size;
 
 import ec.edu.ups.util.jpa.EntitySuperclass;
 
-/**
- * Description.
- *
- * @author ups .
- */
 @Entity
 @Table(name = "OFE_HORARIO", catalog = "", schema = "OFE", uniqueConstraints = { @UniqueConstraint(
 		columnNames = { "DIS_CODIGO", "HOR_HORA_INICIO", "HOR_DIA", "HOR_FECHA_INICIO", "HOR_FECHA_FIN" }) })

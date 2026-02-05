@@ -7,11 +7,6 @@ import javax.persistence.PersistenceContext;
 import ec.edu.ups.pos.rep.data.entities.rep.RepLog;
 import ec.edu.ups.pos.rep.logic.sessions.AbstractFacade;
 
-/**
- * Description.
- *
- * @author ups .
- */
 @Stateless
 public class RepLogFacade extends AbstractFacade<RepLog> {
 

@@ -13,11 +13,6 @@ import javax.persistence.Query;
 import ec.edu.ups.pos.rep.data.entities.rep.RepReportesSistema;
 import ec.edu.ups.pos.rep.logic.sessions.AbstractFacade;
 
-/**
- * Description.
- *
- * @author ups .
- */
 @Stateless
 public class RepReportesSistemaFacade extends AbstractFacade<RepReportesSistema> {
 

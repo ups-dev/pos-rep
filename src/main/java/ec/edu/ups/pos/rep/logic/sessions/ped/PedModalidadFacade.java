@@ -11,11 +11,6 @@ import ec.edu.ups.pos.rep.data.entities.org.OrgEstructura;
 import ec.edu.ups.pos.rep.data.entities.ped.PedModalidad;
 import ec.edu.ups.pos.rep.logic.sessions.AbstractFacade;
 
-/**
- * Description.
- *
- * @author ups .
- */
 @Stateless
 public class PedModalidadFacade extends AbstractFacade<PedModalidad> {
 

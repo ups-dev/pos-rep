@@ -12,11 +12,6 @@ import ec.edu.ups.pos.rep.data.entities.rep.RepNumeroCertificado;
 import ec.edu.ups.pos.rep.logic.sessions.AbstractFacade;
 import ec.edu.ups.util.exceptions.UPSDataEditException;
 
-/**
- * Description.
- *
- * @author UPS .
- */
 @Stateless
 public class RepNumeroCertificadoFacade extends AbstractFacade<RepNumeroCertificado> {
 

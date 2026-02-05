@@ -10,11 +10,6 @@ import javax.persistence.TypedQuery;
 import ec.edu.ups.pos.rep.data.entities.rep.RepSecretarioGeneral;
 import ec.edu.ups.pos.rep.logic.sessions.AbstractFacade;
 
-/**
- * Description.
- *
- * @author UPS .
- */
 @Stateless
 public class RepSecretarioGeneralFacade extends AbstractFacade<RepSecretarioGeneral> {
 

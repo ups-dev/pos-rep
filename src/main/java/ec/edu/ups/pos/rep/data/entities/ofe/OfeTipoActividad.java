@@ -15,11 +15,6 @@ import javax.validation.constraints.Size;
 
 import ec.edu.ups.util.jpa.EntitySuperclass;
 
-/**
- * Description.
- *
- * @author ups .
- */
 @Entity
 @Table(name = "OFE_TIPO_ACTIVIDAD", catalog = "", schema = "OFE")
 public class OfeTipoActividad extends EntitySuperclass {

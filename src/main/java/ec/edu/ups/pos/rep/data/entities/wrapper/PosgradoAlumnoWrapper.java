@@ -6,11 +6,6 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-/**
- * Description.
- *
- * @author ups .
- */
 @Entity
 public class PosgradoAlumnoWrapper implements Serializable {
 

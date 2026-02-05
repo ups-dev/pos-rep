@@ -1,4 +1,4 @@
-package ec.edu.ups.pos.rep.view.controller.org;
+package ec.edu.ups.pos.rep.view.controllers.org;
 
 import java.util.List;
 

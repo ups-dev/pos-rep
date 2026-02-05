@@ -9,11 +9,6 @@ import javax.persistence.PersistenceContext;
 import ec.edu.ups.pos.rep.data.entities.rep.RepParametro;
 import ec.edu.ups.pos.rep.logic.sessions.AbstractFacade;
 
-/**
- * Description.
- *
- * @author ups .
- */
 @Stateless
 public class RepParametroFacade extends AbstractFacade<RepParametro> {
 

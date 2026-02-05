@@ -22,7 +22,7 @@ import ec.edu.ups.util.jsf.JSFUtils;
 /**
  * Clase abstracta usada por las vistas que componen una aplicaciÃ³n.
  *
- * @param <T> indica la Entidad que va a manipular el controller.
+ * @param <T> indica la Entidad que va a manipular el controllers.
  * @author ups .
  */
 public abstract class AbstractController<T> implements Serializable {

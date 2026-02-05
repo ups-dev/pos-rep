@@ -7,10 +7,9 @@
                 xmlns:u="http://ups.edu.ec/ui"
                 xmlns:o="http://omnifaces.org/ui">
 
-
     <o:importConstants type="ec.edu.ups.pos.rep.data.utils.PosRepConstants"/>
 
-    <h:form id="PosReportesForm" >
+    <h:form id="PosReportesForm">
         <u:verticalStack gapXs="3">
 
             <p:messages id="listMessages" closable="true">
@@ -19,12 +18,11 @@
                 </p:effect>
             </p:messages>
 
-
             <u:card id="RepCabecera">
 
                 <u:verticalStack gapXs="3">
 
-                    <p:toolbar id="informesToolbar" >
+                    <p:toolbar id="informesToolbar">
                         <p:toolbarGroup align="left">
 
                             <us:auth permissions="{'operations':['GENERAR']}">
@@ -35,7 +33,8 @@
                                                  ajax="false"
                                                  onclick="PrimeFaces.monitorDownload(start, stop);"
                                                  disabled="#{repReportesSistemaController.selected.resFormato eq null or (repReportesSistemaController.selected.resFormato ne 'EXCEL' and repReportesSistemaController.selected.resFormato ne 'PDF - EXCEL')}">
-                                    <p:fileDownload value="#{posRepGeneralController.generar_reporte_generico('xlsx')}" />
+                                    <p:fileDownload
+                                            value="#{posRepGeneralController.generar_reporte_generico('xlsx')}"/>
                                 </p:commandButton>
                             </us:auth>
 
@@ -111,7 +110,7 @@
                         </p:column>
                     </p:dataTable>
 
-                    <p:panel  id="PosRepFiltroPanel" header="#{posRepBundle['PosRepParametros']}">
+                    <p:panel id="PosRepFiltroPanel" header="#{posRepBundle['PosRepParametros']}">
 
                         <u:grid columnsXs="1" columnsMd="2" columnsLg="3">
 
@@ -398,14 +397,12 @@
                                     <p:selectOneMenu id="posRepFiltrarGrupo"
                                                      value="#{posRepResultadoController.ofeGrupo}"
                                                      autoWidth="false"
-                                                     filter="true" filterMatchMode="contains" var="filtro"
-                                    >
+                                                     filter="true" filterMatchMode="contains" var="filtro">
                                         <f:selectItem itemLabel="#{posRepBundle['Todos']}" itemValue=""/>
                                         <f:selectItems value="#{posRepResultadoController.ofeGrupoList}"
                                                        var="grupoItem"
                                                        itemValue="#{grupoItem}"
-                                                       itemLabel="#{grupoItem.gruDescripcion.toString()}"
-                                        />
+                                                       itemLabel="#{grupoItem.gruDescripcion.toString()}"/>
                                         <p:column>
                                             <h:outputText value="#{filtro.gruCodigo}"/>
                                         </p:column>
@@ -425,14 +422,12 @@
 
                                     <p:selectOneMenu id="posRepFiltrarAnio" value="#{posRepResultadoController.anio}"
                                                      autoWidth="false"
-                                                     filter="true" filterMatchMode="contains" var="filtro"
-                                    >
+                                                     filter="true" filterMatchMode="contains" var="filtro">
 
                                         <f:selectItems value="#{posRepResultadoController.anioList}"
                                                        var="grupoItem"
                                                        itemValue="#{anio}"
-                                                       itemLabel="#{anio}"
-                                        />
+                                                       itemLabel="#{anio}"/>
 
                                         <p:column>
                                             <h:outputText value="#{filtro}"/>
@@ -440,7 +435,6 @@
                                     </p:selectOneMenu>
                                 </u:formField>
                             </h:panelGroup>
-
 
                             <h:panelGroup id="pagado" rendered="#{repReportesSistemaController.selected ne null
                                                  and posRepResultadoController.compruebaParametro(repReportesSistemaController.selected, PosRepConstants.REP_PARAMETRO_PAGADO)}">
@@ -454,21 +448,17 @@
                                         <f:selectItem itemLabel="#{posRepBundle['Todos']}" itemValue="%"/>
                                         <f:selectItem itemLabel="SI" itemValue="S"/>
                                         <f:selectItem itemLabel="NO" itemValue="N"/>
-
                                     </p:selectOneMenu>
-
                                 </u:formField>
                             </h:panelGroup>
                         </u:grid>
                     </p:panel>
                 </u:verticalStack>
             </u:card>
-
         </u:verticalStack>
     </h:form>
 
     <script>
-
         function start() {
             PF('statusDialog').show();
         }
@@ -476,6 +466,5 @@
         function stop() {
             PF('statusDialog').hide();
         }
-
     </script>
 </ui:composition>

@@ -10,11 +10,6 @@ import javax.validation.constraints.Size;
 
 import ec.edu.ups.util.jpa.EntitySuperclass;
 
-/**
- * Description.
- *
- * @author ups .
- */
 @Entity
 @Table(name = "PED_RELACION_DEPENDENCIA", catalog = "", schema = "PED")
 public class PedRelacionDependencia extends EntitySuperclass {

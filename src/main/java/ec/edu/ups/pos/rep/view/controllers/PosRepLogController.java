@@ -8,7 +8,7 @@ import javax.inject.Named;
 
 import ec.edu.ups.pos.rep.data.entities.rep.RepLog;
 import ec.edu.ups.pos.rep.logic.sessions.rep.RepLogFacade;
-import ec.edu.ups.pos.rep.view.controller.rep.RepReportesSistemaController;
+import ec.edu.ups.pos.rep.view.controllers.rep.RepReportesSistemaController;
 
 /**
  * Description. Optimized version of PosRepLogController.

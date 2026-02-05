@@ -8,11 +8,6 @@ import javax.persistence.PersistenceException;
 import ec.edu.ups.pos.rep.data.entities.rep.RepEmisionCertificado;
 import ec.edu.ups.pos.rep.logic.sessions.AbstractFacade;
 
-/**
- * Description.
- *
- * @author UPS .
- */
 @Stateless
 public class RepEmisionCertificadoFacade extends AbstractFacade<RepEmisionCertificado> {
 

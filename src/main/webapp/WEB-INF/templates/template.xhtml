@@ -2,6 +2,7 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
+
                 xmlns:u="http://ups.edu.ec/ui"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 template="/WEB-INF/templates/ups-master.xhtml">
@@ -16,6 +17,7 @@
     </ui:define>
 
     <ui:define name="ups-frame">
+
         <u:frame showTestingLabel="#{not facesContext.isProjectStage('Production')}"
                  title="Administración del Sistema de Reportes">
             <f:facet name="navigation">
@@ -23,7 +25,7 @@
                     <ui:include src="/appmenu.xhtml"/>
                     <p:panel header="Estructura">
                         <h:form id="secOrgEstructuraMenu">
-                            <ui:insert name="posRep-estructura"/>
+                            <ui:insert name="ups-content-estructura"/>
                         </h:form>
                     </p:panel>
                     <p:panel header="Menú">
@@ -49,7 +51,17 @@
             </f:facet>
 
             <f:facet name="content">
-                <ui:insert name="posRep-content"/>
+               <ui:insert name="posRep-content">
+                    <u:page fullWidth="true">
+                        <f:facet name="title">
+                            <ui:insert name="ups-breadcrumb-contenido"/>
+                        </f:facet>
+
+                        <u:card>
+                            <ui:insert name="ups-content-center"/>
+                        </u:card>
+                    </u:page>
+                </ui:insert>
             </f:facet>
 
             <f:facet name="footer">

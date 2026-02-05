@@ -1,4 +1,4 @@
-package ec.edu.ups.pos.rep.view.controller.rep;
+package ec.edu.ups.pos.rep.view.controllers.rep;
 
 import java.util.List;
 
@@ -10,11 +10,6 @@ import ec.edu.ups.pos.rep.data.entities.rep.RepSecretarioGeneral;
 import ec.edu.ups.pos.rep.logic.sessions.rep.RepSecretarioGeneralFacade;
 import ec.edu.ups.pos.rep.view.controllers.AbstractController;
 
-/**
- * Description.
- *
- * @author UPS .
- */
 @Named("repSecretarioGeneralController")
 @ViewScoped
 public class RepSecretarioGeneralController extends AbstractController<RepSecretarioGeneral> {

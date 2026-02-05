@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-CER-0003" pageWidth="595" pageHeight="842" columnWidth="551" leftMargin="22" rightMargin="22" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="26"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="624"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_alu_codigo" class="java.lang.Integer">
@@ -231,11 +231,47 @@ and calp2.mal_obligatorio='N') imprime,
          acg.acg_nota_definitiva_grado nota_definitiva_grado,
          acg.acg_equivalencia equivalencia,
          DECODE(acg.acg_apreciacion,'E','EXCELENTE','M','MUY BUENA','B','BUENA','R','REGULAR','D','DEFICIENTE') apreciacion,
-         met.met_descripcion mecanismo_graduacion
+         met.met_descripcion mecanismo_graduacion,
+'A partir de la resolución ' || res.res_num_resolucion || ' ' ||
+    'emitida por ' || res.res_emitido_por || ' ' ||
+    'de fecha ' || TO_CHAR(res.res_fecha_emicion, 'dd/mm/yyyy') || ' ' ||
+    CASE
+        WHEN alu.alu_genero = 'F' THEN 'la'
+        WHEN alu.alu_genero = 'M' THEN 'el'
+        ELSE 'el/la'
+    END || ' estudiante ' ||
+    CASE
+        WHEN (cli.cllc_ruc != res.res_ruc) AND
+             (res.res_apellidos != alu.alu_apellidos OR res.res_nombres != alu.alu_nombres)
+        THEN
+            TRIM(res.res_apellidos || ' ' || res.res_nombres) ||
+            ' con número de identificación ' || res.res_ruc ||
+            ', de ahora en adelante constará con el número de identificación ' ||
+            cli.cllc_ruc || ' y de nombre ' || alu.alu_apellidos || ' ' || alu.alu_nombres ||
+            ', guardando relación entre sus anteriores y nuevos datos por tratarse de la misma persona.'
+        WHEN (res.res_apellidos != alu.alu_apellidos OR res.res_nombres != alu.alu_nombres)
+        THEN
+            TRIM(res.res_apellidos || ' ' || res.res_nombres) ||
+            ', de ahora en adelante constará con el nombre de ' ||
+            alu.alu_apellidos || ' ' || alu.alu_nombres ||
+            ', número de identificación ' || cli.cllc_ruc ||
+            ', guardando relación entre sus anteriores y nuevos datos por tratarse de la misma persona.'
+        WHEN cli.cllc_ruc != res.res_ruc
+        THEN
+            TRIM(alu.alu_apellidos || ' ' || alu.alu_nombres) ||
+            ' con número de identificación ' || res.res_ruc ||
+            ', de ahora en adelante constará con el número de identificación ' ||
+            cli.cllc_ruc ||
+            ', guardando relación entre sus anteriores y nuevos datos por tratarse de la misma persona.'
+        ELSE NULL
+    END AS cambio_identidad,
+    res.res_fecha_emicion
+
 FROM    ins.ins_inscripcion             ins,
         fac.fac_pago_factura            paf,
         ins.ins_ins_pro_aca             ipa,
         ins.ins_alumno                  alu,
+        ins.ins_resolucion res,
         sigac.cliente_local             cli,
         ped.ped_mod_pro_edu             mpe,
         ped.ped_proyecto_educacion      pre,
@@ -301,6 +337,7 @@ AND    ins.ins_codigo         = mta.ins_codigo
 AND    mta.aud_eliminado      = 'N'
 AND    mta.mat_anulado        = 'N'
 AND   mta.mat_pagado          = 'S'
+ AND res.alu_codigo(+) = alu.alu_codigo
 AND   pre.pre_numero          = malp.pre_numero
 AND   ins.ins_codigo          = calp.ins_codigo(+)
 AND   malp.mal_codigo         = calp.mal_codigo(+)
@@ -350,6 +387,8 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 	<field name="EQUIVALENCIA" class="java.math.BigDecimal"/>
 	<field name="APRECIACION" class="java.lang.String"/>
 	<field name="MECANISMO_GRADUACION" class="java.lang.String"/>
+	<field name="CAMBIO_IDENTIDAD" class="java.lang.String"/>
+	<field name="RES_FECHA_EMICION" class="java.sql.Timestamp"/>
 	<variable name="contador" class="java.lang.Integer" calculation="Count">
 		<variableExpression><![CDATA[$V{REPORT_COUNT}]]></variableExpression>
 		<initialValueExpression><![CDATA[]]></initialValueExpression>
@@ -505,7 +544,7 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="35">
+			<band height="57">
 				<subreport>
 					<reportElement style="Estilo_contenido7" isPrintRepeatedValues="false" x="12" y="4" width="530" height="31" uuid="5432252b-4d20-4e6b-9e63-b68584aa5a5e"/>
 					<subreportParameter name="pn_seg_codigo">
@@ -520,6 +559,15 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					<subreportExpression><![CDATA["POSREP-CER-0003_subreport2.jasper"]]></subreportExpression>
 				</subreport>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement positionType="Float" x="13" y="37" width="529" height="20" uuid="d6cb3c32-1d43-465d-8a05-a85db0def179">
+						<printWhenExpression><![CDATA[!$F{RES_FECHA_EMICION}.equals( null )]]></printWhenExpression>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{CAMBIO_IDENTIDAD}]]></textFieldExpression>
+				</textField>
 			</band>
 		</groupFooter>
 	</group>
@@ -609,8 +657,8 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$F{PROMEDIO_ACADEMICO}]]></textFieldExpression>
 				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement style="Estilo_contenido7" x="20" y="51" width="328" height="16" uuid="55f43e7b-8d32-4a17-ac34-fcf176397841"/>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Estilo_contenido7" x="20" y="51" width="328" height="16" isPrintWhenDetailOverflows="true" uuid="55f43e7b-8d32-4a17-ac34-fcf176397841"/>
 					<textFieldExpression><![CDATA[$V{TrabajoTitulacion}]]></textFieldExpression>
 				</textField>
 			</band>
@@ -713,7 +761,7 @@ ORDER BY semestre,mencion nulls first,mat_descripcion]]>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
 					<reportElement style="Estilo_contenido7" stretchType="RelativeToBandHeight" x="145" y="0" width="406" height="15" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="531a3d88-4544-42bb-86a7-edbf13f25b0a"/>
 					<textElement>
-						<font fontName="SansSerif" size="7" pdfEncoding="Cp1250" isPdfEmbedded="false"/>
+						<font fontName="SansSerif" size="7" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{TITULO}]]></textFieldExpression>
 				</textField>

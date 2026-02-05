@@ -34,7 +34,7 @@
     </error-page>
     <error-page>
         <error-code>403</error-code>
-        <location>/error/404.xhtml</location>
+        <location>/error/403.xhtml</location>
     </error-page>
     <error-page>
         <error-code>404</error-code>
@@ -52,8 +52,9 @@
     <!--Configuracion jsf-security-ups -->
     <context-param>
         <param-name>ec.edu.ups.jsf.security.ENABLE_SECURITY</param-name>
-        <param-value>false</param-value>
+        <param-value>true</param-value>
         <!--  <param-value>false</param-value> poner true para que considere los permisos-->
+
     </context-param>
     <context-param>
         <param-name>ec.edu.ups.jsf.security.ENABLE_SECURITY_TAG</param-name>
@@ -99,6 +100,24 @@
         <param-name>primefaces.THEME</param-name>
         <param-value>ups</param-value>
     </context-param>
+    <context-param>
+        <param-name>primefaces.CLIENT_SIDE_VALIDATION</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>primefaces.UPLOADER</param-name>
+        <param-value>commons</param-value>
+    </context-param>
+
+    <filter>
+        <filter-name>PrimeFaces FileUpload Filter</filter-name>
+        <filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>PrimeFaces FileUpload Filter</filter-name>
+        <servlet-name>Faces Servlet</servlet-name>
+    </filter-mapping>
 
     <!-- Configuraciones OmniFaces -->
     <filter>

@@ -11,11 +11,6 @@ import javax.validation.constraints.Size;
 
 import ec.edu.ups.util.jpa.EntitySuperclass;
 
-/**
- * Description.
- *
- * @author UPS .
- */
 @Entity
 @Table(name = "REP_SECRETARIO_GENERAL", catalog = "", schema = "REP")
 public class RepSecretarioGeneral extends EntitySuperclass {

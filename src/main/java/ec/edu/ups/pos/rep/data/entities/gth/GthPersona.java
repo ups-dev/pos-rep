@@ -14,11 +14,6 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-/**
- * Description.
- *
- * @author ups .
- */
 @Entity
 @Table(name = "GTH_PERSONA", catalog = "", schema = "GTH",
 		uniqueConstraints = { @UniqueConstraint(columnNames = { "PER_NRO_SEGURO_SOCIAL" }),

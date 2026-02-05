@@ -27,11 +27,6 @@ import ec.edu.ups.util.jasper.JasperUtils;
 import ec.edu.ups.util.jasper.ReportParamBuilder;
 import ec.edu.ups.util.jasper.ReportType;
 
-/**
- * Description.
- *
- * @author ups .
- */
 @Named("posReporteController")
 @ViewScoped
 public class PosReporteController implements Serializable {

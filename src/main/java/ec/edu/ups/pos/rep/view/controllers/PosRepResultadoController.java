@@ -38,7 +38,7 @@ import ec.edu.ups.pos.rep.logic.sessions.org.OrgPeriodoEstructuraFacade;
 import ec.edu.ups.pos.rep.logic.sessions.ped.PedMallaFacade;
 import ec.edu.ups.pos.rep.logic.sessions.ped.PedModalidadFacade;
 import ec.edu.ups.pos.rep.logic.sessions.rep.RepParametroReporteFacade;
-import ec.edu.ups.pos.rep.view.controller.rep.RepReportesSistemaController;
+import ec.edu.ups.pos.rep.view.controllers.rep.RepReportesSistemaController;
 
 @Named("posRepResultadoController")
 @ViewScoped
@@ -220,8 +220,6 @@ public class PosRepResultadoController implements Serializable {
 
 	public void updateCarreraList() {
 
-		// setOrgEstructuraCarrera(null);
-		// setOrgEstructuraCarreraList(null);
 		updateAsignaturaList();
 		setGthPersona(null);
 
@@ -244,6 +242,26 @@ public class PosRepResultadoController implements Serializable {
 					}
 				}
 			}
+			else if (this.secOrgEstructuraController.getTipoEstructura() == TipoEstructura.DOCTORADO) {
+
+				if (Objects.equals(this.secOrgEstructuraController.getEstructuraCarrera().getEstCodigo(),
+						PosRepConstants.TODAS_CARRERAS)) {
+					this.orgEstructuraCarreraList = this.orgEstructuraFacade
+						.listaEstructuraDoctoradoSelecActivo(getOrgEstructuraCampus());
+				}
+				else {
+					this.orgEstructuraCarreraList = this.orgEstructuraFacade
+						.listaEstructuraDoctoradoSelecActivo(getOrgEstructuraCampus());
+					this.orgEstructuraCarreraList = this.orgEstructuraCarreraList.stream()
+						.filter((est) -> Objects.equals(est.getEstCodigo(),
+								this.secOrgEstructuraController.getEstructuraCarrera().getEstCodigo()))
+						.collect(Collectors.toList());
+					if (!this.orgEstructuraCarreraList.isEmpty()) {
+						setOrgEstructuraCarrera(this.orgEstructuraCarreraList.get(0));
+					}
+				}
+
+			}
 		}
 		setPedModalidad(null);
 		setPedModalidadList(null);
@@ -256,16 +274,33 @@ public class PosRepResultadoController implements Serializable {
 		setOrgPeriodoFinal(null);
 		setOrgPeriodoLectivoList(null);
 		updateGrupoList();
+		if (this.secOrgEstructuraController.getTipoEstructura() == TipoEstructura.DOCTORADO) {
 
-		if (obtenerEstructura() != null) {
+			if (obtenerEstructura() != null) {
 
-			setOrgPeriodoLectivoList(this.orgPeriodoEstructuraFacade.obtieneCohortePorEstructura(obtenerEstructura()));
-			// System.out.println("Cohorte por Estructura");
+				setOrgPeriodoLectivoList(
+						this.orgPeriodoEstructuraFacade.obtieneCohorteDoctoradoPorEstructura(obtenerEstructura()));
+				// System.out.println("Cohorte por Estructura");
+			}
+			else {
+				setOrgPeriodoLectivoList(this.orgPeriodoEstructuraFacade.obtienePeriodoLectivoDoctorado());
+				// System.out.println("Cohorte sin Estructura");
+			}
+
 		}
-		else {
-			setOrgPeriodoLectivoList(this.orgPeriodoEstructuraFacade.obtienePeriodoLectivo());
-			// System.out.println("Cohorte sin Estructura");
+		else if (this.secOrgEstructuraController.getTipoEstructura() == TipoEstructura.PROGRAMA) {
+			if (obtenerEstructura() != null) {
+
+				setOrgPeriodoLectivoList(
+						this.orgPeriodoEstructuraFacade.obtieneCohortePorEstructura(obtenerEstructura()));
+				// System.out.println("Cohorte por Estructura");
+			}
+			else {
+				setOrgPeriodoLectivoList(this.orgPeriodoEstructuraFacade.obtienePeriodoLectivo());
+				// System.out.println("Cohorte sin Estructura");
+			}
 		}
+
 		updateNivelMallaList();
 	}
 
@@ -764,7 +799,7 @@ public class PosRepResultadoController implements Serializable {
 		this.insAlumnoFacade = insAlumnoFacade;
 	}
 
-	// Metodo controller
+	// Metodo controllers
 	public List<InsAlumnoWrapper> getListadoAlumnos() {
 		return this.listadoAlumnos;
 	}
@@ -780,7 +815,7 @@ public class PosRepResultadoController implements Serializable {
 			String replace = query.replace(" ", "%%");
 			suggestions = this.insAlumnoFacade.findAlumnoWrapper(replace);
 		}
-
+		System.out.println(suggestions);
 		setListadoAlumnos(suggestions);
 		return suggestions;
 	}

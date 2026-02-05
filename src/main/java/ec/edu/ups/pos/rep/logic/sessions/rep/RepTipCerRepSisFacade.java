@@ -11,11 +11,6 @@ import ec.edu.ups.pos.rep.data.entities.rep.RepTipCerRepSis;
 import ec.edu.ups.pos.rep.logic.sessions.AbstractFacade;
 import ec.edu.ups.util.exceptions.UPSDataSelectException;
 
-/**
- * Description.
- *
- * @author UPS .
- */
 @Stateless
 public class RepTipCerRepSisFacade extends AbstractFacade<RepTipCerRepSis> {
 

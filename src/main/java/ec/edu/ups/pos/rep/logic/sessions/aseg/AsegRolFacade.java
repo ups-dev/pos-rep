@@ -9,11 +9,6 @@ import javax.persistence.PersistenceContext;
 import ec.edu.ups.pos.rep.data.entities.aseg.AsegRol;
 import ec.edu.ups.pos.rep.logic.sessions.AbstractFacade;
 
-/**
- * Description.
- *
- * @author ups .
- */
 @Stateless
 public class AsegRolFacade extends AbstractFacade<AsegRol> {
 

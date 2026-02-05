@@ -2,11 +2,6 @@ package ec.edu.ups.pos.rep.data.exception;
 
 import ec.edu.ups.util.exceptions.UPSDataEditException;
 
-/**
- * Description.
- *
- * @author ups .
- */
 public class UPSDataEditActivatedException extends UPSDataEditException {
 
 	public UPSDataEditActivatedException() {
