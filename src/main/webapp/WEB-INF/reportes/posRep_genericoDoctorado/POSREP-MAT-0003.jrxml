@@ -2,53 +2,14 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-MAT-0003" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="41e59c34-cad2-4097-b6a5-c3d0e020b34e">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="72"/>
+	<property name="ireport.y" value="0"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String"/>
 	<parameter name="pn_alu_codigo" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[select sd.sed_descripcion sede,
-       cm.cam_descripcion campus,
-       ps.car_descripcion posgrado,
-       tep.ted_descripcion cohorte,
-       mp.pel_codigo,
-       md.mod_descripcion modalidad,
-       cli.cllc_ruc cedula,cli.cllc_cdg,alu.alu_codigo,
-       cli.cllc_nmb estudiante,
-       ' - ' nivel,
-       mp.map_numero nro_matricula,
-       to_char(mp.map_fecha_prematricula,'dd/mm/yyyy') fecha_matricula,
-       pel.pel_descripcion fecha_semestre
-from sna.sna_matricula_postgrado mp,
-     sna.sna_modalidad           md,
-     sna.sna_carrera             ps,
-     sna.sna_campus              cm,
-     sna.sna_sede                sd,
-     sna.sna_periodo_lectivo     pel,
-     sna.sna_tipo_edicion_postgrado tep,
-     sigac.cliente_local         cli,
-     ins.ins_alumno              alu
-where mp.map_pagado = 'S'
-and   mp.map_eliminado = 'N'
-and   mp.map_anulado = 'N'
-and   md.mod_codigo  = mp.mod_codigo_postgrado
-and   ps.car_codigo = mp.car_codigo_postgrado
-and   ps.fac_codigo = mp.fac_codigo_postgrado
-and   cm.cam_codigo = mp.cam_codigo_postgrado
-and   cm.sed_codigo = mp.sed_codigo
-and   sd.sed_codigo = mp.sed_codigo
-and   pel.pel_codigo = mp.pel_codigo
-and   tep.ted_codigo = mp.ted_codigo
-and   cli.cllc_cdg   = mp.cllc_cdg
-and   cli.cllc_cdg   = alu.cllc_cdg
-and   alu.alu_codigo = $P{pn_alu_codigo}
-
-
-UNION
-
-SELECT  dsed.dee_descripcion        sede,
+		<![CDATA[SELECT  dsed.dee_descripcion        sede,
         dcam.dee_descripcion        campus,
         dpos.dee_descripcion        posgrado,
         pel.pel_descripcion         cohorte,
@@ -57,7 +18,7 @@ SELECT  dsed.dee_descripcion        sede,
         cli.cllc_ruc                cedula,cli.cllc_cdg,alu.alu_codigo,
         cli.cllc_nmb                estudiante,
         to_char(pee.pee_nivel)      nivel,
-        mta.mat_codigo,
+        mta.mat_codigo nro_matricula,
         to_char(mta.mat_fecha_registro,'dd/mm/yyyy')      fecha_matricula,
         extract (year from pee.pee_fecha_inicial)||' - '||extract (year from pee.pee_fecha_final) fecha_semestre
 FROM  mat.mat_matricula mta,
@@ -77,7 +38,7 @@ FROM  mat.mat_matricula mta,
       ped.ped_mod_pro_edu         mpe,
       ped.ped_modalidad           mod
 
-WHERE mta.mat_tipo_proceso = 'M'
+WHERE mta.mat_tipo_proceso = 'D'
 AND   mta.mat_pagado = 'S'
 AND   mta.aud_eliminado = 'N'
 AND   pre.pre_numero  = dep.pre_numero

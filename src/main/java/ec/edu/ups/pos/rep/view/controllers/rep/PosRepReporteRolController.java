@@ -18,7 +18,6 @@ import ec.edu.ups.pos.rep.data.entities.rep.RepReportesSistema;
 import ec.edu.ups.pos.rep.logic.sessions.aseg.AsegRolFacade;
 import ec.edu.ups.pos.rep.logic.sessions.rep.RepReporteRolFacade;
 import ec.edu.ups.pos.rep.view.controllers.AbstractController;
-import ec.edu.ups.pos.rep.view.controllers.PosRepGestorArchivosController;
 
 @Named("posRepReporteRolController")
 @ViewScoped

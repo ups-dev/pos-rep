@@ -1,4 +1,4 @@
-package ec.edu.ups.pos.rep.view.controllers;
+package ec.edu.ups.pos.rep.view.controllers.rep;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
@@ -8,7 +8,8 @@ import javax.inject.Named;
 
 import ec.edu.ups.pos.rep.data.entities.rep.RepLog;
 import ec.edu.ups.pos.rep.logic.sessions.rep.RepLogFacade;
-import ec.edu.ups.pos.rep.view.controllers.rep.RepReportesSistemaController;
+import ec.edu.ups.pos.rep.view.controller.rep.RepReportesSistemaController;
+import ec.edu.ups.pos.rep.view.controllers.AbstractController;
 
 /**
  * Description. Optimized version of PosRepLogController.
