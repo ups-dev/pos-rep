@@ -1,4 +1,4 @@
-package ec.edu.ups.pos.rep.view.controllers;
+package ec.edu.ups.pos.rep.view.controllers.rep;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

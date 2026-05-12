@@ -1,4 +1,4 @@
-package ec.edu.ups.pos.rep.view.controllers;
+package ec.edu.ups.pos.rep.view.controllers.rep;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -38,7 +38,6 @@ import ec.edu.ups.pos.rep.logic.sessions.org.OrgPeriodoEstructuraFacade;
 import ec.edu.ups.pos.rep.logic.sessions.ped.PedMallaFacade;
 import ec.edu.ups.pos.rep.logic.sessions.ped.PedModalidadFacade;
 import ec.edu.ups.pos.rep.logic.sessions.rep.RepParametroReporteFacade;
-import ec.edu.ups.pos.rep.view.controllers.rep.RepReportesSistemaController;
 
 @Named("posRepResultadoController")
 @ViewScoped
@@ -109,9 +108,6 @@ public class PosRepResultadoController implements Serializable {
 
 	@Inject
 	private OrgEstructuraFacade orgEstructuraFacade;
-
-	@Inject
-	private RepReportesSistemaController repReportesSistemaController;
 
 	@Inject
 	private OrgPeriodoEstructuraFacade orgPeriodoEstructuraFacade;
