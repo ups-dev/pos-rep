@@ -1,0 +1,1559 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SBEREP-DISC-0003" pageWidth="3000" pageHeight="500" orientation="Landscape" columnWidth="2960" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="f83da8e3-03bb-47e0-b42d-d079b3f8ddcb">
+	<property name="ireport.zoom" value="1.3310000000000004"/>
+	<property name="ireport.x" value="2967"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="pv_usuario" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pv_anio" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT DISTINCT inc.ins_codigo,
+                cli.cllc_cdg,
+                alu.alu_codigo,
+                sed.est_codigo       cod_sede,
+                dse.dee_descripcion  sede,
+                dcm.dee_descripcion campus,
+                car.est_codigo,
+                dca.dee_descripcion posgrado,
+                pel.pel_codigo,
+                pel.pel_descripcion  cohorte,
+               (select distinct pee.pee_fecha_inicial_cohorte
+                from  org.org_periodo_estructura pee
+                where oii.est_codigo = pee.est_codigo
+                and pee.pee_nivel = 1
+                and pee.pel_codigo = pel.pel_codigo) fecha_icicio_cohorte,
+                (select distinct pee.pee_fecha_final_cohorte
+                from  org.org_periodo_estructura pee
+                where oii.est_codigo = pee.est_codigo
+                and pee.pee_nivel = 1
+                and pee.pel_codigo = pel.pel_codigo) fecha_fin_cohorte,
+                res.res_codigo,
+                MOD.mod_descripcion  modalidad,
+                cli.cllc_ruc         cedula,
+                alu.alu_apellidos    apellidos,
+                alu.alu_nombres      nombres,
+                decode(alu.alu_genero,'F','FEMENINO','M','MASCULINO')genero,
+                alu.alu_email        correo_institucional,
+                cli.cllc_email       correo_personal,
+                cli.cllc_fono        telefono,
+                cli.cllc_celular     celular,
+                 nvl(( SELECT DISTINCT 'SI'
+                FROM stg.stg_acta_grado G ,
+                stg.stg_trabajo_graduacion tg,
+                ins.ins_ins_pro_aca ipa,
+                org.org_estructura car,
+                org.org_descripcion_estructura dca,
+                ins.ins_inscripcion inc,
+                ins.ins_alumno alu
+                WHERE ipa.ipa_codigo = tg.ipa_codigo
+                AND tg.tdg_codigo = G.tdg_codigo
+                AND G.aud_eliminado = 'N'
+                AND car.est_codigo = tg.est_codigo
+                AND car.dee_codigo = dca.dee_codigo
+                AND dca.tie_codigo = 5
+                AND inc.ins_codigo = ipa.ins_codigo
+                AND inc.alu_codigo = alu.alu_codigo
+                AND alu.cllc_cdg = cli.cllc_cdg
+                UNION
+                SELECT DISTINCT 'SI'
+                FROM sna.sna_acta_grado ag,
+                sna.sna_titulo_proyecto_academico tp
+                WHERE tp.pra_numero = ag.pra_numero
+                AND tp.fac_codigo = ag.fac_codigo
+                AND tp.car_codigo = ag.car_codigo
+                AND tp.tit_codigo = ag.tit_codigo
+                AND tp.tpa_titulo_terminal = 'S'
+                AND ag.acg_eliminado = 'N'
+                AND ag.cllc_cdg = cli.cllc_cdg),'NO')     graduado_ups,
+                inc.ins_fecha_inscripcion                 fecha_inscripcion,
+                decode(inc.ins_vigencia,'S','SI','N','NO')      vigencia_inscripcion,
+                decode(inc.ins_confirmado,'S','SI','N','NO')    confirmado,
+                decode(paf.paf_pagado,'S','SI','NO')     pagado_insc,
+                (select distinct min(mta.mat_fecha_registro)
+                from mat.mat_matricula mta,
+                org.org_periodo_estructura pee
+                where mta.ins_codigo = inc.ins_codigo
+                and mta.mat_tipo_proceso = 'M'
+                and mta.aud_eliminado = 'N'
+                and mta.mat_anulado = 'N'
+                and pee.pee_codigo = mta.pee_codigo
+                and pee.pee_nivel = 1
+                and pee.pel_codigo = pel.pel_codigo
+                ) fecha_matricula,
+                (select distinct decode(mta.mat_pagado,'S','SI','NO')
+                from mat.mat_matricula mta,
+                org.org_periodo_estructura pee
+                where mta.ins_codigo = inc.ins_codigo
+                and mta.mat_tipo_proceso = 'M'
+                and mta.aud_eliminado = 'N'
+                and mta.mat_anulado = 'N'
+                and pee.pee_codigo = mta.pee_codigo
+                and pee.pee_nivel = 1
+                and pee.pel_codigo = pel.pel_codigo)pagado_matr,
+                decode(tg.tdg_vigente,'S','VIGENTE','N','NO VIGENTE') estado_trab_tit,
+                ttg.ttg_descripcion                      tema_trabajo_titulacion,
+                decode(nvl(rpe.per_codigo,0),0,rpe.rep_docente_externo,PER.per_apellidos ||' '||PER.per_nombres) tutor,
+                CASE WHEN rpe.per_codigo IS NOT NULL THEN (decode(nvl(rpe.per_codigo,0),0,'EXTERNO','INTERNO'))
+                     WHEN rpe.rep_docente_externo IS NOT NULL THEN (decode(nvl(rpe.per_codigo,0),0,'EXTERNO','INTERNO'))
+                     ELSE NULL  END tipo_tutor,
+                res.res_codificacion_resolucion     resolucion_presentacion_trab_tit,
+                tg.tdg_fecha_aprobacion             fecha_aprobacion,
+                tg.tdg_fecha_vencimiento            fecha_vencimiento,
+                mec.met_descripcion                 tipo_trabajo,
+                decode(ttg.ttg_modo,'uno','INDIVIDUAL','dos','PAREJA',NULL) modo,
+                (SELECT DISTINCT res.res_codificacion_resolucion
+                FROM
+                sse.sse_tip_res_par trp,
+                sse.sse_res_val_par rvp,
+                sse.sse_resolucion res,
+                stg.stg_trabajo_graduacion tdg,
+                stg.stg_prorroga_trabajo prt
+                WHERE trp.trp_codigo = '25' --C�digo de la Prorroga del stg.stg_prorroga_trabajo(prt_codigo)
+                AND trp.trp_codigo = rvp.trp_codigo
+                AND tdg.tdg_codigo = tg.tdg_codigo --168-- --C�digo del Trabajo Graduaci�n
+                AND tdg.tdg_codigo = prt.tdg_codigo
+                AND rvp.rvp_valor_entero = prt.prt_codigo
+                AND prt.aud_eliminado = 'N'
+                AND prt.prt_vigente = 'S'
+                AND res.res_estado = 'A'
+                AND res.aud_eliminado = 'N'
+                AND rvp.res_codigo = res.res_codigo
+                AND prt.prt_numero_prorroga = 1
+                AND res.res_codigo IN (SELECT MIN(res2.res_codigo)
+                FROM sse.sse_resolucion res2,
+                sse.sse_res_val_par rvp2,
+                stg.stg_prorroga_trabajo prt2,
+                sse.sse_tip_res_par trp2
+                WHERE res2.res_codigo = rvp2.res_codigo
+                AND res2.aud_eliminado = 'N'
+                AND res2.res_estado = 'A'
+                AND rvp2.rvp_valor_entero = prt2.prt_codigo
+                AND prt2.tdg_codigo = prt.tdg_codigo
+                AND trp2.trp_codigo = '25'
+                AND trp2.trp_codigo = rvp2.trp_codigo
+                AND prt2.prt_numero_prorroga = 1))            primera_prorroga,
+                (SELECT DISTINCT prt.prt_fecha_vencimiento
+                FROM
+                sse.sse_tip_res_par trp,
+                sse.sse_res_val_par rvp,
+                sse.sse_resolucion res,
+                stg.stg_trabajo_graduacion tdg,
+                stg.stg_prorroga_trabajo prt
+                WHERE trp.trp_codigo = '25' --C�digo de la Prorroga del stg.stg_prorroga_trabajo(prt_codigo)
+                AND trp.trp_codigo = rvp.trp_codigo
+                AND tdg.tdg_codigo = tg.tdg_codigo --168-- --C�digo del Trabajo Graduaci�n
+                AND tdg.tdg_codigo = prt.tdg_codigo
+                AND rvp.rvp_valor_entero = prt.prt_codigo
+                AND prt.aud_eliminado = 'N'
+                AND prt.prt_vigente = 'S'
+                AND res.res_estado = 'A'
+                AND res.aud_eliminado = 'N'
+                AND rvp.res_codigo = res.res_codigo
+                AND prt.prt_numero_prorroga = 1
+                AND res.res_codigo IN (SELECT MIN(res2.res_codigo)
+                FROM sse.sse_resolucion res2,
+                sse.sse_res_val_par rvp2,
+                stg.stg_prorroga_trabajo prt2,
+                sse.sse_tip_res_par trp2
+                WHERE res2.res_codigo = rvp2.res_codigo
+                AND res2.aud_eliminado = 'N'
+                AND res2.res_estado = 'A'
+                AND rvp2.rvp_valor_entero = prt2.prt_codigo
+                AND prt2.tdg_codigo = prt.tdg_codigo
+                AND trp2.trp_codigo = '25'
+                AND trp2.trp_codigo = rvp2.trp_codigo
+                AND prt2.prt_numero_prorroga = 1))      fecha_fin_primera_prorroga,
+                (SELECT DISTINCT res.res_codificacion_resolucion
+                FROM
+                sse.sse_tip_res_par trp,
+                sse.sse_res_val_par rvp,
+                sse.sse_resolucion res,
+                stg.stg_trabajo_graduacion tdg,
+                stg.stg_prorroga_trabajo prt
+                WHERE trp.trp_codigo = '25' --C�digo de la Prorroga del stg.stg_prorroga_trabajo(prt_codigo)
+                AND trp.trp_codigo = rvp.trp_codigo
+                AND tdg.tdg_codigo = tg.tdg_codigo --168-- --C�digo del Trabajo Graduaci�n
+                AND tdg.tdg_codigo = prt.tdg_codigo
+                AND rvp.rvp_valor_entero = prt.prt_codigo
+                AND prt.aud_eliminado = 'N'
+                AND prt.prt_vigente = 'S'
+                AND res.res_estado = 'A'
+                AND res.aud_eliminado = 'N'
+                AND rvp.res_codigo = res.res_codigo
+                AND prt.prt_numero_prorroga = 2
+                AND res.res_codigo IN (SELECT MIN(res2.res_codigo)
+                FROM sse.sse_resolucion res2,
+                sse.sse_res_val_par rvp2,
+                stg.stg_prorroga_trabajo prt2,
+                sse.sse_tip_res_par trp2
+                WHERE res2.res_codigo = rvp2.res_codigo
+                AND res2.aud_eliminado = 'N'
+                AND res2.res_estado = 'A'
+                AND rvp2.rvp_valor_entero = prt2.prt_codigo
+                AND prt2.tdg_codigo = prt.tdg_codigo
+                AND trp2.trp_codigo = '25'
+                AND trp2.trp_codigo = rvp2.trp_codigo
+                AND prt2.prt_numero_prorroga = 2))          segunda_prorroga,
+                (SELECT DISTINCT prt.prt_fecha_vencimiento
+                FROM
+                sse.sse_tip_res_par trp,
+                sse.sse_res_val_par rvp,
+                sse.sse_resolucion res,
+                stg.stg_trabajo_graduacion tdg,
+                stg.stg_prorroga_trabajo prt
+                WHERE trp.trp_codigo = '25' --C�digo de la Prorroga del stg.stg_prorroga_trabajo(prt_codigo)
+                AND trp.trp_codigo = rvp.trp_codigo
+                AND tdg.tdg_codigo = tg.tdg_codigo --168-- --C�digo del Trabajo Graduaci�n
+                AND tdg.tdg_codigo = prt.tdg_codigo
+                AND rvp.rvp_valor_entero = prt.prt_codigo
+                AND prt.aud_eliminado = 'N'
+                AND prt.prt_vigente = 'S'
+                AND res.res_estado = 'A'
+                AND res.aud_eliminado = 'N'
+                AND rvp.res_codigo = res.res_codigo
+                AND prt.prt_numero_prorroga = 2
+                AND res.res_codigo IN (SELECT MIN(res2.res_codigo)
+                FROM sse.sse_resolucion res2,
+                sse.sse_res_val_par rvp2,
+                stg.stg_prorroga_trabajo prt2,
+                sse.sse_tip_res_par trp2
+                WHERE res2.res_codigo = rvp2.res_codigo
+                AND res2.aud_eliminado = 'N'
+                AND res2.res_estado = 'A'
+                AND rvp2.rvp_valor_entero = prt2.prt_codigo
+                AND prt2.tdg_codigo = prt.tdg_codigo
+                AND trp2.trp_codigo = '25'
+                AND trp2.trp_codigo = rvp2.trp_codigo
+                AND prt2.prt_numero_prorroga = 2))   fecha_fin_segunda_prorroga,
+                (SELECT DISTINCT res.res_codificacion_resolucion
+                FROM sse.sse_resolucion_inscripcion rei,
+                sse.sse_resolucion res,
+                sse.sse_antecedente ant,
+                sse.sse_tip_con_tip_res tct,
+                sse.sse_res_val_par rvp,
+                ins.ins_inscripcion ins
+                WHERE rei.res_codigo = res.res_codigo
+                AND res.ant_codigo = ant.ant_codigo
+                AND ant.tct_codigo = tct.tct_codigo
+                AND tct.tir_codigo = '29' --RESOLUCION EVALUACI�N
+                AND res.res_codigo = rvp.res_codigo
+                AND rei.ins_codigo = ins.ins_codigo
+                AND ins.ins_codigo = inc.ins_codigo
+                AND res.aud_eliminado = 'N'
+                AND res.res_estado = 'A' )           resolucion_evaluacion,
+                (SELECT DISTINCT res.res_codificacion_resolucion
+                FROM sse.sse_resolucion_inscripcion rei,
+                sse.sse_resolucion res,
+                sse.sse_antecedente ant,
+                sse.sse_tip_con_tip_res tct,
+                sse.sse_res_val_par rvp,
+                ins.ins_inscripcion ins
+                WHERE rei.res_codigo = res.res_codigo
+                AND res.ant_codigo = ant.ant_codigo
+                AND ant.tct_codigo = tct.tct_codigo
+                AND tct.tir_codigo = '9' --RESOLUCION DECLARATORIA DE APTITUD
+                AND res.res_codigo = rvp.res_codigo
+                AND rei.ins_codigo = ins.ins_codigo
+                AND ins.ins_codigo = inc.ins_codigo )resolucion_declaratoria_aptitud,
+                (SELECT ag.acg_numero_acta
+                FROM stg.stg_acta_grado ag
+                WHERE ag.tdg_codigo = tg.tdg_codigo
+                AND ag.aud_eliminado = 'N')            numero_acta,
+                (SELECT ag.acg_nota_definitiva_grado
+                FROM stg.stg_acta_grado ag
+                WHERE ag.tdg_codigo = tg.tdg_codigo
+                AND ag.aud_eliminado = 'N')            nota_acta_posgrados,
+               (SELECT ag.acg_fecha_acta
+                FROM stg.stg_acta_grado ag
+                WHERE ag.tdg_codigo = tg.tdg_codigo
+                AND ag.aud_eliminado = 'N')             fecha_acta
+
+FROM    ins.ins_inscripcion inc,
+        ins.ins_alumno alu,
+        ins.ins_oferta_inscripcion_inicial oii,
+        sigac.cliente_local cli,
+        org.org_estructura car,
+        org.org_descripcion_estructura dca,
+        org.org_estructura cam,
+        org.org_descripcion_estructura dcm,
+        org.org_estructura sed,
+        org.org_descripcion_estructura dse,
+        ins.ins_tip_apr_ins tai,
+        ins.ins_tipo_inscripcion tii,
+        ins.ins_tipo_aprobacion tap,
+        fac.fac_pago_factura paf,
+        ped.ped_proyecto_educacion ped,
+        org.org_periodo_lectivo pel,
+        mat.mat_matricula mat,
+        ins.ins_ins_pro_aca ipa,
+        stg.stg_trabajo_graduacion tg,
+        stg.stg_titulo_trabajo_graduacion ttg,
+        sse.sse_res_val_par rvp,
+        sse.sse_resolucion res,
+        sse.sse_resolucion_persona rpe,
+        gth.gth_persona PER,
+        ped.ped_mod_pro_edu mpe,
+        ped.ped_modalidad MOD,
+        ped.ped_proyecto_mecanismo prm,
+        ped.ped_mecanismo_titulacion mec,
+         org.org_periodo_estructura pee
+
+WHERE inc.alu_codigo = alu.alu_codigo
+AND inc.oii_codigo = oii.oii_codigo
+AND alu.cllc_cdg = cli.cllc_cdg
+AND car.est_codigo = oii.est_codigo
+AND car.dee_codigo = dca.dee_codigo
+AND car.est_codigo_padre = cam.est_codigo
+AND cam.dee_codigo = dcm.dee_codigo
+AND cam.est_codigo_padre = sed.est_codigo
+AND sed.dee_codigo = dse.dee_codigo
+AND oii.pel_codigo = pel.pel_codigo
+AND inc.tai_codigo = tai.tai_codigo
+AND tai.tii_codigo = tii.tii_codigo
+AND tai.tia_codigo = tap.tia_codigo
+AND tai.tai_codigo = 17
+AND inc.ins_codigo = paf.ins_codigo
+AND paf.tip_codigo = 8 -- Inscripcion de Posgrado
+AND inc.pre_numero = ped.pre_numero(+)
+and inc.ins_codigo = mat.ins_codigo(+)
+AND inc.ins_codigo = ipa.ins_codigo(+)
+AND ipa.ipa_codigo = tg.ipa_codigo(+)
+AND tg.ttg_codigo  = ttg.ttg_codigo(+)
+AND ttg.ttg_codigo = rvp.rvp_valor_entero(+)
+AND pee.pel_codigo = pel.pel_codigo
+--AND inc.ins_vigencia = 'S'
+AND inc.ins_anulado = 'N'
+AND ipa.ipa_vigente(+) = 'S'
+AND rvp.trp_codigo(+) = 4
+AND tg.tdg_aprobado(+) = 'S'
+AND tg.tdg_vigente(+)  = 'S'
+AND tg.tdg_anulado(+) = 'N'
+and ttg.ttg_anulado(+)= 'N'
+AND rvp.res_codigo =  res.res_codigo(+)
+AND res.res_codigo = rpe.res_codigo(+)
+AND rpe.per_codigo = PER.per_codigo(+)
+AND ped.pre_numero  = mpe.pre_numero(+)
+AND mpe.mod_codigo  = MOD.mod_codigo(+)
+AND tg.prm_codigo  = prm.prm_codigo(+)
+AND prm.met_codigo = mec.met_codigo(+)
+AND res.res_estado(+) = 'A'
+AND EXTRACT(YEAR FROM (select distinct min(mta.mat_fecha_registro)
+                from mat.mat_matricula mta,
+                org.org_periodo_estructura pee
+                where mta.ins_codigo = inc.ins_codigo
+                and mta.mat_tipo_proceso = 'M'
+                and mta.aud_eliminado = 'N'
+                and mta.mat_anulado = 'N'
+                and pee.pee_codigo = mta.pee_codigo
+                and pee.pee_nivel = 1
+                and pee.pel_codigo = pel.pel_codigo
+                ))=$P{pv_anio}
+ORDER BY sed.est_codigo,campus,posgrado,cohorte,apellidos,nombres]]>
+	</queryString>
+	<field name="INS_CODIGO" class="java.math.BigDecimal"/>
+	<field name="CLLC_CDG" class="java.math.BigDecimal"/>
+	<field name="ALU_CODIGO" class="java.math.BigDecimal"/>
+	<field name="COD_SEDE" class="java.math.BigDecimal"/>
+	<field name="SEDE" class="java.lang.String"/>
+	<field name="CAMPUS" class="java.lang.String"/>
+	<field name="EST_CODIGO" class="java.math.BigDecimal"/>
+	<field name="POSGRADO" class="java.lang.String"/>
+	<field name="PEL_CODIGO" class="java.math.BigDecimal"/>
+	<field name="COHORTE" class="java.lang.String"/>
+	<field name="FECHA_ICICIO_COHORTE" class="java.sql.Timestamp"/>
+	<field name="FECHA_FIN_COHORTE" class="java.sql.Timestamp"/>
+	<field name="RES_CODIGO" class="java.math.BigDecimal"/>
+	<field name="MODALIDAD" class="java.lang.String"/>
+	<field name="CEDULA" class="java.lang.String"/>
+	<field name="APELLIDOS" class="java.lang.String"/>
+	<field name="NOMBRES" class="java.lang.String"/>
+	<field name="GENERO" class="java.lang.String"/>
+	<field name="CORREO_INSTITUCIONAL" class="java.lang.String"/>
+	<field name="CORREO_PERSONAL" class="java.lang.String"/>
+	<field name="TELEFONO" class="java.lang.String"/>
+	<field name="CELULAR" class="java.lang.String"/>
+	<field name="GRADUADO_UPS" class="java.lang.String"/>
+	<field name="FECHA_INSCRIPCION" class="java.sql.Timestamp"/>
+	<field name="VIGENCIA_INSCRIPCION" class="java.lang.String"/>
+	<field name="CONFIRMADO" class="java.lang.String"/>
+	<field name="PAGADO_INSC" class="java.lang.String"/>
+	<field name="FECHA_MATRICULA" class="java.sql.Timestamp"/>
+	<field name="PAGADO_MATR" class="java.lang.String"/>
+	<field name="ESTADO_TRAB_TIT" class="java.lang.String"/>
+	<field name="TEMA_TRABAJO_TITULACION" class="java.lang.String"/>
+	<field name="TUTOR" class="java.lang.String"/>
+	<field name="TIPO_TUTOR" class="java.lang.String"/>
+	<field name="RESOLUCION_PRESENTACION_TRAB_TIT" class="java.lang.String"/>
+	<field name="FECHA_APROBACION" class="java.sql.Timestamp"/>
+	<field name="FECHA_VENCIMIENTO" class="java.sql.Timestamp"/>
+	<field name="TIPO_TRABAJO" class="java.lang.String"/>
+	<field name="MODO" class="java.lang.String"/>
+	<field name="PRIMERA_PRORROGA" class="java.lang.String"/>
+	<field name="FECHA_FIN_PRIMERA_PRORROGA" class="java.sql.Timestamp"/>
+	<field name="SEGUNDA_PRORROGA" class="java.lang.String"/>
+	<field name="FECHA_FIN_SEGUNDA_PRORROGA" class="java.sql.Timestamp"/>
+	<field name="RESOLUCION_EVALUACION" class="java.lang.String"/>
+	<field name="RESOLUCION_DECLARATORIA_APTITUD" class="java.lang.String"/>
+	<field name="NUMERO_ACTA" class="java.math.BigDecimal"/>
+	<field name="NOTA_ACTA_POSGRADOS" class="java.math.BigDecimal"/>
+	<field name="FECHA_ACTA" class="java.sql.Timestamp"/>
+	<title>
+		<band height="46" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="802" height="16" uuid="db976378-237e-42e4-8d1b-1f461251233e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[UNIVERSIDAD POLITÉCNICA SALESIANA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="16" width="802" height="14" uuid="58ea30d3-14f8-4a3a-af19-769df1fe3b5b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SISTEMA DE POSGRADOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="30" width="802" height="14" uuid="7d8dc530-9b55-47c7-94c4-6bfeb2ac114a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REPORTE CONSOLIDADOS INSCRITOS, MATRICULADOS, GRADUADOS]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="22" splitType="Stretch">
+			<textField pattern="dd-MM-yyyy HH:mm:ss" isBlankWhenNull="true">
+				<reportElement x="2829" y="0" width="129" height="11" uuid="a56ae067-823f-49d3-a84b-2697c1468d3c"/>
+				<textElement textAlignment="Right">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="2828" y="11" width="115" height="11" uuid="553d1c3a-631d-43b2-9009-b9c412de0bc5"/>
+				<textElement textAlignment="Right">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Página  "+$V{PAGE_NUMBER}+" de "]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="" isBlankWhenNull="false">
+				<reportElement key="textField" stretchType="RelativeToBandHeight" x="2943" y="11" width="15" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="312adfbb-e3cf-4b26-9bfd-c8f1abb0617d"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="39">
+			<staticText>
+				<reportElement x="0" y="0" width="62" height="39" uuid="4a87e28b-0d25-47f6-92cf-46b2c8e3246b"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[INS_CODIGO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="62" y="0" width="62" height="39" uuid="40afc129-2ba8-4452-a485-d557af740ebf"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CLLC_CDG]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="124" y="0" width="62" height="39" uuid="73f1d8ca-7f42-4e0e-b324-25816a5a782a"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ALU_CODIGO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="186" y="0" width="62" height="39" uuid="2e325fb8-6ab3-4c4f-8b89-30063bd55084"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[COD_SEDE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="248" y="0" width="62" height="39" uuid="91b9b18f-14b6-484d-8324-518a2c7fd950"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[SEDE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="310" y="0" width="62" height="39" uuid="46e82408-1ebc-4a3e-aeeb-93faead1aee8"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CAMPUS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="372" y="0" width="62" height="39" uuid="1f7b2eca-8291-400d-851d-37e75131e7c5"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[EST_CODIGO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="434" y="0" width="62" height="39" uuid="8ad2b481-32db-416e-915b-df57abecdb93"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[POSGRADO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="496" y="0" width="62" height="39" uuid="6742496d-3db3-4d2b-b04d-2a1704d240f2"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PEL_CODIGO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="558" y="0" width="62" height="39" uuid="97adcfd0-8748-4695-8309-91d09a1394dc"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[COHORTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="620" y="0" width="62" height="39" uuid="a4a7d033-be51-47f4-8579-ffef08dbd4fc"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA_ICICIO_COHORTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="682" y="0" width="62" height="39" uuid="43b3479e-e767-477d-a9b7-bad0856691f4"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA_FIN_COHORTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="744" y="0" width="62" height="39" uuid="20c50288-aa2d-4960-8157-66f3716eaa00"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[RES_CODIGO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="806" y="0" width="62" height="39" uuid="5c4f489b-635b-4db7-a3d1-368664fce9bd"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[MODALIDAD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="868" y="0" width="62" height="39" uuid="3551bbff-25a6-43f3-ad30-bb8a7e2690ab"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CEDULA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="930" y="0" width="62" height="39" uuid="d41d7a1e-9c0e-4115-b36d-c6d789e0c808"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[APELLIDOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="992" y="0" width="62" height="39" uuid="cbdd1c49-183e-4de8-8ff1-18b0bd9f2e1a"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOMBRES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1054" y="0" width="62" height="39" uuid="3b9ed1ce-7659-4f6a-ac00-0a5ba16993c1"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[GENERO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1116" y="0" width="62" height="39" uuid="8635f18e-6fef-4b51-828a-9d5a11aa0518"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CORREO_INSTITUCIONAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1178" y="0" width="62" height="39" uuid="34328598-b58a-4e4b-8c70-fc60257e5175"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CORREO_PERSONAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1240" y="0" width="62" height="39" uuid="44774060-b762-4a1c-a13c-f383d2492e50"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TELEFONO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1302" y="0" width="62" height="39" uuid="071db020-0737-4663-9b2b-72975a1200d5"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CELULAR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1364" y="0" width="62" height="39" uuid="2f5e111e-eea8-4abb-88d8-79166ed5595d"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[GRADUADO_UPS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1426" y="0" width="62" height="39" uuid="bbc73078-1abb-472c-b9e1-f3cc251fd2d7"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA_INSCRIPCION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1488" y="0" width="62" height="39" uuid="55e56bee-ffda-4266-9253-5af6c14e7cf2"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[VIGENCIA_INSCRIPCION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1550" y="0" width="62" height="39" uuid="ecf44278-50db-4f2e-8e88-3711ade08e83"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONFIRMADO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1612" y="0" width="62" height="39" uuid="add2eadc-51a4-451f-a8e8-4eedbd5b8799"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PAGADO_INSC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1674" y="0" width="62" height="39" uuid="25e0ccb2-fcb6-40a5-a47c-c369e4dcc96b"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA_MATRICULA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1736" y="0" width="62" height="39" uuid="97cf0ebd-f2da-4666-9393-f11f9c4dcec4"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PAGADO_MATR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1798" y="0" width="62" height="39" uuid="410017dd-e9ef-4ef9-bc87-c076056c28c9"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ESTADO_TRAB_TIT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1860" y="0" width="62" height="39" uuid="09ac0281-3e2f-48a8-859f-7f206db091e2"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TEMA_TRABAJO_TITULACION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1922" y="0" width="62" height="39" uuid="fe62821c-433c-4f45-9d7d-ab850b88f386"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TUTOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1984" y="0" width="62" height="39" uuid="ce7521f4-3b4a-40a5-b03d-0f016b9446a0"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TIPO_TUTOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2046" y="0" width="62" height="39" uuid="4dd0ecfe-43ba-4210-8b84-24fe100100f2"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[RESOLUCION_PRESENTACION_TRAB_TIT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2108" y="0" width="62" height="39" uuid="947da807-ef94-4a16-8384-b5117cc3b69a"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA_APROBACION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2170" y="0" width="62" height="39" uuid="83ffff47-9fe7-488c-a9bf-51ddd6fd23c7"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA_VENCIMIENTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2232" y="0" width="62" height="39" uuid="7e5aeea9-27a0-44bc-9f27-61042a9d1b9f"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TIPO_TRABAJO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2294" y="0" width="62" height="39" uuid="b8a2a426-1f6b-41a2-8928-e21cb54c2a61"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[MODO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2356" y="0" width="62" height="39" uuid="4cfd1174-ca17-4ee5-8f77-a1e7f38c45fc"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PRIMERA_PRORROGA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2418" y="0" width="62" height="39" uuid="5957e319-1337-44ac-ab36-f1fd07f329d0"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA_FIN_PRIMERA_PRORROGA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2480" y="0" width="62" height="39" uuid="5300a2a1-2034-46f2-babb-3f97164f5988"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[SEGUNDA_PRORROGA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2542" y="0" width="62" height="39" uuid="2204a358-9d5b-4232-9152-f61e956348dc"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA_FIN_SEGUNDA_PRORROGA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2604" y="0" width="62" height="39" uuid="e4d4986f-c225-4279-aaa0-60bdc8d53cfa"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[RESOLUCION_EVALUACION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2666" y="0" width="62" height="39" uuid="748a5ec4-abf4-4a11-b3bc-b3b9a05435e0"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[RESOLUCION_DECLARATORIA_APTITUD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2728" y="0" width="62" height="39" uuid="1732839c-336f-4010-9efa-839e12424f7d"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[NUMERO_ACTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2790" y="0" width="62" height="39" uuid="2d9e924f-eae4-48ed-bd60-e502ea0c9a2e"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOTA_ACTA_POSGRADOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2852" y="0" width="62" height="39" uuid="8ae5e951-1b66-43a2-9833-d54388a6f4ed"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA_ACTA]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="28" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="dba61089-792b-4f9f-8ab2-56b9ec5bc402"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{INS_CODIGO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="62" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="4a288476-35a8-44ab-815c-022010a49d2d"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{CLLC_CDG}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="124" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="6bc3d9de-1583-401d-bc57-6a3ab386d335"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{ALU_CODIGO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="186" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="b316211b-91d6-4a51-af3c-9eaa4b3e44b5"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{COD_SEDE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="248" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="86caaff9-963b-465a-9363-79cf632eac51"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{SEDE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="310" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="77e14284-dd02-4f3c-bfdb-3e20bf44fbbe"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{CAMPUS}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="372" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="73c28e9e-33fe-44a6-9381-46f8e9ad7840"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{EST_CODIGO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="434" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="e91eb082-1c5f-41d8-941b-a0492724e2d3"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{POSGRADO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="496" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="3fe48c3e-c238-4f70-ad71-00ae47f95419"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{PEL_CODIGO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="558" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="1f4de025-537e-42ac-bd4a-eadd4715acae"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{COHORTE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="620" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="a5fe48cb-20a8-4b2a-9034-3954be1b7839"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{FECHA_ICICIO_COHORTE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="682" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="d0891428-860a-408c-9b1e-384a1592305e"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{FECHA_FIN_COHORTE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="744" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="4cc192af-4692-4466-9dac-e26ea8565b5f"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{RES_CODIGO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="806" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="52b6c52d-cfd9-49a1-bf9b-e7f3973f7ae5"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{MODALIDAD}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="868" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="845e6910-f2dd-4024-a335-5633db0c65e7"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{CEDULA}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="930" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="ff73d6c9-cf7a-4f35-ad55-0fbf5431f41a"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{APELLIDOS}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="992" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="fbddf140-754e-4a95-87c6-7a61d5a05611"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{NOMBRES}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1054" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="89caa3a0-0418-4979-9834-6923ef1a7a18"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{GENERO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1116" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="1e9610e6-d632-473d-a6a2-3f8566fb6824"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{CORREO_INSTITUCIONAL}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1178" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="6e40bd84-10c6-4c72-a744-04792a7cea14"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{CORREO_PERSONAL}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1240" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="c39c8969-b76b-4af1-aa97-08cbb55f5f6c"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{TELEFONO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1302" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="0b94896d-ce47-4e5f-b234-92ffeacdd8f5"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{CELULAR}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1364" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="4af3bfdc-d2e7-4ef2-ba7b-3632cddd1a9f"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{GRADUADO_UPS}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1426" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="c1bbabb2-cffc-432b-9116-bbdc177bac68"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{FECHA_INSCRIPCION}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1488" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="2e47affe-b7e7-4a0c-b795-47ca2304619e"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{VIGENCIA_INSCRIPCION}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1550" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="76a138e2-e519-4a29-b7bc-0d3f51be899e"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{CONFIRMADO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1612" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="3c87398c-9c6b-4d53-a6c5-a0c060040de5"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{PAGADO_INSC}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1674" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="8fc74de8-cc3d-4c9a-887b-f2da0775af93"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{FECHA_MATRICULA}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1736" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="c5e483ad-fd3f-4c22-8a78-def90bd84bc6"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{PAGADO_MATR}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1798" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="9e49be85-95fe-403d-a29c-62f381a8f576"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{ESTADO_TRAB_TIT}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1860" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="0db57c9f-3b07-44e6-bb54-a16a77559649"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{TEMA_TRABAJO_TITULACION}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1922" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="bbac0fb6-355c-4101-9e10-4bf0277c89e3"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{TUTOR}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1984" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="27e6b51f-d4a3-4dad-a466-8e1d1e385abb"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{TIPO_TUTOR}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="2046" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="eb1c9119-95f0-45a7-bc4a-4d30bf1556a1"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{RESOLUCION_PRESENTACION_TRAB_TIT}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="2108" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="b30eb112-96d3-4d48-9da9-b1113886ea90"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{FECHA_APROBACION}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="2170" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="239cba82-7e27-4c05-b38b-8b8f423a897e"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{FECHA_VENCIMIENTO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="2232" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="e292ad75-040a-48ec-9f2e-2135bb94d9db"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{TIPO_TRABAJO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="2294" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="747a676d-fede-427f-8232-dc22088af580"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{MODO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="2356" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="6d048f2e-6866-4945-b509-c5374bb156aa"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{PRIMERA_PRORROGA}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="2418" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="b67ed3b5-0f4d-4918-99de-ccb2137bdf75"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{FECHA_FIN_PRIMERA_PRORROGA}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="2480" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="7d762224-3c14-4059-b432-51af9c7d6a46"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{SEGUNDA_PRORROGA}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="2542" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="4631efb7-faff-4523-8a85-74cc1205a31f"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{FECHA_FIN_SEGUNDA_PRORROGA}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="2604" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="85840798-04de-4b9c-83d2-78452bab40fa"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{RESOLUCION_EVALUACION}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="2666" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="65d07daf-8648-4dd8-8b46-c3fe5b7053b6"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{RESOLUCION_DECLARATORIA_APTITUD}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="2728" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="7cb34158-7b3e-4c3c-bd3c-e73824bcb7a7"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{NUMERO_ACTA}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="2790" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="2c913cb8-5363-465a-8bfd-77962b4c380d"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{NOTA_ACTA_POSGRADOS}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="2852" y="0" width="62" height="28" isPrintWhenDetailOverflows="true" uuid="683ae26f-2e05-4d62-b201-f3d33fc58483"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{FECHA_ACTA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="11" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="3" y="0" width="130" height="11" uuid="a889ffd1-1890-4b58-9dbd-51510455ef1c"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{JASPER_REPORT}.getName()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

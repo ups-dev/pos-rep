@@ -1,4 +1,4 @@
-package ec.edu.ups.pos.rep.view.controllers;
+package ec.edu.ups.pos.rep.view.controllers.rep;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -21,6 +21,7 @@ import org.primefaces.model.file.UploadedFile;
 
 import ec.edu.ups.pos.rep.data.entities.rep.RepReportesSistema;
 import ec.edu.ups.pos.rep.logic.sessions.rep.RepReportesSistemaFacade;
+import ec.edu.ups.pos.rep.view.controllers.AbstractController;
 
 @Named("posRepGestorArchivosController")
 @ViewScoped

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-STG-0001X" pageWidth="4200" pageHeight="840" columnWidth="4160" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a5610fb4-cc29-46b5-b47b-735f7e78b38b">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="POSREP-STG-0001X" pageWidth="3900" pageHeight="840" columnWidth="3860" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a5610fb4-cc29-46b5-b47b-735f7e78b38b">
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="3524"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<template><![CDATA["/../../reportes/estilosRep/Estilo_insRep.jrtx"]]></template>
 	<parameter name="pv_usuario" class="java.lang.String">
@@ -342,7 +342,7 @@ FROM    mat.mat_matricula               mat,
         ped.ped_mecanismo_titulacion    mec
 
 WHERE   mat.mat_codigo  = paf.ins_codigo
-AND     mat.mat_tipo_proceso = 'M'
+AND     mat.mat_tipo_proceso = 'D'
 AND     mat.aud_eliminado = 'N'
 AND     mat.mat_anulado = 'N'
 AND     paf.tip_codigo  = 4
@@ -491,19 +491,19 @@ ORDER BY sede,campus,posgrado,pel.pel_codigo,apellidos,nombres]]>
 				<text><![CDATA[FECHA VENCIMIENTO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Estilo_titulo" x="2679" y="0" width="152" height="16" uuid="23196243-9c64-43a4-9259-0c896c636cf6"/>
+				<reportElement style="Estilo_titulo" x="2371" y="0" width="152" height="16" uuid="23196243-9c64-43a4-9259-0c896c636cf6"/>
 				<text><![CDATA[PRIMERA PRÓRROGA]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Estilo_titulo" x="3599" y="0" width="150" height="16" uuid="193ed389-f49c-4da2-9a51-e4d6c6c032f7"/>
+				<reportElement style="Estilo_titulo" x="3291" y="0" width="150" height="16" uuid="193ed389-f49c-4da2-9a51-e4d6c6c032f7"/>
 				<text><![CDATA[RESOLUCIÓN EVALUACIÓN]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Estilo_titulo" x="3749" y="0" width="155" height="16" uuid="4f501033-d1ae-43f2-abb0-681ddafb56d9"/>
+				<reportElement style="Estilo_titulo" x="3441" y="0" width="155" height="16" uuid="4f501033-d1ae-43f2-abb0-681ddafb56d9"/>
 				<text><![CDATA[RESOLUCIÓN DECLARATORIA APTITUD]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Estilo_titulo" x="3013" y="0" width="133" height="16" uuid="583f9ea6-4d2a-451b-b662-8def1e3f303f"/>
+				<reportElement style="Estilo_titulo" x="2705" y="0" width="133" height="16" uuid="583f9ea6-4d2a-451b-b662-8def1e3f303f"/>
 				<text><![CDATA[SEGUNDA PRÓRROGA]]></text>
 			</staticText>
 			<staticText>
@@ -515,7 +515,7 @@ ORDER BY sede,campus,posgrado,pel.pel_codigo,apellidos,nombres]]>
 				<text><![CDATA[TIPO TUTOR]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Estilo_titulo" x="2831" y="0" width="182" height="16" uuid="439cf259-2447-4ca9-aab8-a206da690bda"/>
+				<reportElement style="Estilo_titulo" x="2523" y="0" width="182" height="16" uuid="439cf259-2447-4ca9-aab8-a206da690bda"/>
 				<text><![CDATA[FECHA FIN PRIMERA PRORROGA]]></text>
 			</staticText>
 			<staticText>
@@ -523,40 +523,36 @@ ORDER BY sede,campus,posgrado,pel.pel_codigo,apellidos,nombres]]>
 				<text><![CDATA[MODALIDAD]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Estilo_titulo" x="3146" y="0" width="160" height="16" uuid="3bde523e-cb22-4969-939c-721af86247db"/>
+				<reportElement style="Estilo_titulo" x="2838" y="0" width="160" height="16" uuid="3bde523e-cb22-4969-939c-721af86247db"/>
 				<text><![CDATA[FECHA FIN SEGUNDA PRORROGA]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Estilo_titulo" x="3904" y="0" width="131" height="16" uuid="b0bcd98f-d376-4f8b-a6a5-2d29528a2a4e"/>
+				<reportElement style="Estilo_titulo" x="3596" y="0" width="131" height="16" uuid="b0bcd98f-d376-4f8b-a6a5-2d29528a2a4e"/>
 				<text><![CDATA[NÚMERO ACTA DE GRADO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Estilo_titulo" x="4035" y="0" width="125" height="16" uuid="d3369d6a-4ecc-4b79-a19b-fe8dc9318e7d"/>
+				<reportElement style="Estilo_titulo" x="3727" y="0" width="125" height="16" uuid="d3369d6a-4ecc-4b79-a19b-fe8dc9318e7d"/>
 				<text><![CDATA[FECHA ACTA DE GRADO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Estilo_titulo" x="2465" y="0" width="119" height="16" uuid="85a13245-b734-46c9-990a-0e5cee358b7f"/>
+				<reportElement style="Estilo_titulo" x="2157" y="0" width="119" height="16" uuid="85a13245-b734-46c9-990a-0e5cee358b7f"/>
 				<text><![CDATA[MODALIDAD TRABAJO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Estilo_titulo" x="2584" y="0" width="95" height="16" uuid="ea44a667-ce64-4e0f-9baf-82dd5124b7cf"/>
+				<reportElement style="Estilo_titulo" x="2276" y="0" width="95" height="16" uuid="ea44a667-ce64-4e0f-9baf-82dd5124b7cf"/>
 				<text><![CDATA[GRADUADO UPS]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Estilo_titulo" x="2196" y="0" width="269" height="16" uuid="0d9d2d04-5907-4262-8f75-c55a26f16212"/>
+				<reportElement style="Estilo_titulo" x="1888" y="0" width="269" height="16" uuid="0d9d2d04-5907-4262-8f75-c55a26f16212"/>
 				<text><![CDATA[TIPO DE TRABAJO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Estilo_titulo" x="3439" y="0" width="160" height="16" uuid="1e39da76-0b92-4dc3-9ac0-371023f49fd6"/>
+				<reportElement style="Estilo_titulo" x="3131" y="0" width="160" height="16" uuid="1e39da76-0b92-4dc3-9ac0-371023f49fd6"/>
 				<text><![CDATA[FECHA FIN TERCERAPRORROGA]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Estilo_titulo" x="3306" y="0" width="133" height="16" uuid="84108f53-73a5-421b-9999-fdd845dfc086"/>
+				<reportElement style="Estilo_titulo" x="2998" y="0" width="133" height="16" uuid="84108f53-73a5-421b-9999-fdd845dfc086"/>
 				<text><![CDATA[TERCERA PRÓRROGA]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Estilo_titulo" x="1888" y="0" width="308" height="16" uuid="b0f43616-7a8c-4801-9ce2-bfae40ac3617"/>
-				<text><![CDATA[TEMA DE TRABAJO]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -612,19 +608,19 @@ ORDER BY sede,campus,posgrado,pel.pel_codigo,apellidos,nombres]]>
 				<textFieldExpression><![CDATA[$F{FECHA_VENCIMIENTO}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido" stretchType="RelativeToTallestObject" x="2679" y="0" width="152" height="20" isPrintWhenDetailOverflows="true" uuid="26a7aff8-7e9f-44a7-b4a0-904761ae7ba7"/>
+				<reportElement style="Estilo_contenido" stretchType="RelativeToTallestObject" x="2371" y="0" width="152" height="20" isPrintWhenDetailOverflows="true" uuid="26a7aff8-7e9f-44a7-b4a0-904761ae7ba7"/>
 				<textFieldExpression><![CDATA[$F{PRIMERA_PRORROGA}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido" stretchType="RelativeToTallestObject" x="3013" y="0" width="133" height="20" isPrintWhenDetailOverflows="true" uuid="2a452972-608c-47c2-b47e-1e2f44aedbe9"/>
+				<reportElement style="Estilo_contenido" stretchType="RelativeToTallestObject" x="2705" y="0" width="133" height="20" isPrintWhenDetailOverflows="true" uuid="2a452972-608c-47c2-b47e-1e2f44aedbe9"/>
 				<textFieldExpression><![CDATA[$F{SEGUNDA_PRORROGA}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido" stretchType="RelativeToTallestObject" x="3599" y="0" width="150" height="20" isPrintWhenDetailOverflows="true" uuid="27f987f9-bea4-4cce-8258-ab9e5aa64965"/>
+				<reportElement style="Estilo_contenido" stretchType="RelativeToTallestObject" x="3291" y="0" width="150" height="20" isPrintWhenDetailOverflows="true" uuid="27f987f9-bea4-4cce-8258-ab9e5aa64965"/>
 				<textFieldExpression><![CDATA[$F{RESOLUCION_EVALUACION}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido" stretchType="RelativeToTallestObject" x="3749" y="0" width="155" height="20" isPrintWhenDetailOverflows="true" uuid="34e25014-2ef5-4121-a3e1-625054faf205"/>
+				<reportElement style="Estilo_contenido" stretchType="RelativeToTallestObject" x="3441" y="0" width="155" height="20" isPrintWhenDetailOverflows="true" uuid="34e25014-2ef5-4121-a3e1-625054faf205"/>
 				<textFieldExpression><![CDATA[$F{RESOLUCION_DECLARATORIA_APTITUD}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
@@ -636,7 +632,7 @@ ORDER BY sede,campus,posgrado,pel.pel_codigo,apellidos,nombres]]>
 				<textFieldExpression><![CDATA[$F{TUTOR}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido" stretchType="RelativeToTallestObject" x="2831" y="0" width="182" height="20" isPrintWhenDetailOverflows="true" uuid="f4c70070-5ec1-4039-9f4d-f447ac195051"/>
+				<reportElement style="Estilo_contenido" stretchType="RelativeToTallestObject" x="2523" y="0" width="182" height="20" isPrintWhenDetailOverflows="true" uuid="f4c70070-5ec1-4039-9f4d-f447ac195051"/>
 				<textFieldExpression><![CDATA[$F{FECHA_FIN_PRIMERA_PRORROGA}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
@@ -644,40 +640,36 @@ ORDER BY sede,campus,posgrado,pel.pel_codigo,apellidos,nombres]]>
 				<textFieldExpression><![CDATA[$F{MODALIDAD}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido" stretchType="RelativeToTallestObject" x="3146" y="0" width="160" height="20" isPrintWhenDetailOverflows="true" uuid="8e2ce76f-5397-416b-a60a-4e6d50904c0b"/>
+				<reportElement style="Estilo_contenido" stretchType="RelativeToTallestObject" x="2838" y="0" width="160" height="20" isPrintWhenDetailOverflows="true" uuid="8e2ce76f-5397-416b-a60a-4e6d50904c0b"/>
 				<textFieldExpression><![CDATA[$F{FECHA_FIN_SEGUNDA_PRORROGA}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido" stretchType="RelativeToTallestObject" x="3904" y="0" width="131" height="20" isPrintWhenDetailOverflows="true" uuid="d01f9a02-2771-4427-a8d0-0886ae563dbd"/>
+				<reportElement style="Estilo_contenido" stretchType="RelativeToTallestObject" x="3596" y="0" width="131" height="20" isPrintWhenDetailOverflows="true" uuid="d01f9a02-2771-4427-a8d0-0886ae563dbd"/>
 				<textFieldExpression><![CDATA[$F{NUMERO_ACTA}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido" stretchType="RelativeToTallestObject" x="4035" y="0" width="125" height="20" isPrintWhenDetailOverflows="true" uuid="ceeed67d-7e6b-422f-b44d-dd49e19b39d1"/>
+				<reportElement style="Estilo_contenido" stretchType="RelativeToTallestObject" x="3727" y="0" width="125" height="20" isPrintWhenDetailOverflows="true" uuid="ceeed67d-7e6b-422f-b44d-dd49e19b39d1"/>
 				<textFieldExpression><![CDATA[$F{FECHA_ACTA}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido" stretchType="RelativeToTallestObject" x="2465" y="0" width="119" height="20" isPrintWhenDetailOverflows="true" uuid="d2ad0152-2fe5-4b85-9b34-c6e04195c85f"/>
+				<reportElement style="Estilo_contenido" stretchType="RelativeToTallestObject" x="2157" y="0" width="119" height="20" isPrintWhenDetailOverflows="true" uuid="d2ad0152-2fe5-4b85-9b34-c6e04195c85f"/>
 				<textFieldExpression><![CDATA[$F{MODO}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido" stretchType="RelativeToTallestObject" x="2584" y="0" width="95" height="20" isPrintWhenDetailOverflows="true" uuid="f1cc5550-e1bc-4c48-b4ee-826bee7c0858"/>
+				<reportElement style="Estilo_contenido" stretchType="RelativeToTallestObject" x="2276" y="0" width="95" height="20" isPrintWhenDetailOverflows="true" uuid="f1cc5550-e1bc-4c48-b4ee-826bee7c0858"/>
 				<textFieldExpression><![CDATA[$F{EX_ALUMNO}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido" stretchType="RelativeToTallestObject" x="2196" y="0" width="269" height="20" isPrintWhenDetailOverflows="true" uuid="4f842054-2738-489b-a904-d2cb37137615"/>
+				<reportElement style="Estilo_contenido" stretchType="RelativeToTallestObject" x="1888" y="0" width="269" height="20" isPrintWhenDetailOverflows="true" uuid="4f842054-2738-489b-a904-d2cb37137615"/>
 				<textFieldExpression><![CDATA[$F{TIPO_TRABAJO}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido" stretchType="RelativeToTallestObject" x="3306" y="0" width="133" height="20" isPrintWhenDetailOverflows="true" uuid="d88579a9-a23c-4fe4-b71b-9535428a9490"/>
+				<reportElement style="Estilo_contenido" stretchType="RelativeToTallestObject" x="2998" y="0" width="133" height="20" isPrintWhenDetailOverflows="true" uuid="d88579a9-a23c-4fe4-b71b-9535428a9490"/>
 				<textFieldExpression><![CDATA[$F{TERCERA_PRORROGA}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido" stretchType="RelativeToTallestObject" x="3439" y="0" width="160" height="20" isPrintWhenDetailOverflows="true" uuid="4dbfc46f-b9e9-438b-a0e6-71f850191bc9"/>
+				<reportElement style="Estilo_contenido" stretchType="RelativeToTallestObject" x="3131" y="0" width="160" height="20" isPrintWhenDetailOverflows="true" uuid="4dbfc46f-b9e9-438b-a0e6-71f850191bc9"/>
 				<textFieldExpression><![CDATA[$F{FECHA_FIN_TERCERA_PRORROGA}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Estilo_contenido" stretchType="RelativeToTallestObject" x="1888" y="0" width="308" height="20" isPrintWhenDetailOverflows="true" uuid="713d3e22-d8cf-4639-9be8-04c0a8c45ad2"/>
-				<textFieldExpression><![CDATA[$F{TEMA_TRABAJO_TITULACION}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
